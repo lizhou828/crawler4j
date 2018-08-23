@@ -1,0 +1,67 @@
+package com.baodiwang.crawler4j.service;
+
+import com.baodiwang.crawler4j.ApplicationTests;
+import com.baodiwang.crawler4j.mapper.RemiseNoticeMapper;
+import com.baodiwang.crawler4j.model.RemiseNotice;
+import com.baodiwang.crawler4j.model.RemiseNoticeDetail;
+import com.github.pagehelper.Page;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by lizhou on 2018年08月22日 21时48分
+ */
+public class RemiseNoticeServiceTest extends ApplicationTests {
+
+    private static final Logger log = LogManager.getLogger(RemiseNoticeServiceTest.class);
+    @Autowired
+    private RemiseNoticeService remiseNoticeService;
+
+
+    @Test
+    public void addTest() throws Exception {
+        RemiseNotice remiseNotice = new RemiseNotice();
+        remiseNotice.setType(1);
+        remiseNotice.setTitle("title");
+        remiseNotice.setAreaId(1123);
+        remiseNotice.setAreaName("地区");
+        remiseNotice.setContent("a撒旦法阿斯顿发flkasdfasdfasdflask");
+        remiseNotice.setCreator("创建者");
+        remiseNotice.setHref("http://www.baidu.com");
+        remiseNotice.setNoticeNum("1231231231");
+        remiseNotice.setPublishTime(new Timestamp(System.currentTimeMillis()));
+        remiseNotice.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        int result = remiseNoticeService.save(remiseNotice);
+        log.info("result="+result + ",remiseNotice=" + remiseNotice);
+    }
+
+    @Test
+    public void getByPKTest() throws Exception {
+        RemiseNotice remiseNotice  = remiseNoticeService.getByPK(4);
+        System.out.println(remiseNotice );
+    }
+
+    @Test
+    public void listByPropertyTest(){
+        RemiseNotice remiseNotice = new RemiseNotice();
+        remiseNotice.setType(3);
+        List<RemiseNotice> listPage = remiseNoticeService.listByProperty(remiseNotice);
+        System.out.println(listPage);
+    }
+
+    @Test
+    public void findNoticeWithoutDetailTest(){
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutDetail();
+        System.out.println(remiseNoticeList);
+    }
+
+
+
+
+}

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baodiwang.crawler4j.mapper.RemiseNoticeDetailMapper">
+    <!--<cache type="com.yyw.yhyc.cache.LoggingRedisCache"-->
+           <!--flushInterval="86400000" size="1024000">-->
+    <!--</cache>-->
+    <resultMap id="RemiseNoticeDetailResultMapper" type="com.baodiwang.crawler4j.model.RemiseNoticeDetail">
+        <result column="id" property="id"/>
+        <result column="notice_id" property="noticeId"/>
+        <result column="land_sn" property="landSn"/>
+        <result column="land_total_area" property="landTotalArea"/>
+        <result column="land_location" property="landLocation"/>
+        <result column="sale_time" property="saleTime"/>
+        <result column="plot_ratio" property="plotRatio"/>
+        <result column="building_density" property="buildingDensity"/>
+        <result column="greening_rate" property="greeningRate"/>
+        <result column="building_limited_height" property="buildingLimitedHeight"/>
+        <result column="land_use_details" property="landUseDetails"/>
+        <result column="investment_intensity" property="investmentIntensity"/>
+        <result column="cash_deposit" property="cashDeposit"/>
+        <result column="valuation_report_num" property="valuationReportNum"/>
+        <result column="current_land_conditions" property="currentLandConditions"/>
+        <result column="starting_price" property="startingPrice"/>
+        <result column="price_increase" property="priceIncrease"/>
+        <result column="open_start_time" property="openStartTime"/>
+        <result column="open_end_time" property="openEndTime"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+    </resultMap>
+
+    <sql id="commonColumns">
+        id,
+        notice_id,
+        land_sn,
+        land_total_area,
+        land_location,
+        sale_time,
+        plot_ratio,
+        building_density,
+        greening_rate,
+        building_limited_height,
+        land_use_details,
+        investment_intensity,
+        cash_deposit,
+        valuation_report_num,
+        current_land_conditions,
+        starting_price,
+        price_increase,
+        open_start_time,
+        open_end_time,
+        remark,
+        create_time,
+        creator
+    </sql>
+
+    <sql id="commonColumnsNotPK">
+        notice_id,
+        land_sn,
+        land_total_area,
+        land_location,
+        sale_time,
+        plot_ratio,
+        building_density,
+        greening_rate,
+        building_limited_height,
+        land_use_details,
+        investment_intensity,
+        cash_deposit,
+        valuation_report_num,
+        current_land_conditions,
+        starting_price,
+        price_increase,
+        open_start_time,
+        open_end_time,
+        remark,
+        create_time,
+        creator
+    </sql>
+
+
+    <sql id="commonProcessDateColumns">
+    id,
+    notice_id,
+    land_sn,
+    land_total_area,
+    land_location,
+    sale_time,
+    plot_ratio,
+    building_density,
+    greening_rate,
+    building_limited_height,
+    land_use_details,
+    investment_intensity,
+    cash_deposit,
+    valuation_report_num,
+    current_land_conditions,
+    starting_price,
+    price_increase,
+    open_start_time,
+    open_end_time,
+    remark,
+    create_time,
+    creator
+    </sql>
+
+    <sql id="commonCondition">
+        <if test="noticeId!= null and noticeId!= ''">
+            AND notice_id = #{noticeId}
+        </if>
+        <if test="landSn!= null and landSn!= ''">
+            AND land_sn = #{landSn}
+        </if>
+        <if test="landTotalArea!= null and landTotalArea!= ''">
+            AND land_total_area = #{landTotalArea}
+        </if>
+        <if test="landLocation!= null and landLocation!= ''">
+            AND land_location = #{landLocation}
+        </if>
+        <if test="saleTime!= null and saleTime!= ''">
+            AND sale_time = #{saleTime}
+        </if>
+        <if test="plotRatio!= null and plotRatio!= ''">
+            AND plot_ratio = #{plotRatio}
+        </if>
+        <if test="buildingDensity!= null and buildingDensity!= ''">
+            AND building_density = #{buildingDensity}
+        </if>
+        <if test="greeningRate!= null and greeningRate!= ''">
+            AND greening_rate = #{greeningRate}
+        </if>
+        <if test="buildingLimitedHeight!= null and buildingLimitedHeight!= ''">
+            AND building_limited_height = #{buildingLimitedHeight}
+        </if>
+        <if test="landUseDetails!= null and landUseDetails!= ''">
+            AND land_use_details = #{landUseDetails}
+        </if>
+        <if test="investmentIntensity!= null and investmentIntensity!= ''">
+            AND investment_intensity = #{investmentIntensity}
+        </if>
+        <if test="cashDeposit!= null and cashDeposit!= ''">
+            AND cash_deposit = #{cashDeposit}
+        </if>
+        <if test="valuationReportNum!= null and valuationReportNum!= ''">
+            AND valuation_report_num = #{valuationReportNum}
+        </if>
+        <if test="currentLandConditions!= null and currentLandConditions!= ''">
+            AND current_land_conditions = #{currentLandConditions}
+        </if>
+        <if test="startingPrice!= null and startingPrice!= ''">
+            AND starting_price = #{startingPrice}
+        </if>
+        <if test="priceIncrease!= null and priceIncrease!= ''">
+            AND price_increase = #{priceIncrease}
+        </if>
+        <if test="openStartTime!= null and openStartTime!= ''">
+            AND open_start_time = #{openStartTime}
+        </if>
+        <if test="openEndTime!= null and openEndTime!= ''">
+            AND open_end_time = #{openEndTime}
+        </if>
+        <if test="remark!= null and remark!= ''">
+            AND remark = #{remark}
+        </if>
+        <if test="createTime!= null and createTime!= ''">
+            AND create_time = #{createTime}
+        </if>
+        <if test="creator!= null and creator!= ''">
+            AND creator = #{creator}
+        </if>
+    </sql>
+
+
+    <insert id="save" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail">
+        <![CDATA[ INSERT INTO remise_notice_detail ( ]]> <include refid="commonColumnsNotPK"/>
+        <![CDATA[
+                ) VALUES (
+                #{noticeId},
+                #{landSn},
+                #{landTotalArea},
+                #{landLocation},
+                #{saleTime},
+                #{plotRatio},
+                #{buildingDensity},
+                #{greeningRate},
+                #{buildingLimitedHeight},
+                #{landUseDetails},
+                #{investmentIntensity},
+                #{cashDeposit},
+                #{valuationReportNum},
+                #{currentLandConditions},
+                #{startingPrice},
+                #{priceIncrease},
+                #{openStartTime},
+                #{openEndTime},
+                #{remark},
+                #{createTime},
+                #{creator}
+      ) ]]>
+    </insert>
+
+    <update id="update" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail">
+        <![CDATA[ UPDATE remise_notice_detail SET
+         id = #{id} ]]>
+
+        <if test="noticeId!= null and noticeId!= ''">
+            , notice_id = #{noticeId}
+        </if>
+        <if test="landSn!= null and landSn!= ''">
+            , land_sn = #{landSn}
+        </if>
+        <if test="landTotalArea!= null and landTotalArea!= ''">
+            , land_total_area = #{landTotalArea}
+        </if>
+        <if test="landLocation!= null and landLocation!= ''">
+            , land_location = #{landLocation}
+        </if>
+        <if test="saleTime!= null and saleTime!= ''">
+            , sale_time = #{saleTime}
+        </if>
+        <if test="plotRatio!= null and plotRatio!= ''">
+            , plot_ratio = #{plotRatio}
+        </if>
+        <if test="buildingDensity!= null and buildingDensity!= ''">
+            , building_density = #{buildingDensity}
+        </if>
+        <if test="greeningRate!= null and greeningRate!= ''">
+            , greening_rate = #{greeningRate}
+        </if>
+        <if test="buildingLimitedHeight!= null and buildingLimitedHeight!= ''">
+            , building_limited_height = #{buildingLimitedHeight}
+        </if>
+        <if test="landUseDetails!= null and landUseDetails!= ''">
+            , land_use_details = #{landUseDetails}
+        </if>
+        <if test="investmentIntensity!= null and investmentIntensity!= ''">
+            , investment_intensity = #{investmentIntensity}
+        </if>
+        <if test="cashDeposit!= null and cashDeposit!= ''">
+            , cash_deposit = #{cashDeposit}
+        </if>
+        <if test="valuationReportNum!= null and valuationReportNum!= ''">
+            , valuation_report_num = #{valuationReportNum}
+        </if>
+        <if test="currentLandConditions!= null and currentLandConditions!= ''">
+            , current_land_conditions = #{currentLandConditions}
+        </if>
+        <if test="startingPrice!= null and startingPrice!= ''">
+            , starting_price = #{startingPrice}
+        </if>
+        <if test="priceIncrease!= null and priceIncrease!= ''">
+            , price_increase = #{priceIncrease}
+        </if>
+        <if test="openStartTime!= null and openStartTime!= ''">
+            , open_start_time = #{openStartTime}
+        </if>
+        <if test="openEndTime!= null and openEndTime!= ''">
+            , open_end_time = #{openEndTime}
+        </if>
+        <if test="remark!= null and remark!= ''">
+            , remark = #{remark}
+        </if>
+        <if test="createTime!= null and createTime!= ''">
+            , create_time = #{createTime}
+        </if>
+        <if test="creator!= null and creator!= ''">
+            , creator = #{creator}
+        </if>
+
+      <![CDATA[  WHERE id = #{id} ]]>
+    </update>
+
+
+    <delete id="deleteByPK" parameterType="java.lang.Integer">
+        <![CDATA[ DELETE FROM remise_notice_detail
+        WHERE id = #{id} ]]>
+    </delete>
+
+    <delete id="deleteByPKeys" parameterType="map">
+        DELETE FROM remise_notice_detail WHERE
+        <foreach collection="primaryKeys" index="index" item="id" open=" id IN(" separator="," close=") ">
+            ${id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail">
+        DELETE FROM remise_notice_detail WHERE 1 = 1
+        <include refid="commonCondition"/>
+    </delete>
+
+    <select id="getByPK" parameterType="java.lang.Integer" resultMap="RemiseNoticeDetailResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM remise_notice_detail WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="RemiseNoticeDetailResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM remise_notice_detail
+    </select>
+
+    <select id="listByProperty" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail" resultMap="RemiseNoticeDetailResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM remise_notice_detail WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByCount" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail" resultType="int">
+        SELECT count(1) AS totalcount FROM remise_notice_detail WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByPagination" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail" resultMap="RemiseNoticeDetailResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM remise_notice_detail WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.RemiseNoticeDetail">
+        insert into  remise_notice_detail( <include refid="commonColumnsNotPK"/> )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.noticeId},
+                #{item.landSn},
+                #{item.landTotalArea},
+                #{item.landLocation},
+                #{item.saleTime},
+                #{item.plotRatio},
+                #{item.buildingDensity},
+                #{item.greeningRate},
+                #{item.buildingLimitedHeight},
+                #{item.landUseDetails},
+                #{item.investmentIntensity},
+                #{item.cashDeposit},
+                #{item.valuationReportNum},
+                #{item.currentLandConditions},
+                #{item.startingPrice},
+                #{item.priceIncrease},
+                #{item.openStartTime},
+                #{item.openEndTime},
+                #{item.remark},
+                #{item.createTime},
+                #{item.creator}
+            )
+        </foreach>
+    </insert>
+
+</mapper>
