@@ -65,6 +65,10 @@ public class RemiseNoticeDetailSchedule {
                 continue;//已经解析过则不再处理
             }
 
+            if(StringUtils.isEmpty(remiseNotice.getContent()) || remiseNotice.getContent().length() < 1000){
+                log.warn("定时的解析已抓取到的网页，并存到相关表中.............................有获取不到内容的数据,先不处理remiseNotice= " + remiseNotice);
+                continue;
+            }
 
             RemiseNoticeVo remiseNoticeVo = RemiseNoticeDetailParser.parseHtml(remiseNotice.getContent());
             List<RemiseNoticeDetail> remiseNoticeDetailList = null == remiseNoticeVo ? null : remiseNoticeVo.getRemiseNoticeDetailList();

@@ -12,6 +12,7 @@ import com.baodiwang.crawler4j.enums.RemiseNoticeTypeEnum;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.HttpUtils;
+import com.baodiwang.crawler4j.utils.IntUtils;
 import com.baodiwang.crawler4j.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -165,11 +166,12 @@ public class RemiseNoticeParser {
                 log.error("该土地公告号的数据已存在: title=" + remiseNotice.getTitle());
                 temp = tempList.get(0);
                 if(temp.getTitle().equals(remiseNotice.getTitle()) && temp.getNoticeNum().equals(remiseNotice.getNoticeNum())){
-                    continue; //该土地公告号的数据已存在(且无需更新)，跳过
+                    log.info("该土地公告号的数据已存在(且无需更新)，跳过");
                 }else{
                     //TODO 异步的其他方式去处理需要更新的数据
-                    log.error("该土地公告号的数据已存在，但需要更新: remiseNotice=" + remiseNotice);
+                    log.error("该土地公告号的数据已存在，但需要更新（暂不处理）: remiseNotice=" + remiseNotice);
                 }
+                continue;
             }
 
             if(StringUtils.isNotEmpty(remiseNotice.getHref())){
@@ -180,7 +182,7 @@ public class RemiseNoticeParser {
                 remiseNotice.setContent(content);
                 remiseNotice.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 remiseNoticeList.add(remiseNotice);
-                int second = new Random().nextInt(8);
+                int second = IntUtils.getRandomInt(5,10);
                 try {
                     log.info("本条数据已抓取完成!休眠" + second + "秒 ,title=" + remiseNotice.getTitle() );
                     long sleep = second  == 0 ? 1000 :  second * 1000;

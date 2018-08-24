@@ -6,6 +6,8 @@
  */
 package com.baodiwang.crawler4j.model;
 
+import com.baodiwang.crawler4j.utils.StringUtils;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -159,7 +161,7 @@ public class RemiseNotice implements Serializable {
                     " , publishTime = " + publishTime +
                     " , areaName = " + areaName +
                     " , areaId = " + areaId +
-                    " , content = " + content +
+                    " , content = " + (StringUtils.isNotEmpty(content) ? content.length() : content) +
                     " , href = " + href +
                     " , createTime = " + createTime +
                     " , creator = " + creator +
