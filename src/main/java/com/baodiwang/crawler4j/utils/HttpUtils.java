@@ -16,12 +16,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,14 +31,18 @@ import java.util.*;
  */
 public class HttpUtils {
 
+    public static final String CHAR_SET_UTF8 = "UTF-8";
+
+    public static final String CHAR_SET_GBK = "GBK";
 
     private static final Logger log = LogManager.getLogger(HttpUtils.class);
 
 
-    public static String get(String webPageUrl,Map<String,String> headMap) {
-        return get(webPageUrl,headMap,"GBK");
+    public static String get(String webPageUrl, Map<String, String> headMap) {
+        return get(webPageUrl, headMap, CHAR_SET_GBK);
     }
-    public static String get(String webPageUrl,Map<String,String> headMap ,String charSet) {
+
+    public static String get(String webPageUrl, Map<String, String> headMap, String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {
             return null;
         }
@@ -51,13 +54,13 @@ public class HttpUtils {
             client = HttpClients.createDefault();
             //创建httpget实例
             HttpGet httpGet = new HttpGet(webPageUrl);
-            httpGet.addHeader("Pragma","no-cache");
-            httpGet.addHeader("Cache-Control","no-cache");
+            httpGet.addHeader("Pragma", "no-cache");
+            httpGet.addHeader("Cache-Control", "no-cache");
             httpGet.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36");
-            if(null != headMap && !headMap.isEmpty()){
-                for(Map.Entry entry : headMap.entrySet()){
-                    if(StringUtils.isNotEmpty(entry.getKey()+"") && StringUtils.isNotEmpty(entry.getValue()+"")){
-                        httpGet.addHeader(entry.getKey()+"",entry.getValue()+"");
+            if (null != headMap && !headMap.isEmpty()) {
+                for (Map.Entry entry : headMap.entrySet()) {
+                    if (StringUtils.isNotEmpty(entry.getKey() + "") && StringUtils.isNotEmpty(entry.getValue() + "")) {
+                        httpGet.addHeader(entry.getKey() + "", entry.getValue() + "");
                     }
                 }
             }
@@ -70,8 +73,10 @@ public class HttpUtils {
 
             //返回获取实体
             HttpEntity entity = response.getEntity();
+
             //获取网页内容，指定编码
-            webContent = EntityUtils.toString(entity, StringUtils.isEmpty(charSet) ? "UTF-8" : charSet);
+            webContent  = convertStreamToString(entity.getContent(),charSet);
+
             long end = System.currentTimeMillis();
             log.info(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,sss").format(new Date()) + ":网页字符长度：" + webContent.length() + ",耗时：" + (end - start) + "毫秒");
 
@@ -90,7 +95,20 @@ public class HttpUtils {
         return webContent;
     }
 
-    public static String post(String webPageUrl,Map<String,String> headMap,Map<String,String> paramsMap,String charSet) {
+
+
+    /**
+     * 默认字符集编码为GBK
+     *
+     * @param webPageUrl
+     * @param headMap
+     * @param paramsMap
+     * @return
+     */
+    public static String post(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
+        return post(webPageUrl, headMap, paramsMap, CHAR_SET_GBK);
+    }
+    public static String post(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {
             return null;
         }
@@ -104,24 +122,24 @@ public class HttpUtils {
             HttpPost httpPost = new HttpPost(webPageUrl);
             httpPost.addHeader("Host", "www.landchina.com");
             httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3278.0 Safari/537.36");
-            if(null != headMap && !headMap.isEmpty()){
-                for(Map.Entry entry : headMap.entrySet()){
-                    if(StringUtils.isNotEmpty(entry.getKey()+"") && StringUtils.isNotEmpty(entry.getValue()+"")){
+            if (null != headMap && !headMap.isEmpty()) {
+                for (Map.Entry entry : headMap.entrySet()) {
+                    if (StringUtils.isNotEmpty(entry.getKey() + "") && StringUtils.isNotEmpty(entry.getValue() + "")) {
 //                        httpGet.addHeader("Cookie", "security_session_mid_verify=d70d231ed4e7b195938aac569dccf384;");
-                        httpPost.addHeader(entry.getKey()+"",entry.getValue()+"");
+                        httpPost.addHeader(entry.getKey() + "", entry.getValue() + "");
                     }
                 }
             }
 
             //设置参数
-            if(null != paramsMap && !paramsMap.isEmpty()){
+            if (null != paramsMap && !paramsMap.isEmpty()) {
                 List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-                for (Iterator iter = paramsMap.keySet().iterator(); iter.hasNext();) {
+                for (Iterator iter = paramsMap.keySet().iterator(); iter.hasNext(); ) {
                     String name = (String) iter.next();
                     String value = String.valueOf(paramsMap.get(name));
                     nameValuePairList.add(new BasicNameValuePair(name, value));
                 }
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, HTTP.UTF_8));
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, CHAR_SET_UTF8));
             }
 
 
@@ -134,7 +152,7 @@ public class HttpUtils {
             //返回获取实体
             HttpEntity entity = response.getEntity();
             //获取网页内容，指定编码
-            webContent = EntityUtils.toString(entity, StringUtils.isEmpty(charSet) ? "UTF-8" : charSet);
+            webContent  = convertStreamToString(entity.getContent(),charSet);
             long end = System.currentTimeMillis();
             log.info(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,sss").format(new Date()) + ":网页字符长度：" + webContent.length() + ",耗时：" + (end - start) + "毫秒");
 
@@ -153,14 +171,35 @@ public class HttpUtils {
         return webContent;
     }
 
+
     /**
-     * 默认字符集编码为gb2312
-     * @param webPageUrl
-     * @param headMap
-     * @param paramsMap
+     * 把输入流中的数据 按照指定字符集转成字符串 ，防止部分中文乱码的问题
+     * @param is  输入流
+     * @param charSet  字符集 （默认GBK）
      * @return
      */
-    public static String post(String webPageUrl,Map<String,String> headMap,Map<String,String> paramsMap) {
-        return post(webPageUrl,headMap,paramsMap,"GBK");
+    private static String convertStreamToString(InputStream is, String charSet) {
+        if (StringUtils.isEmpty(charSet)) {
+            charSet = CHAR_SET_GBK;
+        }
+        StringBuilder sb1 = new StringBuilder();
+        byte[] bytes = new byte[4096];
+        int size = 0;
+
+        try {
+            while ((size = is.read(bytes)) > 0) {
+                String str = new String(bytes, 0, size, charSet);
+                sb1.append(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb1.toString();
     }
 }
