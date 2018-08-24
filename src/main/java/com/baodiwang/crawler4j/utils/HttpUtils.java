@@ -37,7 +37,7 @@ public class HttpUtils {
 
 
     public static String get(String webPageUrl,Map<String,String> headMap) {
-        return get(webPageUrl,headMap,"GB2312");
+        return get(webPageUrl,headMap,"GBK");
     }
     public static String get(String webPageUrl,Map<String,String> headMap ,String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {
@@ -51,7 +51,8 @@ public class HttpUtils {
             client = HttpClients.createDefault();
             //创建httpget实例
             HttpGet httpGet = new HttpGet(webPageUrl);
-            httpGet.addHeader("Host", "www.landchina.com");
+            httpGet.addHeader("Pragma","no-cache");
+            httpGet.addHeader("Cache-Control","no-cache");
             httpGet.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36");
             if(null != headMap && !headMap.isEmpty()){
                 for(Map.Entry entry : headMap.entrySet()){
@@ -160,6 +161,6 @@ public class HttpUtils {
      * @return
      */
     public static String post(String webPageUrl,Map<String,String> headMap,Map<String,String> paramsMap) {
-        return post(webPageUrl,headMap,paramsMap,"GB2312");
+        return post(webPageUrl,headMap,paramsMap,"GBK");
     }
 }

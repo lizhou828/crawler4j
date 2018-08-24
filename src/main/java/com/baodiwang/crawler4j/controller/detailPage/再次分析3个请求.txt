@@ -1,0 +1,40 @@
+第一次请求：
+GET http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath= HTTP/1.1
+Referer: http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath=&security_verify_data=313336362c373638
+
+第一次响应：
+Set-Cookie: yunsuo_session_verify=8c0fef848ba514c5ccc45d22ed4c74dc; expires=Sun, 26-Aug-18 22:37:18 GMT; path=/; HttpOnly
+
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, post-check=0, pre-check=0"/><meta http-equiv="Connection" content="Close"/><script type="text/javascript">function stringToHex(str){var val="";for(var i = 0; i < str.length; i++){if(val == "")val = str.charCodeAt(i).toString(16);else val += str.charCodeAt(i).toString(16);}return val;}function YunSuoAutoJump(){ var width =screen.width; var height=screen.height; var screendate = width + "," + height;var curlocation = window.location.href;if(-1 == curlocation.indexOf("security_verify_")){ document.cookie="srcurl=" + stringToHex(window.location.href) + ";path=/;";}self.location = "/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath=&security_verify_data=" + stringToHex(screendate);}</script><script>setTimeout("YunSuoAutoJump()", 50);</script></head><body><div style="font-size: 14px; font-family:微软雅黑;">&#x6B63;&#x5728;&#x4E3A;&#x60A8;&#x8DF3;&#x8F6C;&#x5230;&#x8BBF;&#x95EE;&#x9875;&#x9762;......<br/><br/>&#x5982;&#x679C;&#x60A8;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x6CA1;&#x6709;&#x81EA;&#x52A8;&#x8DF3;&#x8F6C;&#xFF0C;&#x8BF7;&#x68C0;&#x67E5;&#x4EE5;&#x4E0B;&#x8BBE;&#x7F6E;&#x3002;<br/><br/>(1)&#x8BF7;&#x786E;&#x4FDD;&#x6D4F;&#x89C8;&#x5668;&#x6CA1;&#x6709;&#x7981;&#x6B62;&#x53D1;&#x9001;Cookie&#x3002;<br/><br/>(2)&#x8BF7;&#x786E;&#x4FDD;&#x6D4F;&#x89C8;&#x5668;&#x53EF;&#x4EE5;&#x6B63;&#x5E38;&#x6267;&#x884C;JavaScript&#x811A;&#x672C;&#x3002;<br/><br/>(3)&#x82E5;&#x4F7F;&#x7528;IE&#x6D4F;&#x89C8;&#x5668;&#xFF0C;&#x8BF7;&#x4F7F;&#x7528;IE9&#x53CA;&#x4EE5;&#x4E0A;&#x7248;&#x672C;&#x3002;<br/><br/>(4)&#x786E;&#x4FDD;&#x672C;&#x5730;&#x65F6;&#x95F4;&#x7684;&#x51C6;&#x786E;&#x6027;&#x3002;<br/><br/>(5)&#x8BF7;&#x89C2;&#x5BDF;&#x8FD9;&#x4E2A;&#x65F6;&#x95F4;&#xFF08;2018-08-23 22:45:31&#xFF09;&#x82E5;&#x65F6;&#x95F4;&#x4E00;&#x76F4;&#x672A;&#x53D8;&#x5316;&#xFF0C;&#x5219;&#x662F;&#x7531;&#x4E8E;&#x9A8C;&#x8BC1;&#x9875;&#x9762;&#x88AB;&#x7F13;&#x5B58;&#xFF0C;&#x53EF;&#x80FD;&#x662F;&#x4E0E;CDN&#x8BBE;&#x7F6E;&#x4E0D;&#x517C;&#x5BB9;&#x3002;<br/><br/></<div></body><!--2018-08-23 22:45:31--></html>
+
+第一次请求的目的：
+1、服务端生成 yunsuo_session_verify 参数，添加到cookie中
+2、页面的js 生成 srcurl参数，加入cookie中：
+3、在原链接上加上 &security_verify_data= 参数，继续跳转
+
+
+
+第2次请求：
+GET http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath=&security_verify_data=313336362c373638 HTTP/1.1
+Referer: http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath=
+Cookie: yunsuo_session_verify=8c0fef848ba514c5ccc45d22ed4c74dc; srcurl=687474703a2f2f7777772e6c616e646368696e612e636f6d2f4465736b746f704d6f64756c652f42697a6672616d65457874656e644d646c2f776f726b4c6973742f62756c576f726b566965772e617370783f776d677569643d32306161653864632d346130632d346166352d616564662d636331353365623665666466267265636f72646572677569643d62323239376136652d323336382d343734332d616330362d3861646631393838666436302673697465506174683d
+第2次响应：
+Set-Cookie: security_session_mid_verify=03b4e112db56736df7bc02af672d47e1; expires=Sun, 26-Aug-18 22:37:18 GMT; path=/; HttpOnly
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, post-check=0, pre-check=0"/><meta http-equiv="Connection" content="Close"/><script>function YunSuoAutoJump() { self.location = "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="; }</script><script>setTimeout("YunSuoAutoJump()", 50);</script></head><!--2018-08-23 22:45:31--></html>
+
+第2次请求的目的：
+1、请求时带上第一次请求时生成的cookie
+2、服务端生成security_session_mid_verify参数，加入到cookie中
+3、在原链接上 继续跳转
+
+第3次请求：
+GET http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath= HTTP/1.1
+Referer: http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath=&security_verify_data=313336362c373638
+Cookie: yunsuo_session_verify=8c0fef848ba514c5ccc45d22ed4c74dc; srcurl=687474703a2f2f7777772e6c616e646368696e612e636f6d2f4465736b746f704d6f64756c652f42697a6672616d65457874656e644d646c2f776f726b4c6973742f62756c576f726b566965772e617370783f776d677569643d32306161653864632d346130632d346166352d616564662d636331353365623665666466267265636f72646572677569643d62323239376136652d323336382d343734332d616330362d3861646631393838666436302673697465506174683d; security_session_mid_verify=03b4e112db56736df7bc02af672d47e1
+
+第3次响应：正文
+
+第3次请求的目的：
+1、带上原来前两次的cookie值
+2、请求原链接，得到正文
+
