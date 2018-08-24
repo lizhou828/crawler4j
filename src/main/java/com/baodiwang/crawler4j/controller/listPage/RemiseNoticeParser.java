@@ -7,6 +7,7 @@
 
 package com.baodiwang.crawler4j.controller.listPage;
 
+import com.baodiwang.crawler4j.constants.Constant;
 import com.baodiwang.crawler4j.enums.RemiseNoticeTypeEnum;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
@@ -109,15 +110,20 @@ public class RemiseNoticeParser {
                     }
                     Element aEle = aEleList.get(0);
                     String href = aEle.attr("href");
-                    remiseNotice.setHref("http://www.landchina.com" + href);
-                    Elements child = aEle.children();
-                    if(null == child || child.size() != 1 ){
-                        continue;
+                    remiseNotice.setHref(Constant.HTTP_HOST + href);
+                    String title = "";
+                    if(StringUtils.isEmpty(aEle.text()) && !aEle.text().contains("...")){
+                        remiseNotice.setTitle(aEle.text());
+                    }else if (StringUtils.isEmpty(aEle.text()) && aEle.text().contains("...")){
+                        Elements child = aEle.children();
+                        if(null == child || child.size() != 1 ){
+                            continue;
+                        }
+                        Element spanEle = child.get(0);
+                        title = spanEle.attr("title");
+                        remiseNotice.setTitle(title);
                     }
-                    Element spanEle = child.get(0);
-                    String title = spanEle.attr("title");
-                    remiseNotice.setTitle(title);
-                    if(StringUtils.isNotEmpty(title) && title.contains("(")){
+                    if(StringUtils.isNotEmpty(remiseNotice.getTitle())){
                         String num = StringUtils.getNoticeNumFromTitle(remiseNotice.getTitle());
                         remiseNotice.setNoticeNum(num);
                     }
@@ -144,7 +150,12 @@ public class RemiseNoticeParser {
             }
 
             if(StringUtils.isEmpty(remiseNotice.getNoticeNum())){
-                remiseNotice.setNoticeNum(remiseNotice.getTitle());//暂时用title来代替，后续的定时器会定时更正过来
+                remiseNotice.setNoticeNum(remiseNotice.getTitle());//如果暂时没有解析出正确的公告号，则暂时用title来代替，后续的定时器会定时更正过来
+            }
+
+            if( StringUtils.isEmpty(remiseNotice.getTitle())){
+                log.warn("无效数据:remiseNotice=" + remiseNotice);
+                continue;//无效数据
             }
 
             RemiseNotice temp = new RemiseNotice();
@@ -158,6 +169,7 @@ public class RemiseNoticeParser {
             if(StringUtils.isNotEmpty(remiseNotice.getHref())){
                 Map<String,String> headMap = new HashMap<>();
                 headMap.put("Cookie", "security_session_mid_verify=d70d231ed4e7b195938aac569dccf384;");
+                headMap.put("Host", Constant.HOST);
                 String content = HttpUtils.get(remiseNotice.getHref(), headMap);
                 remiseNotice.setContent(content);
                 remiseNotice.setCreateTime(new Timestamp(System.currentTimeMillis()));
