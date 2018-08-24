@@ -47,7 +47,7 @@ public class RemiseNoticeDetailParser {
         Element lblXzq = doc.getElementById("lblXzq");
         if(null != lblXzq && lblXzq.hasText()){
             String str = lblXzq.text();
-            log.info(str);
+//            log.info(str);
 //            if(StringUtils.isNotEmpty(str)){
 //                str = str.replace("行政区：","");
 //            }

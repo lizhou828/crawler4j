@@ -84,11 +84,17 @@ public class RemiseNoticeController {
         String pageContent = HttpUtils.post(listPageUrl, headMap,paramsMap);
 
         List<RemiseNotice> remiseNoticeList = remiseNoticeParser.parseHtml(pageContent);
+
         int count = 0;
         if(!remiseNoticeList.isEmpty()){
-            count = remiseNoticeService.batchInsert(remiseNoticeList);
+            try{
+                count = remiseNoticeService.batchInsert(remiseNoticeList);
+            }catch (Exception e){
+                log.error("批量插入数据发生异常："+e.getMessage(),e);//批量插入未保存过的数据
+            }
         }
-        return "数据条数：" + remiseNoticeList.size() + ",处理条数：" + count;
+
+        return "数据条数：" + remiseNoticeList.size() + ",\n remiseNoticeList = " + remiseNoticeList + " \n 处理条数：" + count;
 
     }
 

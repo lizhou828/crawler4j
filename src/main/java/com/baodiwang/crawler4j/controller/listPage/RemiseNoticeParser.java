@@ -112,9 +112,9 @@ public class RemiseNoticeParser {
                     String href = aEle.attr("href");
                     remiseNotice.setHref(Constant.HTTP_HOST + href);
                     String title = "";
-                    if(StringUtils.isEmpty(aEle.text()) && !aEle.text().contains("...")){
+                    if(StringUtils.isNotEmpty(aEle.text()) && !aEle.text().contains("...")){
                         remiseNotice.setTitle(aEle.text());
-                    }else if (StringUtils.isEmpty(aEle.text()) && aEle.text().contains("...")){
+                    }else if (StringUtils.isNotEmpty(aEle.text()) && aEle.text().contains("...")){
                         Elements child = aEle.children();
                         if(null == child || child.size() != 1 ){
                             continue;
@@ -153,17 +153,23 @@ public class RemiseNoticeParser {
                 remiseNotice.setNoticeNum(remiseNotice.getTitle());//如果暂时没有解析出正确的公告号，则暂时用title来代替，后续的定时器会定时更正过来
             }
 
-            if( StringUtils.isEmpty(remiseNotice.getTitle())){
+            if( StringUtils.isEmpty(remiseNotice.getHref())){
                 log.warn("无效数据:remiseNotice=" + remiseNotice);
                 continue;//无效数据
             }
 
             RemiseNotice temp = new RemiseNotice();
-            temp.setTitle(remiseNotice.getTitle());
-            int count = remiseNoticeService.findByCount(temp);
-            if(count > 0){
-                log.error("该土地公告号的数据已存在: remiseNotice=" + remiseNotice);
-                continue; //该土地公告号的数据已存在，跳过
+            temp.setHref(remiseNotice.getHref());
+            List<RemiseNotice> tempList = remiseNoticeService.listByProperty(temp);
+            if(null != tempList && !tempList.isEmpty() && tempList.size() > 0){
+                log.error("该土地公告号的数据已存在: title=" + remiseNotice.getTitle());
+                temp = tempList.get(0);
+                if(temp.getTitle().equals(remiseNotice.getTitle()) && temp.getNoticeNum().equals(remiseNotice.getNoticeNum())){
+                    continue; //该土地公告号的数据已存在(且无需更新)，跳过
+                }else{
+                    //TODO 异步的其他方式去处理需要更新的数据
+                    log.error("该土地公告号的数据已存在，但需要更新: remiseNotice=" + remiseNotice);
+                }
             }
 
             if(StringUtils.isNotEmpty(remiseNotice.getHref())){
@@ -176,8 +182,8 @@ public class RemiseNoticeParser {
                 remiseNoticeList.add(remiseNotice);
                 int second = new Random().nextInt(8);
                 try {
+                    log.info("本条数据已抓取完成!休眠" + second + "秒 ,title=" + remiseNotice.getTitle() );
                     long sleep = second  == 0 ? 1000 :  second * 1000;
-                    log.info("本条数据已抓取完成!休眠" + sleep + "秒");
                     Thread.sleep(sleep);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

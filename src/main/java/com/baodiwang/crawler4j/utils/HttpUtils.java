@@ -35,11 +35,13 @@ public class HttpUtils {
 
     public static final String CHAR_SET_GBK = "GBK";
 
+    public static final String CHAR_SET_GB2312 = "gb2312";
+
     private static final Logger log = LogManager.getLogger(HttpUtils.class);
 
 
     public static String get(String webPageUrl, Map<String, String> headMap) {
-        return get(webPageUrl, headMap, CHAR_SET_GBK);
+        return get(webPageUrl, headMap, CHAR_SET_GB2312);
     }
 
     public static String get(String webPageUrl, Map<String, String> headMap, String charSet) {
@@ -106,7 +108,7 @@ public class HttpUtils {
      * @return
      */
     public static String post(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
-        return post(webPageUrl, headMap, paramsMap, CHAR_SET_GBK);
+        return post(webPageUrl, headMap, paramsMap, CHAR_SET_GB2312);
     }
     public static String post(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {
