@@ -182,7 +182,7 @@ public class RemiseNoticeParser {
                 remiseNotice.setContent(content);
                 remiseNotice.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 remiseNoticeList.add(remiseNotice);
-                int second = IntUtils.getRandomInt(5,10);
+                int second = IntUtils.getRandomInt(2,6);
                 try {
                     log.info("本条数据已抓取完成!休眠" + second + "秒 ,title=" + remiseNotice.getTitle() );
                     long sleep = second  == 0 ? 1000 :  second * 1000;
