@@ -47,7 +47,7 @@ public class RemiseNoticeSchedule {
      */
     @Scheduled(cron = "0 27 15 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void scheduledSingleProvince(){
-        parseSingleProvinceDataToRemiseNotice(13, "河北省", 48, 59);
+        parseSingleProvinceDataToRemiseNotice(13, "河北省", 52, 59);
     }
 
     /**
