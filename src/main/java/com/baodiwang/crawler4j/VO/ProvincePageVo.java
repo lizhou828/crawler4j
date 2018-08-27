@@ -7,6 +7,9 @@
 
 package com.baodiwang.crawler4j.VO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author lizhou
  * @version 1.0
@@ -24,6 +27,11 @@ public class ProvincePageVo{
     private  Integer provinceAllPage;
 
     public ProvincePageVo() {
+    }
+
+    public ProvincePageVo(String provinceName, Integer provinceCode) {
+        this.provinceName = provinceName;
+        this.provinceCode = provinceCode;
     }
 
     public ProvincePageVo(String provinceName, Integer provinceCode, Integer provinceAllPage) {
@@ -63,5 +71,42 @@ public class ProvincePageVo{
                 ", provinceCode='" + provinceCode + '\'' +
                 ", provinceAllPage='" + provinceAllPage + '\'' +
                 '}';
+    }
+    
+    public static List<ProvincePageVo> getAllProvince(){
+        List<ProvincePageVo> provincePageVoList = new ArrayList<>();
+        provincePageVoList.add(new ProvincePageVo("北京市",11));
+        provincePageVoList.add(new ProvincePageVo("天津市", 12));
+        provincePageVoList.add(new ProvincePageVo("河北省", 13));
+        provincePageVoList.add(new ProvincePageVo("山西省", 14));
+        provincePageVoList.add(new ProvincePageVo("内蒙古", 15));
+        provincePageVoList.add(new ProvincePageVo("辽宁省", 21));
+        provincePageVoList.add(new ProvincePageVo("吉林省",22));
+        provincePageVoList.add(new ProvincePageVo("黑龙江省", 23));
+        provincePageVoList.add(new ProvincePageVo("上海市", 31));
+        provincePageVoList.add(new ProvincePageVo("江苏省", 32));
+        provincePageVoList.add(new ProvincePageVo("浙江省", 33));
+        provincePageVoList.add(new ProvincePageVo("安徽省", 34));
+        provincePageVoList.add(new ProvincePageVo("福建省", 35));
+        provincePageVoList.add(new ProvincePageVo("江西省", 36));
+        provincePageVoList.add(new ProvincePageVo("山东省", 37));
+        provincePageVoList.add(new ProvincePageVo("河南省", 41));
+        provincePageVoList.add(new ProvincePageVo("湖北省", 42));
+        provincePageVoList.add(new ProvincePageVo("湖南省", 43));
+        provincePageVoList.add(new ProvincePageVo("广东省", 44));
+        provincePageVoList.add(new ProvincePageVo("广西壮族", 45));
+        provincePageVoList.add(new ProvincePageVo("海南省", 46));
+        provincePageVoList.add(new ProvincePageVo("重庆市", 50));
+        provincePageVoList.add(new ProvincePageVo("四川省", 51));
+        provincePageVoList.add(new ProvincePageVo("贵州省", 52));
+        provincePageVoList.add(new ProvincePageVo("云南省", 53));
+        provincePageVoList.add(new ProvincePageVo("西藏", 54));
+        provincePageVoList.add(new ProvincePageVo("陕西省", 61));
+        provincePageVoList.add(new ProvincePageVo("甘肃省", 62));
+        provincePageVoList.add(new ProvincePageVo("青海省", 63));
+        provincePageVoList.add(new ProvincePageVo("宁夏回族", 64));
+        provincePageVoList.add(new ProvincePageVo("新疆维吾尔", 65));
+        provincePageVoList.add(new ProvincePageVo("新疆建设兵团", 66));
+        return provincePageVoList;
     }
 }

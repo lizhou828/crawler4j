@@ -47,7 +47,39 @@ public class RemiseNoticeSchedule2 {
     public void parseEveryProvinceDataToRemiseNotice(){
         List<ProvincePageVo> provincePageVoList = new ArrayList<>();
         provincePageVoList.add(new ProvincePageVo("北京市",11,1));
+        provincePageVoList.add(new ProvincePageVo("天津市", 12, 6));
         provincePageVoList.add(new ProvincePageVo("河北省", 13, 59));
+        provincePageVoList.add(new ProvincePageVo("山西省", 14, 16));
+        provincePageVoList.add(new ProvincePageVo("内蒙古", 15, 26));
+        provincePageVoList.add(new ProvincePageVo("辽宁省", 21, 16));
+        provincePageVoList.add(new ProvincePageVo("吉林省",22, 27));
+        provincePageVoList.add(new ProvincePageVo("黑龙江省", 23, 19));
+        provincePageVoList.add(new ProvincePageVo("上海市", 31, 4));
+        provincePageVoList.add(new ProvincePageVo("江苏省", 32, 65));
+        provincePageVoList.add(new ProvincePageVo("浙江省", 33, 79));
+        provincePageVoList.add(new ProvincePageVo("安徽省", 34, 37));
+        provincePageVoList.add(new ProvincePageVo("福建省", 35, 25));
+        provincePageVoList.add(new ProvincePageVo("江西省", 36, 56));
+        provincePageVoList.add(new ProvincePageVo("山东省", 37, 61));
+        provincePageVoList.add(new ProvincePageVo("河南省", 41, 65));
+        provincePageVoList.add(new ProvincePageVo("湖北省", 42, 48));
+        provincePageVoList.add(new ProvincePageVo("湖南省", 43, 46));
+        provincePageVoList.add(new ProvincePageVo("广东省", 44, 39));
+        provincePageVoList.add(new ProvincePageVo("广西壮族", 45, 28));
+        provincePageVoList.add(new ProvincePageVo("海南省", 46, 1));
+        provincePageVoList.add(new ProvincePageVo("重庆市", 50, 15));
+        provincePageVoList.add(new ProvincePageVo("四川省", 51, 38));
+        provincePageVoList.add(new ProvincePageVo("贵州省", 52, 26));
+        provincePageVoList.add(new ProvincePageVo("云南省", 53, 27));
+        provincePageVoList.add(new ProvincePageVo("西藏", 54, 0));
+        provincePageVoList.add(new ProvincePageVo("陕西省", 61, 21));
+        provincePageVoList.add(new ProvincePageVo("甘肃省", 62, 19));
+        provincePageVoList.add(new ProvincePageVo("青海省", 63, 4));
+        provincePageVoList.add(new ProvincePageVo("宁夏回族", 64, 7));
+        provincePageVoList.add(new ProvincePageVo("新疆维吾尔", 65, 22));
+        provincePageVoList.add(new ProvincePageVo("新疆建设兵团", 66, 6));
+
+
         //todo 其他省份 singeProvinceScheduler.parseSingleProvinceDataToRemiseNotice();
 
 
