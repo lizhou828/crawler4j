@@ -48,15 +48,15 @@ public class LandChinaHttpBreaker2 {
      */
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap,String charSet){
         String yunsuo_session_verify = stepOne(webPageUrl,headMap,paramsMap,charSet);
-        System.out.println("第一次请求返回结果yunsuo_session_verify =" + yunsuo_session_verify );
+        log.info("第一次请求返回结果yunsuo_session_verify =" + yunsuo_session_verify);
 
         String security_session_mid_verify = stepTwo(webPageUrl,headMap,paramsMap,charSet,yunsuo_session_verify);
-        System.out.println("第二次请求返回结果security_session_mid_verify  =" + security_session_mid_verify  );
+        log.info("第二次请求返回结果security_session_mid_verify  =" + security_session_mid_verify);
 
         if(StringUtils.isNotEmpty(yunsuo_session_verify) && StringUtils.isNotEmpty(security_session_mid_verify) ){
             return stepThree(webPageUrl,headMap,paramsMap,charSet,yunsuo_session_verify,security_session_mid_verify );
         }else{
-            System.out.println("参数异常！");
+            log.error("参数异常！yunsuo_session_verify=" + yunsuo_session_verify + ",security_session_mid_verify=" + security_session_mid_verify);
             return null;
         }
     }
@@ -76,7 +76,7 @@ public class LandChinaHttpBreaker2 {
         headMap.put("Referer","http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=c64ce206-9367-40e0-92a1-5938c978d560&sitePath=&security_verify_data=313336362c373638");
         headMap.put("Accept-Encoding","gzip, deflate");
         headMap.put("Accept-Language","zh-CN,zh;q=0.9");
-        System.out.println("发起第一次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
+        log.info("发起第一次请求webPageUrl=" + webPageUrl + ",headMap=" + headMap);
 
         if(StringUtils.isEmpty(webPageUrl)){
             return null;
@@ -110,7 +110,7 @@ public class LandChinaHttpBreaker2 {
         if(StringUtils.isEmpty(webPageUrl)){
             return null;
         }
-        System.out.println("发起第二次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
+        log.info("发起第二次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
         HttpResponse response = HttpUtils.postWithResponse(webPageUrl, headMap,paramsMap);
         Map<String,String> cookieMap = null;
 
@@ -147,7 +147,7 @@ public class LandChinaHttpBreaker2 {
         if(webPageUrl.contains("&security_verify_data")){
             webPageUrl = webPageUrl.substring(0,webPageUrl.indexOf("&security_verify_data"));
         }
-        System.out.println("发起第三次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
+        log.info("发起第三次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
         if(StringUtils.isEmpty(charSet)){
             charSet = HttpUtils.CHAR_SET_GB2312;
         }
@@ -162,7 +162,7 @@ public class LandChinaHttpBreaker2 {
             if(null == header){
                 continue;
             }
-            System.out.println("header.getName()=" + header.getName() + ",header.getValue()=" + header.getValue());
+            log.debug("header.getName()=" + header.getName() + ",header.getValue()=" + header.getValue());
         }
 
         //返回获取实体
@@ -178,12 +178,12 @@ public class LandChinaHttpBreaker2 {
             return null;
         }
         if(webContent.length() > 5000){
-            System.out.println("webContent.length()=" + webContent.length() + ",请求成功！===========================================================================" +
+            log.info("webContent.length()=" + webContent.length() + ",请求成功！===========================================================================" +
                     "\n===========================================================================" +
                     "\n===========================================================================");
             return webContent;
         }else{
-            System.out.println("未能获取到正确的数据......");
+            log.info("未能获取到正确的数据......webContent.length()=" + webContent.length() + ",webContent=" + webContent);
             return webContent;
         }
     }

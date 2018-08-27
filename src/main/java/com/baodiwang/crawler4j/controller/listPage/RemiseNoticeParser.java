@@ -13,6 +13,7 @@ import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.HttpUtils;
 import com.baodiwang.crawler4j.utils.IntUtils;
+import com.baodiwang.crawler4j.utils.LandChinaHttpBreaker2;
 import com.baodiwang.crawler4j.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -176,10 +177,10 @@ public class RemiseNoticeParser {
 
             if(StringUtils.isNotEmpty(remiseNotice.getHref())){
                 Map<String,String> headMap = new HashMap<>();
-                headMap.put("Cookie", "security_session_mid_verify=d70d231ed4e7b195938aac569dccf384;");
-                headMap.put("Host", Constant.HOST);
-                String content = HttpUtils.get(remiseNotice.getHref(), headMap);
-                remiseNotice.setContent(content);
+                String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap,null);
+                if(StringUtils.isNotEmpty(content) && content.length() > 8000){
+                    remiseNotice.setContent(content);
+                }
                 remiseNotice.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 remiseNoticeList.add(remiseNotice);
                 int second = IntUtils.getRandomInt(2,6);

@@ -10,6 +10,7 @@ package com.baodiwang.crawler4j.controller.detailPage;
 import com.baodiwang.crawler4j.VO.RemiseNoticeVo;
 import com.baodiwang.crawler4j.model.RemiseNoticeDetail;
 import com.baodiwang.crawler4j.utils.HttpUtils;
+import com.baodiwang.crawler4j.utils.LandChinaHttpBreaker2;
 import com.baodiwang.crawler4j.utils.StringUtils;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,8 +44,7 @@ public class RemiseNoticeDetailController {
 //        detailPageUrl =  "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="  //部分中文乱码 ： 博罗县石湾镇滘源路南侧地段
 
         Map<String,String> headMap = new HashMap<>();
-        headMap.put("Cookie", "security_session_mid_verify=d70d231ed4e7b195938aac569dccf384;");
-        String pageContent  = HttpUtils.post(detailPageUrl, headMap,null);
+        String pageContent  = LandChinaHttpBreaker2.breakBarrier(detailPageUrl, headMap, null);
 
 //        String pageContent = getListPageContent(listPageUrl);
         if(StringUtils.isEmpty(pageContent) || pageContent.length() < 10000){
