@@ -35,7 +35,7 @@ public class LandChinaHttpBreaker2 {
      * @return
      */
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
-        return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GBK);
+        return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GB2312);
     }
 
     /**
@@ -149,7 +149,7 @@ public class LandChinaHttpBreaker2 {
         }
         System.out.println("发起第三次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
         if(StringUtils.isEmpty(charSet)){
-            charSet = HttpUtils.CHAR_SET_GBK;
+            charSet = HttpUtils.CHAR_SET_GB2312;
         }
         if(StringUtils.isEmpty(webPageUrl)){
             return null;

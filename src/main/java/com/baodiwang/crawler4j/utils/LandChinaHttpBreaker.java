@@ -31,7 +31,7 @@ public class LandChinaHttpBreaker {
      */
     @Deprecated
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
-        return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GBK);
+        return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GB2312);
     }
 
     /**
@@ -45,7 +45,7 @@ public class LandChinaHttpBreaker {
     @Deprecated
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap,String charSet){
          if(StringUtils.isEmpty(charSet)){
-            charSet = HttpUtils.CHAR_SET_GBK;
+            charSet = HttpUtils.CHAR_SET_GB2312;
         }
         if(StringUtils.isEmpty(webPageUrl)){
             return null;
