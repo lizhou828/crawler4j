@@ -122,7 +122,7 @@ public class HttpUtils {
             client = HttpClients.createDefault();
             //创建httpget实例
             HttpPost httpPost = new HttpPost(webPageUrl);
-            httpPost.addHeader("Host", "www.landchina.com");
+
             httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3278.0 Safari/537.36");
             if (null != headMap && !headMap.isEmpty()) {
                 for (Map.Entry entry : headMap.entrySet()) {
@@ -173,6 +173,53 @@ public class HttpUtils {
         return webContent;
     }
 
+    public static HttpResponse postWithResponse(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
+        return postWithResponse(webPageUrl,headMap,paramsMap,CHAR_SET_GB2312);
+    }
+    public static HttpResponse postWithResponse(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
+        if (StringUtils.isEmpty(webPageUrl)) {
+            return null;
+        }
+        //创建client实例
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        //创建httpPost实例
+        HttpPost httpPost = new HttpPost(webPageUrl);
+
+        try {
+            long start = System.currentTimeMillis();
+            httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3278.0 Safari/537.36");
+            if (null != headMap && !headMap.isEmpty()) {
+                for (Map.Entry entry : headMap.entrySet()) {
+                    if (StringUtils.isNotEmpty(entry.getKey() + "") && StringUtils.isNotEmpty(entry.getValue() + "")) {
+//                        httpGet.addHeader("Cookie", "security_session_mid_verify=d70d231ed4e7b195938aac569dccf384;");
+                        httpPost.addHeader(entry.getKey() + "", entry.getValue() + "");
+                    }
+                }
+            }
+
+            //设置参数
+            if (null != paramsMap && !paramsMap.isEmpty()) {
+                List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+                for (Iterator iter = paramsMap.keySet().iterator(); iter.hasNext(); ) {
+                    String name = (String) iter.next();
+                    String value = String.valueOf(paramsMap.get(name));
+                    nameValuePairList.add(new BasicNameValuePair(name, value));
+                }
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, CHAR_SET_UTF8));
+            }
+
+            //执行post请求
+            HttpResponse  response  = client.execute(httpPost);
+            long end = System.currentTimeMillis();
+            log.info("执行post请求完成，耗时：" + (end - start) + "毫秒");
+            return response;
+        }catch (Exception e){
+            log.error("执行post请求发生异常:" + e.getMessage(),e);
+        }
+        return null;
+    }
+
 
     /**
      * 把输入流中的数据 按照指定字符集转成字符串 ，防止部分中文乱码的问题
@@ -180,9 +227,9 @@ public class HttpUtils {
      * @param charSet  字符集 （默认GBK）
      * @return
      */
-    private static String convertStreamToString(InputStream is, String charSet) {
+    public static String convertStreamToString(InputStream is, String charSet) {
         if (StringUtils.isEmpty(charSet)) {
-            charSet = CHAR_SET_GBK;
+            charSet = CHAR_SET_GB2312;
         }
         StringBuilder sb1 = new StringBuilder();
         byte[] bytes = new byte[4096];
@@ -201,7 +248,35 @@ public class HttpUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        };
         return sb1.toString();
+    }
+
+    public static Map<String,String> cookieValueToMap(String cookieValue){
+        if(StringUtils.isEmpty(cookieValue)){
+            return null;
+        }
+        if(!cookieValue.contains("=") || !cookieValue.contains(";")){
+            return null;
+        }
+        String [] keyValueArray = cookieValue.split("; ");
+        if(keyValueArray.length == 0){
+            return null;
+        }
+        Map<String ,String> map = new HashMap<>();
+        for(String keyValue :keyValueArray){
+            if(StringUtils.isEmpty(keyValue)){
+                continue;
+            }
+            String[] kv = keyValue.split("=");
+            if(kv.length == 2){
+                map.put(kv[0],kv[1]);
+            }
+        }
+        return map;
+    }
+
+    public static void main(String[] args) {
+        cookieValueToMap("");
     }
 }
