@@ -1,16 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="OFF">
     <!--该文件的名称log4j2-spring.xml中有-spring的后缀，则不再需要在application.properties中指定该文件的位置-->
+    <!--log4j2配置说明： https://blog.csdn.net/vbirdbest/article/details/71751835-->
+    <properties>
+        <property name="LOG_HOME">D:/logs</property>
+        <property name="FILE_NAME">crawler4j</property>
+    </properties>
+
     <appenders>
+        <!--控制台日志-->
         <Console name="Console" target="SYSTEM_OUT">
             <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:s,SSS}:%5p [%t] (%C.%M:%L) - %m%n"/>
         </Console>
+
+
+        <File name="FileAppender" fileName="D:/logs/app.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </File>
+
+        <!--固定文件大小的日志-->
+        <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${LOG_HOME}/${FILE_NAME}.log" filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+
+
+        <Async name="AsyncAppender">
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="RollingRandomAccessFile"/>
+        </Async>
+
     </appenders>
+
+
     <loggers>
         <root level="INFO">
             <appender-ref ref="Console"/>
         </root>
+        <Logger name="RollingRandomAccessFileLogger" level="info" additivity="false">
+            <AppenderRef ref="AsyncAppender" />
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Logger name="AsyncFileLogger" level="trace" additivity="true">
+            <AppenderRef ref="AsyncAppender" />
+        </Logger>
     </loggers>
 
 

@@ -15,12 +15,15 @@ import com.baodiwang.crawler4j.service.RemiseNoticeDetailService;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.StringUtils;
 import com.github.pagehelper.Page;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,7 +46,7 @@ public class RemiseNoticeDetailSchedule {
      * 定时的解析已抓取到的网页，并存到相关表中
      */
 //    @Scheduled(cron = "0 */5 * * * ?")//,每隔5分钟执行一次
-    @Scheduled(cron = "*/10 * * * * ?")//,每隔10秒执行一次（测试）
+    @Scheduled(cron = "*/20 * * * * ?")//,每隔10秒执行一次（测试）
     public void parseDataToRemiseNoticeDetail(){
         log.info("定时的解析已抓取到的网页，并存到相关表中.............................开始运行");
 
@@ -54,6 +57,7 @@ public class RemiseNoticeDetailSchedule {
             return;
         }
 
+        log.info("定时的解析已抓取到的网页，并存到相关表中.............................本次需要解析的数据条数："+(CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
         for(RemiseNotice remiseNotice :remiseNoticeList){
             if(null == remiseNotice || null == remiseNotice.getId() || StringUtils.isEmpty(remiseNotice.getContent())){
                 continue;
@@ -77,8 +81,11 @@ public class RemiseNoticeDetailSchedule {
                     if(null == remiseNoticeDetail){
                         continue;
                     }
+                    remiseNoticeDetail.setCreateTime(new Timestamp(new Date().getTime()));
                     remiseNoticeDetail.setNoticeId(remiseNotice.getId());
+
                 }
+                log.info("定时的解析已抓取到的网页，并存到相关表中.............................本次成功解析的数据条数："+(CollectionUtils.isEmpty(remiseNoticeDetailList) ? 0 : remiseNoticeDetailList.size()));
                 remiseNoticeDetailService.batchInsert(remiseNoticeDetailList);
             }
 

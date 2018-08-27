@@ -195,10 +195,10 @@
     </select>
 
     <select id="findNoticeWithoutDetail" resultMap="RemiseNoticeResultMapper">
-        select n.id ,n.content,n.notice_num
+        select n.id,n.type ,n.content,n.notice_num,n.href
         from remise_notice  n
         left join remise_notice_detail d on n.id = d.notice_id
-        where d.notice_id is  null
+        where n.type in(1,2,3) and  d.notice_id is  null LIMIT 1,20
     </select>
 
     <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.RemiseNotice">

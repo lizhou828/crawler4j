@@ -7,6 +7,7 @@
 
 package com.baodiwang.crawler4j.schedule;
 
+import com.baodiwang.crawler4j.VO.ProvincePageVo;
 import com.baodiwang.crawler4j.constants.Constant;
 import com.baodiwang.crawler4j.controller.listPage.RemiseNoticeParser;
 import com.baodiwang.crawler4j.model.RemiseNotice;
@@ -45,9 +46,67 @@ public class RemiseNoticeSchedule {
     /**
      * 定时抓取数据、并解析已抓取到的网页，并存到相关表中
      */
-    @Scheduled(cron = "0 27 15 1/1 * ? ")//,每小时执行一次 从10点30分开始,
+    @Scheduled(cron = "0 58 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void scheduledSingleProvince(){
+
+        ProvincePageVo beiJing = new ProvincePageVo("北京市",11,1);
+        parseSingleProvinceDataToRemiseNotice(beiJing.getProvinceCode(), beiJing.getProvinceName(), 1, beiJing.getProvinceAllPage());
+        try {
+            Thread.sleep( 1200* 1000);//休眠半小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         parseSingleProvinceDataToRemiseNotice(13, "河北省", 52, 59);
+        try {
+            Thread.sleep(1* 3600* 1000);//休眠1小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        ProvincePageVo jiangXi = new ProvincePageVo("江西省", 36, 56);
+        parseSingleProvinceDataToRemiseNotice(jiangXi.getProvinceCode(), jiangXi.getProvinceName(), 1, jiangXi.getProvinceAllPage());
+        try {
+            Thread.sleep(2* 3600* 1000);//休眠2小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ProvincePageVo shanDong =  new ProvincePageVo("山东省", 37, 61);
+        parseSingleProvinceDataToRemiseNotice(shanDong.getProvinceCode(), shanDong.getProvinceName(), 1, shanDong.getProvinceAllPage());
+
+        try {
+            Thread.sleep(2* 3600* 1000);//休眠2小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ProvincePageVo tianJin = new ProvincePageVo("天津市", 12, 6);
+        parseSingleProvinceDataToRemiseNotice(tianJin.getProvinceCode(), tianJin.getProvinceName(), 1, tianJin.getProvinceAllPage());
+
+        try {
+            Thread.sleep(1* 3600* 1000);//休眠1小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+        ProvincePageVo zheJiang =new ProvincePageVo("浙江省", 33, 79);
+        parseSingleProvinceDataToRemiseNotice(zheJiang.getProvinceCode(), zheJiang.getProvinceName(), 1, zheJiang.getProvinceAllPage());
+        try {
+            Thread.sleep(1* 3600* 1000);//休眠两小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ProvincePageVo jiangSu = new ProvincePageVo("江苏省", 32, 65);
+        parseSingleProvinceDataToRemiseNotice(jiangSu.getProvinceCode(), jiangSu.getProvinceName(), 1, jiangSu.getProvinceAllPage());
+        try {
+            Thread.sleep(1* 3600* 1000);//休眠两小时
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
