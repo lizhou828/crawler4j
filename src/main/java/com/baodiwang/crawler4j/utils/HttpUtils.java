@@ -7,6 +7,7 @@
 
 package com.baodiwang.crawler4j.utils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -19,6 +20,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -231,25 +234,19 @@ public class HttpUtils {
         if (StringUtils.isEmpty(charSet)) {
             charSet = CHAR_SET_GB2312;
         }
-        StringBuilder sb1 = new StringBuilder();
-        byte[] bytes = new byte[4096];
-        int size = 0;
 
-        try {
-            while ((size = is.read(bytes)) > 0) {
-                String str = new String(bytes, 0, size, charSet);
-                sb1.append(str);
+        //整个字节数组一起读取，解决因定长切割字符数组而导致的个别中文乱码问题
+        try{
+            byte[] byteArray = IOUtils.toByteArray(is);
+            return new String(byteArray, 0, byteArray.length, charSet);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }finally {
+            if(null != is){
+                IOUtils.closeQuietly(is);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
-        return sb1.toString();
+        }
+        return null;
     }
 
     public static Map<String,String> cookieValueToMap(String cookieValue){
@@ -278,5 +275,32 @@ public class HttpUtils {
 
     public static void main(String[] args) {
         cookieValueToMap("");
+
+
+        String applicationPath = HttpUtils.class.getResource("/").getPath();
+        int idx = applicationPath.lastIndexOf("/");
+        applicationPath = applicationPath.substring(0, idx);
+        idx = applicationPath.lastIndexOf("/");
+        applicationPath = applicationPath.substring(0, idx);
+        idx = applicationPath.lastIndexOf("/");
+        applicationPath = applicationPath.substring(0, idx);
+
+
+        String fileName = applicationPath + File.separator + "data" + File.separator  + "平方米.txt";
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(new File(fileName));
+            byte[] byteArray = IOUtils.toByteArray(inputStream);
+            String str = new String(byteArray, 0, byteArray.length, CHAR_SET_UTF8);
+            System.out.println(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(null != inputStream){
+                IOUtils.closeQuietly(inputStream);
+            }
+
+        }
+
     }
 }

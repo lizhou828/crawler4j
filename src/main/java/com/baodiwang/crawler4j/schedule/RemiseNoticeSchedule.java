@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 抓取单个省份数据
  * @author lizhou
  * @version 1.0
  * @Date 2018年08月23日 17时54分
@@ -44,10 +45,21 @@ public class RemiseNoticeSchedule {
     /**
      * 定时抓取数据、并解析已抓取到的网页，并存到相关表中
      */
-    @Scheduled(cron = "0 01 12 1/1 * ? ")//,每小时执行一次 从10点30分开始,
-    public void parseDataToRemiseNotice(){
-        log.info("【抓取出让公告列表页数据】...............................开始");
-        for(int i = 1 ;i<= 59;i++){
+    @Scheduled(cron = "0 27 15 1/1 * ? ")//,每小时执行一次 从10点30分开始,
+    public void scheduledSingleProvince(){
+        parseSingleProvinceDataToRemiseNotice(13, "河北省", 48, 59);
+    }
+
+    /**
+     * 解析单个省的列表页数据
+     * @param provinceCode 省代码
+     * @param provinceName  省名称
+     * @param startPage    起始页
+     * @param provinceAllPages  总页数
+     */
+    public void parseSingleProvinceDataToRemiseNotice(int provinceCode,String provinceName,int startPage,int provinceAllPages){
+        log.info("【抓取" + provinceName + "出让公告列表页数据】...............................开始,从第"+startPage+"页开始，共"+provinceAllPages+"页");
+        for(int i = startPage ;i<= provinceAllPages;i++){
             String listPageUrl = "http://www.landchina.com/default.aspx?tabid=261";//出让公告（2011年后）
 
             Map<String,String> headMap = new HashMap<>();
@@ -66,15 +78,15 @@ public class RemiseNoticeSchedule {
             paramsMap.put("TAB_QuerySortItemList","c04b6ee6-3975-43ab-a733-28dcc4707112:False");
             paramsMap.put("TAB_QuerySortItemList","c04b6ee6-3975-43ab-a733-28dcc4707112:False");
 //            paramsMap.put("TAB_QuerySubmitConditionData","598bdde3-078b-4c9b-b460-2e0b2d944e86:2018-1-1~2018-12-31");//只根据发布日期来查
-            paramsMap.put("TAB_QuerySubmitConditionData","894e12d9-6b0f-46a2-b053-73c49d2f706d:13▓~河北省|598bdde3-078b-4c9b-b460-2e0b2d944e86:2018-1-1~2018-12-31");//根据发布日期、和省份来查
+            paramsMap.put("TAB_QuerySubmitConditionData","894e12d9-6b0f-46a2-b053-73c49d2f706d:" + provinceCode + "▓~" + provinceName + "|598bdde3-078b-4c9b-b460-2e0b2d944e86:2018-1-1~2018-12-31");//根据发布日期、和省份来查
             paramsMap.put("TAB_QuerySubmitOrderData","c04b6ee6-3975-43ab-a733-28dcc4707112:False|c04b6ee6-3975-43ab-a733-28dcc4707112:False");
             paramsMap.put("TAB_RowButtonActionControl","");
             paramsMap.put("TAB_QuerySubmitSortData","");
             paramsMap.put("TAB_QuerySubmitPagerData",i+"");
 
             String pageContent = LandChinaHttpBreaker2.breakBarrier(listPageUrl, headMap, paramsMap);
-            if(StringUtils.isEmpty( pageContent ) || pageContent.length()< 5000){
-                log.info("【抓取出让公告列表页数据】...............................未能抓到合法的数据 ：pageContent.length()=" + (StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) );
+            if(StringUtils.isEmpty( pageContent ) || pageContent.length()< 10000){
+                log.info("【抓取" + provinceName +"出让公告列表页数据】...............................未能抓到合法的数据 ：pageContent.length()=" + (StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) );
                 continue;
             }
 
@@ -82,10 +94,10 @@ public class RemiseNoticeSchedule {
             try{
                 remiseNoticeList = remiseNoticeParser.parseHtml(pageContent);
             }catch (Exception e){
-                log.error("【抓取出让公告列表页数据】...............................解析html网页发生异常:" + e.getMessage(),e);
+                log.error("【抓取" + provinceName + "出让公告列表页数据】...............................解析html网页发生异常:" + e.getMessage(),e);
             }
             if(null == remiseNoticeList || remiseNoticeList.isEmpty()){
-                log.info("【抓取出让公告列表页数据】...............................数据已抓取过,无需处理");
+                log.info("【抓取"+provinceName+"出让公告列表页数据】...............................数据已抓取过,无需处理");
                 continue;
             }
             int count = 0;
@@ -93,19 +105,19 @@ public class RemiseNoticeSchedule {
             try{
                 count = remiseNoticeService.batchInsert(remiseNoticeList);//批量插入未保存过的数据
             }catch (Exception e){
-                log.error("【抓取出让公告列表页数据】...............................批量插入数据发生异常："  + e.getMessage() + " \n remiseNoticeList = " + remiseNoticeList,e);
+                log.error("【抓取" + provinceName +"出让公告列表页数据】...............................批量插入数据发生异常："  + e.getMessage() + " \n remiseNoticeList = " + remiseNoticeList,e);
                 break;
             }
             int sleepSeconds = IntUtils.getRandomInt(4,8);
-            log.info("【抓取出让公告列表页数据】第" + i + "次抓取数据条数：" + remiseNoticeList.size() + ",处理条数：" + count +"，休眠" + sleepSeconds +"秒钟======================================");
+            log.info("【抓取"+provinceName+"出让公告列表页数据】第" + i + "次抓取数据条数：" + remiseNoticeList.size() + ",处理条数：" + count +"，休眠" + sleepSeconds +"秒钟======================================");
             try {
                 Thread.sleep(sleepSeconds  * 1000);
             } catch (InterruptedException e) {
-                log.error("【抓取出让公告列表页数据】休眠" + sleepSeconds + "秒钟发生异常" + e.getMessage(),e);
+                log.error("【抓取"+provinceName+"出让公告列表页数据】休眠" + sleepSeconds + "秒钟发生异常" + e.getMessage(),e);
             }
         }
 
-        log.info("【抓取出让公告列表页数据】...............................结束");
+        log.info("【抓取"+provinceName+"出让公告列表页数据】...............................结束");
 //        int sleepHours = IntUtils.getRandomInt(20,24);
 //        log.info("【抓取出让公告列表页数据】...............................完成，休眠" + sleepHours + "小时" );
 //        try {
