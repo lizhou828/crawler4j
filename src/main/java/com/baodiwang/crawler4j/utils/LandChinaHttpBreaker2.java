@@ -29,6 +29,7 @@ public class LandChinaHttpBreaker2 {
     /**
      * 目录：打破 www.landchina.com 反扒屏障
      * 原因：www.landchina.com 对http请求做了反扒处理，每个请求需要跳转3次才能获取正真的数据
+     * 机制：逐次调用，上一次调用不成功，则直接返回，不再处理
      *
      * @param webPageUrl
      * @return
@@ -36,6 +37,15 @@ public class LandChinaHttpBreaker2 {
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
         return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GBK);
     }
+
+    /**
+     * 目录：打破 www.landchina.com 反扒屏障
+     * 原因：www.landchina.com 对http请求做了反扒处理，每个请求需要跳转3次才能获取正真的数据
+     * 机制：逐次调用，上一次调用不成功，则直接返回，不再处理
+     *
+     * @param webPageUrl
+     * @return
+     */
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap,String charSet){
         String yunsuo_session_verify = stepOne(webPageUrl,headMap,paramsMap,charSet);
         System.out.println("第一次请求返回结果yunsuo_session_verify =" + yunsuo_session_verify );
@@ -193,7 +203,7 @@ public class LandChinaHttpBreaker2 {
 //        String pageContent = getListPageContent(listPageUrl);
         if(StringUtils.isEmpty(pageContent) || pageContent.length() < 10000){
             System.out.println("获取网页的数据异常:pageContent=" + pageContent);
-            System.out.println(pageContent);
+
         }else{
             System.out.println("成功突破云锁屏障,耗时:" + (end - start) +  "毫秒========================================================================================================================================");
             RemiseNoticeVo remiseNoticeVo = RemiseNoticeDetailParser.parseHtml(pageContent);

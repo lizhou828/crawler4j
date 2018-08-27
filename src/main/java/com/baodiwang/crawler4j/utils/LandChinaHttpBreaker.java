@@ -24,13 +24,25 @@ public class LandChinaHttpBreaker {
     /**
      * 目录：打破 www.landchina.com 反扒屏障
      * 原因：www.landchina.com 对http请求做了反扒处理，每个请求需要跳转3次才能获取正真的数据
+     * 机制：递归调用，直到能获取到数据为止（容易造成IP被封，慎用!!!）
      *
      * @param webPageUrl
      * @return
      */
+    @Deprecated
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
         return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GBK);
     }
+
+    /**
+     * 目录：打破 www.landchina.com 反扒屏障
+     * 原因：www.landchina.com 对http请求做了反扒处理，每个请求需要跳转3次才能获取正真的数据
+     * 机制：递归调用，直到能获取到数据为止（容易造成IP被封，慎用!!!）
+     *
+     * @param webPageUrl
+     * @return
+     */
+    @Deprecated
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap,String charSet){
          if(StringUtils.isEmpty(charSet)){
             charSet = HttpUtils.CHAR_SET_GBK;
