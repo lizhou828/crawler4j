@@ -34,6 +34,7 @@ public class RemiseNoticeDetailParser {
     public static RemiseNoticeVo parseHtml(String pageContent){
         RemiseNoticeVo remiseNoticeVo = new RemiseNoticeVo();
         RemiseNotice remiseNotice = new RemiseNotice();
+        List<RemiseNoticeDetail> remiseNoticeDetailList = new ArrayList<>();
 
         Document doc = Jsoup.parse(pageContent);
         Element tileEle = doc.getElementById("lblTitle");
@@ -58,6 +59,14 @@ public class RemiseNoticeDetailParser {
         }
 
         Element tdContent = doc.getElementById("tdContent");//网页中的正文部分
+        if(null != tdContent && StringUtils.isNotEmpty(tdContent.text()) && tdContent.text().contains("未找到数据。")){//详情页正文没有数据
+            log.error("详情页正文内容：" + tdContent.text());
+            RemiseNoticeDetail remiseNoticeDetail = new RemiseNoticeDetail();
+            remiseNoticeDetail.setRemark("详情页正文内容：" + tdContent.text());
+            remiseNoticeDetailList.add(remiseNoticeDetail);
+            remiseNoticeVo.setRemiseNoticeDetailList(remiseNoticeDetailList);
+            return remiseNoticeVo;
+        }
         Element contentTable = null;
         if(null != tdContent && !tdContent.children().isEmpty()){
             contentTable = tdContent.children().get(0);
@@ -82,7 +91,7 @@ public class RemiseNoticeDetailParser {
         if(null == tableEleList || tableEleList.isEmpty()){
             return null;
         }
-        List<RemiseNoticeDetail> remiseNoticeDetailList = new ArrayList<>();
+
         for(Element table : tableEleList){
             RemiseNoticeDetail remiseNoticeDetail = parseTable(table);
             if(null != remiseNoticeDetail){
