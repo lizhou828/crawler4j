@@ -9,11 +9,12 @@ package com.baodiwang.crawler4j.mapper;
 
 
 import com.baodiwang.crawler4j.model.RemiseNotice;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, Integer>{
 
-    public List<RemiseNotice> findNoticeWithoutDetail();
+    public List<RemiseNotice> findNoticeWithoutDetail(@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
 
 }

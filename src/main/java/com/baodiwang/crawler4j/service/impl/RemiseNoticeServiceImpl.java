@@ -124,6 +124,15 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
     }
 
     public List<RemiseNotice> findNoticeWithoutDetail(){
-        return remiseNoticeMapper.findNoticeWithoutDetail();
+        return remiseNoticeMapper.findNoticeWithoutDetail(1,20);
+    }
+    public List<RemiseNotice> findNoticeWithoutDetail( int pageNum , int pageSize){
+        if(pageNum <= 0 || pageSize <= 0){
+            return null;
+        }
+        if(pageNum > pageSize){
+            return null;
+        }
+        return remiseNoticeMapper.findNoticeWithoutDetail( pageNum , pageSize);
     }
 }

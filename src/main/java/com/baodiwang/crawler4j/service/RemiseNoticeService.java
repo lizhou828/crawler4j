@@ -15,4 +15,6 @@ public interface RemiseNoticeService extends GenericIService<RemiseNotice,Intege
 
     public List<RemiseNotice> findNoticeWithoutDetail();
 
+    public List<RemiseNotice> findNoticeWithoutDetail( int pageNum , int pageSize);
+
 }

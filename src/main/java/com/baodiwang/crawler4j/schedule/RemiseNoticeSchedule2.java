@@ -61,6 +61,7 @@ public class RemiseNoticeSchedule2 {
         provincePageVoList.add(new ProvincePageVo("福建省", 35, 25));
         provincePageVoList.add(new ProvincePageVo("江西省", 36, 56));
         provincePageVoList.add(new ProvincePageVo("山东省", 37, 61));
+
         provincePageVoList.add(new ProvincePageVo("河南省", 41, 65));
         provincePageVoList.add(new ProvincePageVo("湖北省", 42, 48));
         provincePageVoList.add(new ProvincePageVo("湖南省", 43, 46));
