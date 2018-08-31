@@ -61,6 +61,13 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
         System.out.println(remiseNoticeList);
     }
 
+    @Test
+    public void findNoticeWithoutContentTest(){
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContent();
+        System.out.println(remiseNoticeList);
+    }
+
+
 
 
 

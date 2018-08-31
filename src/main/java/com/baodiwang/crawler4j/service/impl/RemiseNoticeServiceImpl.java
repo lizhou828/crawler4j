@@ -130,9 +130,19 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
         if(pageNum <= 0 || pageSize <= 0){
             return null;
         }
-        if(pageNum > pageSize){
+        return remiseNoticeMapper.findNoticeWithoutDetail( pageNum , pageSize);
+    }
+
+    @Override
+    public List<RemiseNotice> findNoticeWithoutContent() {
+        return remiseNoticeMapper.findNoticeWithoutContent(1, 20);
+    }
+
+    @Override
+    public List<RemiseNotice> findNoticeWithoutContent(int pageNum, int pageSize) {
+        if(pageNum <= 0 || pageSize <= 0){
             return null;
         }
-        return remiseNoticeMapper.findNoticeWithoutDetail( pageNum , pageSize);
+        return remiseNoticeMapper.findNoticeWithoutContent( pageNum , pageSize);
     }
 }

@@ -19,6 +19,9 @@ import com.baodiwang.crawler4j.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +36,8 @@ import java.util.Map;
  * @Date 2018年08月23日 17时54分
  */
 @Component
+@EnableScheduling
+@EnableAsync
 public class RemiseNoticeSchedule {
 
     private static final Logger log = LogManager.getLogger(RemiseNoticeDetailSchedule.class);
@@ -46,7 +51,8 @@ public class RemiseNoticeSchedule {
     /**
      * 定时抓取数据、并解析已抓取到的网页，并存到相关表中
      */
-    @Scheduled(cron = "0 19 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
+    @Async
+//    @Scheduled(cron = "0 19 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void scheduledSingleProvince(){
 
 //        ProvincePageVo beiJing = new ProvincePageVo("北京市",11,1);

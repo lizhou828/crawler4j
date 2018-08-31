@@ -16,6 +16,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,8 @@ import java.util.concurrent.Executors;
  */
 
 @Component
+@EnableScheduling
+@EnableAsync
 public class RemiseNoticeDetailParserSchedule {
 
     private static final Logger log = LogManager.getLogger(RemiseNoticeDetailSchedule.class);
@@ -48,8 +52,7 @@ public class RemiseNoticeDetailParserSchedule {
     @Autowired
     RemiseNoticeDetailService remiseNoticeDetailService;
 
-//    @Scheduled(cron = "0 0/2 * * * ? ")//每隔2分钟执行一次
-    @Scheduled(cron = "*/20 * * * * ? ")//每隔2分钟执行一次
+    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void parseDataToRemiseNoticeDetail(){
 
         log.info("多线程解析公告详情页数据============================开始");
@@ -124,7 +127,7 @@ public class RemiseNoticeDetailParserSchedule {
                     remiseNoticeDetailSchedule.parseSingleRemiseNotice(remiseNotice);
                 }
             }catch (Exception e){
-                log.error("多线程解析公告详情页数据============================当前子线程(" + Thread.currentThread().getName() + ")执行发生异常：" + e.getMessage(),e);
+                log.error("多线程解析公告详情页数据============================当前子线程(" + Thread.currentThread().getName() + ")执行发生异常：" + e.getMessage(), e);
             }
             long end = System.currentTimeMillis();
             log.info("多线程解析公告详情页数据============================当前子线程(" + Thread.currentThread().getName() + ")已经执行完毕 耗时：" + (end - start) + "毫秒");
