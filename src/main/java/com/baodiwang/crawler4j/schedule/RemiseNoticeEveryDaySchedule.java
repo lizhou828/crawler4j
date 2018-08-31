@@ -13,7 +13,11 @@ import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +28,12 @@ import java.util.List;
  * @version 1.0
  * @Date 2018年08月27日 14时07分
  */
-public class RemiseNoticeSchedule2 {
+@Component
+@EnableScheduling
+@EnableAsync
+public class RemiseNoticeEveryDaySchedule {
 
-    private static final Logger log = LogManager.getLogger(RemiseNoticeDetailSchedule.class);
+    private static final Logger log = LogManager.getLogger(RemiseNoticeEveryDaySchedule.class);
 
 
     @Autowired
@@ -40,11 +47,12 @@ public class RemiseNoticeSchedule2 {
 
 
     /**
-     * 定时抓取数据、并解析已抓取到的网页，并存到相关表中
+     * 定时抓取每天的数据
      * 多线程执行
      */
-    @Scheduled(cron = "00 00 00 1 1/1 ? ")//每个月执行一次 从1号的0点00分开始,
-    public void parseEveryProvinceDataToRemiseNotice(){
+    @Async
+    @Scheduled(cron = "0 0 0/2 * * ? ")//每隔两小时执行一次
+    public void parseEveryDayDataToRemiseNotice(){
         List<ProvincePageVo> provincePageVoList = new ArrayList<>();
         provincePageVoList.add(new ProvincePageVo("北京市",11,1));
         provincePageVoList.add(new ProvincePageVo("天津市", 12, 6));

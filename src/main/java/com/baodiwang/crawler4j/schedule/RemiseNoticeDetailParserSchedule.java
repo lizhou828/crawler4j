@@ -7,7 +7,10 @@
 
 package com.baodiwang.crawler4j.schedule;
 
+import com.baodiwang.crawler4j.VO.RemiseNoticeVo;
+import com.baodiwang.crawler4j.controller.detailPage.RemiseNoticeDetailParser;
 import com.baodiwang.crawler4j.model.RemiseNotice;
+import com.baodiwang.crawler4j.model.RemiseNoticeDetail;
 import com.baodiwang.crawler4j.service.RemiseNoticeDetailService;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.SpringContextHolder;
@@ -16,12 +19,16 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -34,12 +41,12 @@ import java.util.concurrent.Executors;
  * @Date 2018年08月28日 12时14分
  */
 
-@Component
+@Service("remiseNoticeDetailParserSchedule")
 @EnableScheduling
 @EnableAsync
 public class RemiseNoticeDetailParserSchedule {
 
-    private static final Logger log = LogManager.getLogger(RemiseNoticeDetailSchedule.class);
+    private static final Logger log = LogManager.getLogger(RemiseNoticeDetailParserSchedule.class);
 
     private static CountDownLatch sCountDownLatch = null;
 
@@ -52,6 +59,7 @@ public class RemiseNoticeDetailParserSchedule {
     @Autowired
     RemiseNoticeDetailService remiseNoticeDetailService;
 
+    @Async
     @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void parseDataToRemiseNoticeDetail(){
 
@@ -100,6 +108,8 @@ public class RemiseNoticeDetailParserSchedule {
         log.info("多线程解析公告详情页数据============================" + THREAD_NUMBER + "个子线程已经执行完毕 耗时：" + (end - start) + "毫秒");
     }
 
+
+
     private static class BatchParseThread implements Runnable{
 
         protected List<RemiseNotice> remiseNoticeList = new ArrayList<RemiseNotice>();
@@ -122,9 +132,9 @@ public class RemiseNoticeDetailParserSchedule {
         public void run() {
             long start = System.currentTimeMillis();
             try{
-                RemiseNoticeDetailSchedule  remiseNoticeDetailSchedule = SpringContextHolder.getBean("remiseNoticeDetailSchedule");
+                RemiseNoticeDetailParserSchedule  remiseNoticeDetailParserSchedule = SpringContextHolder.getBean("remiseNoticeDetailParserSchedule");
                 for(RemiseNotice remiseNotice :remiseNoticeList){
-                    remiseNoticeDetailSchedule.parseSingleRemiseNotice(remiseNotice);
+                    remiseNoticeDetailParserSchedule.parseSingleRemiseNotice(remiseNotice);
                 }
             }catch (Exception e){
                 log.error("多线程解析公告详情页数据============================当前子线程(" + Thread.currentThread().getName() + ")执行发生异常：" + e.getMessage(), e);
@@ -132,6 +142,48 @@ public class RemiseNoticeDetailParserSchedule {
             long end = System.currentTimeMillis();
             log.info("多线程解析公告详情页数据============================当前子线程(" + Thread.currentThread().getName() + ")已经执行完毕 耗时：" + (end - start) + "毫秒");
             sCountDownLatch.countDown();
+        }
+    }
+
+
+
+    protected  void parseSingleRemiseNotice(RemiseNotice remiseNotice){
+        if(null == remiseNotice || null == remiseNotice.getId() || StringUtils.isEmpty(remiseNotice.getContent())){
+            return ;
+        }
+        RemiseNoticeDetail temp = new RemiseNoticeDetail();
+        temp.setNoticeId(remiseNotice.getId());
+        int detailCount = remiseNoticeDetailService.findByCount(temp);
+        if( detailCount > 0){
+            return;//已经解析过则不再处理
+        }
+
+        if(StringUtils.isEmpty(remiseNotice.getContent()) || remiseNotice.getContent().length() < 1000){
+            log.warn("定时的解析已抓取到的网页，并存到相关表中.............................有获取不到内容的数据,先不处理remiseNotice= " + remiseNotice);
+            return;
+        }
+
+        RemiseNoticeVo remiseNoticeVo = RemiseNoticeDetailParser.parseHtml(remiseNotice.getContent());
+        List<RemiseNoticeDetail> remiseNoticeDetailList = null == remiseNoticeVo ? null : remiseNoticeVo.getRemiseNoticeDetailList();
+        if(null != remiseNoticeDetailList && !remiseNoticeDetailList.isEmpty()){
+            for(RemiseNoticeDetail remiseNoticeDetail :remiseNoticeDetailList){
+                if(null == remiseNoticeDetail){
+                    continue;
+                }
+                remiseNoticeDetail.setCreateTime(new Timestamp(new Date().getTime()));
+                remiseNoticeDetail.setNoticeId(remiseNotice.getId());
+
+            }
+            log.info("定时的解析已抓取到的网页，并存到相关表中.............................本次成功解析的数据条数："+(CollectionUtils.isEmpty(remiseNoticeDetailList) ? 0 : remiseNoticeDetailList.size()));
+            remiseNoticeDetailService.batchInsert(remiseNoticeDetailList);
+        }
+
+        RemiseNotice update  = null == remiseNoticeVo ? null : remiseNoticeVo.getRemiseNotice();
+        if(null != update ){
+            update.setId(remiseNotice.getId());
+            if(StringUtils.isNotEmpty(remiseNotice.getNoticeNum()) && !remiseNotice.getNoticeNum().equals(update.getNoticeNum())){
+                remiseNoticeService.update(update);
+            }
         }
     }
 }

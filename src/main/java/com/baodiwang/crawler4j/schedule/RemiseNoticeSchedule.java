@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 抓取单个省份数据
+ * 抓取省份数据(一个一个抓取)
  * @author lizhou
  * @version 1.0
  * @Date 2018年08月23日 17时54分
@@ -40,7 +40,7 @@ import java.util.Map;
 @EnableAsync
 public class RemiseNoticeSchedule {
 
-    private static final Logger log = LogManager.getLogger(RemiseNoticeDetailSchedule.class);
+    private static final Logger log = LogManager.getLogger(RemiseNoticeSchedule.class);
 
     @Autowired
     RemiseNoticeService remiseNoticeService;
