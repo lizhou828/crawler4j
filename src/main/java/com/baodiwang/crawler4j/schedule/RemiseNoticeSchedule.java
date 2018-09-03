@@ -51,7 +51,7 @@ public class RemiseNoticeSchedule {
     /**
      * 定时抓取数据、并解析已抓取到的网页，并存到相关表中
      */
-    @Async
+//    @Async
 //    @Scheduled(cron = "0 19 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void scheduledSingleProvince(){
 
