@@ -95,15 +95,19 @@ public class RemiseNoticeEveryDaySchedule {
             paramsMap.put("TAB_QuerySubmitSortData","");
             paramsMap.put("TAB_QuerySubmitPagerData",i+"");
 
-            String pageContent = LandChinaHttpBreaker2.breakBarrier(listPageUrl, headMap, paramsMap);
+            String pageContent = null ;
+            try{
+                pageContent = LandChinaHttpBreaker2.breakBarrier(listPageUrl, headMap, paramsMap);
+            }catch (Exception e){
+                log.error(logMessage +"抓取网页发生异常：" + e.getMessage(),e);
+            }
             if(StringUtils.isEmpty(pageContent) || pageContent.length()< 10000){
                 log.info(logMessage + "未能抓到合法的数据 ：pageContent.length()=" + (StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) );
-            }else{
                 pageContent = logMessage + ",第" + i + "次抓取的内容异常==================================================================================================\n"+pageContent;
             }
 
             String saveDir = getSaveDir();
-            String fileName = new SimpleDateFormat("yyyy-MM-dd_hhssSS").format(new Date()) + ".html";
+            String fileName = new SimpleDateFormat("yyyy-MM-dd_HHssSS").format(new Date()) + ".html";
             File saveDirFile = new File(saveDir);
             if(null == saveDirFile || !saveDirFile.exists()){
                 saveDirFile.mkdir();
