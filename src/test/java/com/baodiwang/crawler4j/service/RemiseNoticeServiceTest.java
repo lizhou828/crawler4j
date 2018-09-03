@@ -1,9 +1,12 @@
 package com.baodiwang.crawler4j.service;
 
 import com.baodiwang.crawler4j.ApplicationTests;
+import com.baodiwang.crawler4j.VO.RemiseNoticeVo;
+import com.baodiwang.crawler4j.controller.detailPage.RemiseNoticeDetailParser;
 import com.baodiwang.crawler4j.mapper.RemiseNoticeMapper;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.model.RemiseNoticeDetail;
+import com.baodiwang.crawler4j.utils.StringUtils;
 import com.github.pagehelper.Page;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,6 +68,15 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
     public void findNoticeWithoutContentTest(){
         List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContent();
         System.out.println(remiseNoticeList);
+    }
+
+    @Test
+    public void parseContent(){
+        RemiseNotice remiseNotice = remiseNoticeService.getByPK(25138);
+        if(null != remiseNotice && StringUtils.isNotEmpty(remiseNotice.getContent())){
+            RemiseNoticeVo remiseNoticeVo = RemiseNoticeDetailParser.parseHtml(remiseNotice.getContent());
+            System.out.println("remiseNoticeVo=" + remiseNoticeVo);
+        }
     }
 
 
