@@ -5,7 +5,6 @@ package com.baodiwang.crawler4j.utils;
  */
 
 import com.baodiwang.crawler4j.VO.RemiseNoticeVo;
-import com.baodiwang.crawler4j.controller.detailPage.RemiseNoticeDetailParser;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -186,30 +185,8 @@ public class LandChinaHttpBreaker2 {
             log.info("未能获取到正确的数据......webContent.length()=" + webContent.length() + ",webContent=" + webContent);
             return webContent;
         }
-    }
-
-    public static void main(String[] args) {
-        //出让公告（2011年后） ->  详情页
-        String detailPageUrl = "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=c64ce206-9367-40e0-92a1-5938c978d560&sitePath=";//特殊字符  ㎡
-//        detailPageUrl =  "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="  //部分中文乱码 ： 博罗县石湾镇滘源路南侧地段
-
-        Map<String,String> headMap = new HashMap<>();
-
-        long start = System.currentTimeMillis();
-        String pageContent  = LandChinaHttpBreaker2.breakBarrier(detailPageUrl,headMap,null);
-        long end = System.currentTimeMillis();
-
-
-//        String pageContent = getListPageContent(listPageUrl);
-        if(StringUtils.isEmpty(pageContent) || pageContent.length() < 10000){
-            System.out.println("获取网页的数据异常:pageContent=" + pageContent);
-
-        }else{
-            System.out.println("成功突破云锁屏障,耗时:" + (end - start) +  "毫秒========================================================================================================================================");
-            RemiseNoticeVo remiseNoticeVo = RemiseNoticeDetailParser.parseHtml(pageContent);
-            System.out.println(remiseNoticeVo);
-        }
 
     }
+
 
 }

@@ -1,7 +1,6 @@
 package com.baodiwang.crawler4j.utils;
 
 import com.baodiwang.crawler4j.VO.RemiseNoticeVo;
-import com.baodiwang.crawler4j.controller.detailPage.RemiseNoticeDetailParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.logging.log4j.LogManager;
@@ -140,50 +139,6 @@ public class LandChinaHttpBreaker {
             System.out.println("未知异常，无法处理!");
             return null;
         }
-    }
-
-    public static void main(String[] args) {
-        //出让公告（2011年后） ->  详情页
-        String detailPageUrl = "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=c64ce206-9367-40e0-92a1-5938c978d560&sitePath=";//特殊字符  ㎡
-//        detailPageUrl =  "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="  //部分中文乱码 ： 博罗县石湾镇滘源路南侧地段
-
-        Map<String,String> headMap = new HashMap<>();
-
-        headMap.put("Host", "www.landchina.com");
-        headMap.put("Connection","keep-alive");
-        headMap.put("Pragma","no-cache");
-        headMap.put("Cache-Control","no-cache");
-        headMap.put("Upgrade-Insecure-Requests","1");
-
-//        User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36
-        headMap.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-
-        headMap.put("Referer","http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=c64ce206-9367-40e0-92a1-5938c978d560&sitePath=&security_verify_data=313336362c373638");
-        headMap.put("Accept-Encoding","gzip, deflate");
-        headMap.put("Accept-Language","zh-CN,zh;q=0.9");
-
-
-//        headMap.put("Cookie", "security_session_mid_verify=d70d231ed4e7b195938aac569dccf384;");
-//        String pageContent =  HttpUtils.post(detailPageUrl, headMap,null);
-        long start = System.currentTimeMillis();
-        String pageContent = "";
-        try{
-            pageContent  = LandChinaHttpBreaker.breakBarrier(detailPageUrl,headMap,null);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        long end = System.currentTimeMillis();
-        System.out.println("成功突破云锁屏障,耗时:" + (end - start) +  "毫秒========================================================================================================================================");
-
-//        String pageContent = getListPageContent(listPageUrl);
-        if(StringUtils.isEmpty(pageContent) || pageContent.length() < 5000){
-            System.out.println("获取网页的数据异常:pageContent=" + pageContent);
-            System.out.println(pageContent);
-        }else{
-            RemiseNoticeVo remiseNoticeVo = RemiseNoticeDetailParser.parseHtml(pageContent);
-            System.out.println(remiseNoticeVo);
-        }
-
     }
 
 }
