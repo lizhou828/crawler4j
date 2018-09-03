@@ -190,7 +190,7 @@ public class RemiseNoticeSchedule {
             paramsMap.put("TAB_QuerySubmitSortData","");
             paramsMap.put("TAB_QuerySubmitPagerData",i+"");
 
-            String pageContent = LandChinaHttpBreaker2.breakBarrier(listPageUrl, headMap, paramsMap);
+            String pageContent = LandChinaHttpBreaker2.breakBarrier0903(listPageUrl, headMap, paramsMap);
             if(StringUtils.isEmpty( pageContent ) || pageContent.length()< 10000){
                 log.info("【抓取" + provinceName +"出让公告列表页数据】...............................未能抓到合法的数据 ：pageContent.length()=" + (StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) );
                 continue;

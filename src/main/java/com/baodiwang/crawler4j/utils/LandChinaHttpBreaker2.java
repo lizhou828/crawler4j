@@ -61,6 +61,37 @@ public class LandChinaHttpBreaker2 {
         }
     }
 
+    /**
+     * 目录：打破 www.landchina.com 反扒屏障(2018-09-03)
+     * 原因：www.landchina.com 对http请求做了反扒处理，每个请求需要跳转3次才能获取正真的数据
+     * 机制：逐次调用，上一次调用不成功，则直接返回，不再处理
+     *
+     * @param webPageUrl
+     * @return
+     */
+    public static String breakBarrier0903(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
+        return breakBarrier0903(webPageUrl,headMap,paramsMap, HttpUtils.CHAR_SET_GB2312);
+    }
+    /**
+     * 目录：打破 www.landchina.com 反扒屏障(2018-09-03)
+     * 原因：www.landchina.com 对http请求做了反扒处理，每个请求需要跳转3次才能获取正真的数据
+     * 机制：逐次调用，上一次调用不成功，则直接返回，不再处理
+     *
+     * @param webPageUrl
+     * @return
+     */
+    public static String breakBarrier0903(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap,String charSet){
+        String yunsuo_session_verify = stepOne(webPageUrl,headMap,paramsMap,charSet);
+        log.info("第一次请求返回结果yunsuo_session_verify =" + yunsuo_session_verify);
+
+        if(StringUtils.isNotEmpty(yunsuo_session_verify)){
+            return stepThree(webPageUrl,headMap,paramsMap,charSet,yunsuo_session_verify,"" );
+        }else{
+            log.error("参数异常！yunsuo_session_verify=" + yunsuo_session_verify );
+            return null;
+        }
+    }
+
 
     public static String stepOne(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap,String charSet){
         headMap = new HashMap<>();
@@ -136,12 +167,16 @@ public class LandChinaHttpBreaker2 {
 
         if(headMap.containsKey("Cookie")){
             String cookieValue = headMap.get("Cookie");
-            cookieValue += "; security_session_mid_verify="+security_session_mid_verify;
+            if(StringUtils.isNotEmpty(security_session_mid_verify)){
+                cookieValue += "; security_session_mid_verify="+security_session_mid_verify;
+            }
             headMap.put("Cookie",cookieValue);
         }else{
             String cookieValue = "yunsuo_session_verify=" + yunsuo_session_verify;
-            cookieValue += "; security_session_mid_verify="+security_session_mid_verify;
-            cookieValue +="; srcurl=" + StringUtils.stringToHex(webPageUrl);;
+            if(StringUtils.isNotEmpty(security_session_mid_verify)){
+                cookieValue += "; security_session_mid_verify="+security_session_mid_verify;
+                cookieValue +="; srcurl=" + StringUtils.stringToHex(webPageUrl);;
+            }
             headMap.put("Cookie",cookieValue);
         }
         if(webPageUrl.contains("&security_verify_data")){
