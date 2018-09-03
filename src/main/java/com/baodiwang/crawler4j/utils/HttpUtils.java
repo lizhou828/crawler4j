@@ -75,6 +75,12 @@ public class HttpUtils {
             if (null != response.getHeaders("Set-Cookie") && response.getHeaders("Set-Cookie").length > 0) {
                 log.info(response.getHeaders("Set-Cookie")[0].getValue());
             }
+            if(null != response && null != response.getStatusLine()){
+                int statusCode = response.getStatusLine().getStatusCode();
+                if(200 != statusCode && 302 != statusCode && 304 != statusCode){
+                    log.error("执行get请求完成,返回的http响应码=" + statusCode);
+                }
+            }
 
             //返回获取实体
             HttpEntity entity = response.getEntity();
@@ -83,11 +89,11 @@ public class HttpUtils {
             webContent  = convertStreamToString(entity.getContent(),charSet);
 
             long end = System.currentTimeMillis();
-            log.info(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,sss").format(new Date()) + ":网页字符长度：" + webContent.length() + ",耗时：" + (end - start) + "毫秒");
+            log.info("执行get请求完成,网页字符长度：" + webContent.length() + ",耗时：" + (end - start) + "毫秒");
 
             return webContent;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("执行get请求发生异常："+e.getMessage(), e);
         } finally {
             if (null != client) {
                 try {
@@ -216,9 +222,24 @@ public class HttpUtils {
             HttpResponse  response  = client.execute(httpPost);
             long end = System.currentTimeMillis();
             log.info("执行post请求完成，耗时：" + (end - start) + "毫秒");
+            if(null != response && null != response.getStatusLine()){
+                int statusCode = response.getStatusLine().getStatusCode();
+                if(200 != statusCode && 302 != statusCode && 304 != statusCode){
+                    log.error("执行post请求完成,返回的http响应码=" + statusCode);
+                }
+            }
+
             return response;
         }catch (Exception e){
             log.error("执行post请求发生异常:" + e.getMessage(),e);
+        }finally {
+            if (null != client) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
         }
         return null;
     }

@@ -56,8 +56,13 @@ public class RemiseNoticeController {
     RemiseNoticeParser remiseNoticeParser;
 
 
-    @RequestMapping("/261")
-    public String listPage261(Integer page){
+    /**
+     * POST方式获取（可以条件查询）
+     * @param page
+     * @return
+     */
+    @RequestMapping("/261post")
+    public String listPage261Post(Integer page){
         String listPageUrl = "http://www.landchina.com/default.aspx?tabid=261";//出让公告（2011年后）
 
 
@@ -131,4 +136,18 @@ public class RemiseNoticeController {
     }
 
 
+
+    @RequestMapping("/261get")
+    public String listPage261Get(Integer page) {
+        String listPageUrl = "http://www.landchina.com/default.aspx?tabid=261";//出让公告（2011年后）
+        Map<String, String> headMap = new HashMap<>();
+        headMap.put("Cookie", "yunsuo_session_verify=b6c3f91ba2689620e7d52cda15414fc7");
+        headMap.put("Referer", "http://www.landchina.com/default.aspx?tabid=261&ComName=default");
+        headMap.put("Origin", Constant.HTTP_HOST);
+        headMap.put("Host", Constant.HOST);
+        headMap.put("Accept-Encoding", "gzip, deflate");
+        headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
+        String webContent = HttpUtils.get(listPageUrl, headMap);
+        return webContent;
+    }
 }
