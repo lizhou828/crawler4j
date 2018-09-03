@@ -44,8 +44,8 @@ public class RemiseNoticeDetailCrawlerSchedule {
     @Autowired
     RemiseNoticeService remiseNoticeService;
 
-    @Async
-    @Scheduled(cron = "0 0/2 * * * ?")//每隔5分钟执行一次
+//    @Async
+//    @Scheduled(cron = "0 0/2 * * * ?")//每隔5分钟执行一次
     public void schedule(){
         log.info("多线程抓取详情页的定时器=======================开始执行");
 

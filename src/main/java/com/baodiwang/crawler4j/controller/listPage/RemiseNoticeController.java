@@ -12,6 +12,7 @@ import com.baodiwang.crawler4j.enums.RemiseNoticeTypeEnum;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.HttpUtils;
+import com.baodiwang.crawler4j.utils.IntUtils;
 import com.baodiwang.crawler4j.utils.LandChinaHttpBreaker2;
 import com.baodiwang.crawler4j.utils.StringUtils;
 import org.apache.http.HttpEntity;
@@ -149,5 +150,49 @@ public class RemiseNoticeController {
         headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
         String webContent = HttpUtils.get(listPageUrl, headMap);
         return webContent;
+    }
+
+    /**
+     * 抓取列表的第一页(get方式)
+     * @param page
+     * @return
+     */
+    @RequestMapping("/261")
+    public String listPage261FirstPage(Integer page) {
+        String listPageUrl = "http://www.landchina.com/default.aspx?tabid=261";//出让公告（2011年后）
+        Map<String, String> headMap = new HashMap<>();
+        headMap.put("Cookie", "yunsuo_session_verify=b6c3f91ba2689620e7d52cda15414fc7");
+        headMap.put("Referer", "http://www.landchina.com/default.aspx?tabid=261&ComName=default");
+        headMap.put("Origin", Constant.HTTP_HOST);
+        headMap.put("Host", Constant.HOST);
+        headMap.put("Accept-Encoding", "gzip, deflate");
+        headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
+        String pageContent = HttpUtils.get(listPageUrl, headMap);
+
+        if(StringUtils.isEmpty( pageContent ) || pageContent.length()< 10000){
+            log.info("【抓取出让公告列表页数据】...............................未能抓到合法的数据 ：pageContent.length()=" + (StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) );
+            return "没抓到数据";
+        }
+
+        List<RemiseNotice> remiseNoticeList = null;
+        try{
+            remiseNoticeList = remiseNoticeParser.parseHtml(pageContent);
+        }catch (Exception e){
+            log.error("【抓取出让公告列表页数据】...............................解析html网页发生异常:" + e.getMessage(),e);
+        }
+        if(null == remiseNoticeList || remiseNoticeList.isEmpty()){
+            log.info("【抓取出让公告列表页数据】...............................数据已抓取过,无需处理");
+            return "没解析到数据";
+        }
+        int count = 0;
+
+        try{
+            count = remiseNoticeService.batchInsert(remiseNoticeList);//批量插入未保存过的数据
+        }catch (Exception e){
+            log.error("【抓取出让公告列表页数据】...............................批量插入数据发生异常："  + e.getMessage() + " \n remiseNoticeList = " + remiseNoticeList,e);
+        }
+        int sleepSeconds = IntUtils.getRandomInt(4, 8);
+        log.info("【抓取出让公告列表页数据】抓取数据条数：" + remiseNoticeList.size() + ",处理条数：" + count +"，休眠" + sleepSeconds +"秒钟======================================");
+        return "抓取到数据后，成功解析并保存";
     }
 }
