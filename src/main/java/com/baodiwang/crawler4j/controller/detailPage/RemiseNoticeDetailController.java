@@ -37,8 +37,8 @@ public class RemiseNoticeDetailController {
 
     private static final Logger log = LogManager.getLogger(RemiseNoticeDetailController.class);
 
-    @RequestMapping("/remiseNoticeDetail")
-    public String detailPage(){
+    @RequestMapping("/postDetail")
+    public String postDetailPage(){
         //出让公告（2011年后） ->  详情页
         String detailPageUrl = "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=c64ce206-9367-40e0-92a1-5938c978d560&sitePath=";//特殊字符  ㎡
 //        detailPageUrl =  "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="  //部分中文乱码 ： 博罗县石湾镇滘源路南侧地段
@@ -56,6 +56,22 @@ public class RemiseNoticeDetailController {
         return remiseNoticeVo.toString();
     }
 
+
+    @RequestMapping("/getDetail")
+    public String getDetailPage(){
+        //出让公告（2011年后） ->  详情页
+        String detailPageUrl = "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=c64ce206-9367-40e0-92a1-5938c978d560&sitePath=";//特殊字符  ㎡
+//        detailPageUrl =  "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="  //部分中文乱码 ： 博罗县石湾镇滘源路南侧地段
+        Map<String, String> headMap = new HashMap<>();
+//        headMap.put("Cookie", "yunsuo_session_verify=b6c3f91ba2689620e7d52cda15414fc7");
+//        headMap.put("Referer", "http://www.landchina.com/default.aspx?tabid=261&ComName=default");
+//        headMap.put("Origin", Constant.HTTP_HOST);
+//        headMap.put("Host", Constant.HOST);
+//        headMap.put("Accept-Encoding", "gzip, deflate");
+//        headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
+        String webContent = HttpUtils.get(detailPageUrl, headMap);
+        return webContent;
+    }
 
 
 

@@ -9,6 +9,7 @@ package com.baodiwang.crawler4j.schedule;
 
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
+import com.baodiwang.crawler4j.utils.HttpUtils;
 import com.baodiwang.crawler4j.utils.IntUtils;
 import com.baodiwang.crawler4j.utils.LandChinaHttpBreaker2;
 import com.baodiwang.crawler4j.utils.StringUtils;
@@ -55,8 +56,10 @@ public class RemiseNoticeDetailCrawlerSchedule {
         }
         int count = 0;
         Map<String,String> headMap = new HashMap<>();
+
         for(RemiseNotice remiseNotice: remiseNoticeList ){
-            String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap, null);
+//            String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap, null); //post过多、过于频繁，易导致IP被封
+            String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
             if(StringUtils.isNotEmpty(content) && content.length() > 8000){
                 remiseNotice.setContent(content);
             }

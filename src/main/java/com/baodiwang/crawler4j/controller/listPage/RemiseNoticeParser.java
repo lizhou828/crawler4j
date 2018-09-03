@@ -177,7 +177,8 @@ public class RemiseNoticeParser {
 
             if(StringUtils.isNotEmpty(remiseNotice.getHref())){
                 Map<String,String> headMap = new HashMap<>();
-                String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap,null);
+//                String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap,null);
+                String content = HttpUtils.get(remiseNotice.getHref(), headMap);//详情页用get方式
                 if(StringUtils.isNotEmpty(content) && content.length() > 8000){
                     remiseNotice.setContent(content);
                 }
