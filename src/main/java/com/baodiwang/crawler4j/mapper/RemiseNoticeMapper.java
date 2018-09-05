@@ -19,5 +19,8 @@ public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, I
 
     public List<RemiseNotice> findNoticeWithoutContent(@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
 
+    public List<RemiseNotice> findNoticeWithoutContentById(@Param("startId")Long startId,@Param("endId")Long endId,@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
+
+
 
 }

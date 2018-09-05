@@ -80,7 +80,14 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
     }
 
 
-
+    /**
+     * 从指定的id段中查找content（大文本字段）为空的数据
+     */
+    @Test
+    public void findNoticeWithoutContentByIdTest(){
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContentById(25138L,null,1,100);
+        System.out.println(remiseNoticeList);
+    }
 
 
 }
