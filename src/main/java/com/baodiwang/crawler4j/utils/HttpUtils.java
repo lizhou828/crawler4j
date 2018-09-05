@@ -232,14 +232,6 @@ public class HttpUtils {
             return response;
         }catch (Exception e){
             log.error("执行post请求发生异常:" + e.getMessage(),e);
-        }finally {
-            if (null != client) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
         }
         return null;
     }
