@@ -59,15 +59,15 @@ public class RemiseNoticeDetailParserSchedule {
     @Autowired
     RemiseNoticeDetailService remiseNoticeDetailService;
 
-//    @Async
-//    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
+    @Async
+    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void parseDataToRemiseNoticeDetail(){
 
         log.info("多线程解析公告详情页数据============================开始");
 
         List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutDetail(1,100); //每次抓取100条未解析的数据（多线程）
+        log.info("多线程解析公告详情页数据============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
         if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
-            log.info("多线程解析公告详情页数据============================没有需要处理的数据");
             return;
         }
 

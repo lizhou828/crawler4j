@@ -79,6 +79,7 @@ public class HttpUtils {
                 int statusCode = response.getStatusLine().getStatusCode();
                 if(200 != statusCode && 302 != statusCode && 304 != statusCode){
                     log.error("执行get请求完成,返回的http响应码=" + statusCode);
+                    return "";
                 }
             }
 

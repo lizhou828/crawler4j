@@ -67,6 +67,11 @@ public class RemiseNoticeParser {
             return null;
         }
 
+        if(doc.getElementById("TAB_contentTable").text().contains("没有检索到相关数据!")){
+            log.error("没有检索到相关数据!");
+            return null;
+        }
+
 
         //根据表格查找表中数据：
         Elements trsItemList = tableEle.select(".gridItem");//奇数行
@@ -176,22 +181,8 @@ public class RemiseNoticeParser {
             }
 
             if(StringUtils.isNotEmpty(remiseNotice.getHref())){
-                Map<String,String> headMap = new HashMap<>();
-//                String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap,null);
-//                String content = HttpUtils.get(remiseNotice.getHref(), headMap);//详情页用get方式
-//                if(StringUtils.isNotEmpty(content) && content.length() > 8000){
-//                    remiseNotice.setContent(content);
-//                }
                 remiseNotice.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 remiseNoticeList.add(remiseNotice);
-                int second = IntUtils.getRandomInt(2,6);
-                try {
-                    log.info("本条数据已抓取完成!休眠" + second + "秒 ,title=" + remiseNotice.getTitle() );
-                    long sleep = second  == 0 ? 1000 :  second * 1000;
-                    Thread.sleep(sleep);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }
         return remiseNoticeList;

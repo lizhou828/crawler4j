@@ -44,13 +44,13 @@ public class RemiseNoticeDetailCrawlerSchedule {
     @Autowired
     RemiseNoticeService remiseNoticeService;
 
-//    @Async
-//    @Scheduled(cron = "0 0/2 * * * ?")//每隔5分钟执行一次
+    @Async
+    @Scheduled(cron = "0 0/2 * * * ?")//每隔2分钟执行一次
     public void schedule(){
-        log.info("多线程抓取详情页的定时器=======================开始执行");
+        log.info("抓取详情页的定时器=======================开始执行");
 
         List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContent();
-        log.info("多线程抓取详情页的定时器============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
+        log.info("抓取详情页的定时器============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
         if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
             return;
         }
@@ -62,19 +62,20 @@ public class RemiseNoticeDetailCrawlerSchedule {
             String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
             if(StringUtils.isNotEmpty(content) && content.length() > 8000){
                 remiseNotice.setContent(content);
+                int resultCount = remiseNoticeService.update(remiseNotice);
+                if(resultCount > 0 ){
+                    count ++;
+                }
             }
-            int resultCount = remiseNoticeService.update(remiseNotice);
-            if(resultCount > 0 ){
-                count ++;
-            }
+
             int sleepSeconds = IntUtils.getRandomInt(5,8);
             try {
-                log.info("多线程抓取详情页的定时器============================成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
+                log.info("抓取详情页的定时器============================成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
                 Thread.sleep( sleepSeconds * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        log.info("多线程抓取详情页的定时器============================成功抓取到详情页并保存数据条数：" + count);
+        log.info("抓取详情页的定时器============================成功抓取到详情页并保存数据条数：" + count);
     }
 }
