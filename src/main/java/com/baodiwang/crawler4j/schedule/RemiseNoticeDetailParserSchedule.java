@@ -66,7 +66,14 @@ public class RemiseNoticeDetailParserSchedule {
         log.info("多线程解析公告详情页数据============================开始");
 
         List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutDetail(1,100); //每次抓取100条未解析的数据（多线程）
+        if(CollectionUtils.isEmpty(remiseNoticeList)){
+            remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1,100);//查询是否还有遗漏的没有解析
+            if(CollectionUtils.isNotEmpty(remiseNoticeList)){
+                log.info("多线程解析公告详情页数据============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()) + ",查询到有遗漏没有解析的数据");
+            }
+        }
         log.info("多线程解析公告详情页数据============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
+
         if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
             return;
         }

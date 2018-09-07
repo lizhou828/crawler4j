@@ -53,7 +53,7 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
     @Test
     public void listByPropertyTest(){
         RemiseNotice remiseNotice = new RemiseNotice();
-        remiseNotice.setType(3);
+        remiseNotice.setHref("http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=fb91fb93-1e5e-4205-8845-966798e37d3b&sitePath=");
         List<RemiseNotice> listPage = remiseNoticeService.listByProperty(remiseNotice);
         System.out.println(listPage);
     }
@@ -85,7 +85,13 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
      */
     @Test
     public void findNoticeWithoutContentByIdTest(){
-        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContentById(25138L,null,1,100);
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContentById(25138L, null, 1, 100);
+        System.out.println(remiseNoticeList);
+    }
+
+    @Test
+    public void findNoticeMissDetailTest(){
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1,20);
         System.out.println(remiseNoticeList);
     }
 

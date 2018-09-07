@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(rollbackFor = Exception.class)
 @Service
 public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Integer> implements RemiseNoticeService {
 
@@ -131,6 +130,12 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
             return null;
         }
         return remiseNoticeMapper.findNoticeWithoutDetail( pageNum , pageSize);
+    }
+
+
+    @Override
+    public List<RemiseNotice> findNoticeMissDetail(int pageNum, int pageSize) {
+        return remiseNoticeMapper.findNoticeMissDetail(pageNum,pageSize);
     }
 
     @Override
