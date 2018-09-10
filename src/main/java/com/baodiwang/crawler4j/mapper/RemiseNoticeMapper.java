@@ -33,11 +33,11 @@ public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, I
 
     /**
      * 查询没有抓取到详情页内容的数据
-     * @param pageNum
+     * @param startId
      * @param pageSize
      * @return
      */
-    public List<RemiseNotice> findNoticeWithoutContent(@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
+    public List<RemiseNotice> findNoticeWithoutContent(@Param("startId") long startId,@Param("pageSize") int pageSize);
 
     /**
      * 通过指定id来查询没有详情页网页内容的数据
@@ -50,5 +50,7 @@ public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, I
     public List<RemiseNotice> findNoticeWithoutContentById(@Param("startId")Long startId,@Param("endId")Long endId,@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
 
 
+    public long findMaxId();
 
+    public long findMinId();
 }

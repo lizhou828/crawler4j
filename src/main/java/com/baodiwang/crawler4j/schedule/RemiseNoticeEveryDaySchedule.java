@@ -62,11 +62,11 @@ public class RemiseNoticeEveryDaySchedule {
     /**
      * 定时抓取每天的数据
      */
-    @Async
+//    @Async
 //    @Scheduled(cron = "0 0 0/2 * * ? ")//每隔两小时执行一次
 //    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
-
-    @Scheduled(cron = "0 08 12 * * ?")//每天固定时间点执行
+//    @Scheduled(cron = "0 0/2 * * * ?")//每隔2分钟执行一次
+//    @Scheduled(cron = "0 55 16 * * ?")//每天固定时间点执行
     public void parseTodayDataToRemiseNotice(){
         String todayStr = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String yesterdayStr = new SimpleDateFormat("yyyy-MM-dd").format(DateUtils.addDays(new Date(), -1));

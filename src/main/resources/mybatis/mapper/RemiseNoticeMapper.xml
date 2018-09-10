@@ -188,6 +188,13 @@
         <include refid="commonCondition"/>
     </select>
 
+    <select id="findMaxId" resultType="long">
+        SELECT MAX(id)  as id  FROM remise_notice
+    </select>
+    <select id="findMinId" resultType="long">
+        SELECT MIN(id)  as id  FROM remise_notice
+    </select>
+
     <select id="findByPagination" parameterType="com.baodiwang.crawler4j.model.RemiseNotice" resultMap="RemiseNoticeResultMapper">
         SELECT <include refid="commonProcessDateColumns"/>
         FROM remise_notice WHERE 1=1
@@ -213,7 +220,8 @@
     <select id="findNoticeWithoutContent" resultMap="RemiseNoticeResultMapper">
         select n.id , n.type , n.content , n.notice_num , n.href
         from remise_notice n
-        where n.content is null LIMIT #{pageNum},#{pageSize}
+        inner join (select id  from remise_notice   LIMIT #{startId} ,#{pageSize}) as t  on t.id  = n.id
+        where n.content is null
     </select>
 
     <select id="findNoticeWithoutContentById" resultMap="RemiseNoticeResultMapper">
@@ -231,7 +239,6 @@
 
             </otherwise>
         </choose>
-        LIMIT #{pageNum},#{pageSize}
     </select>
 
     <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.RemiseNotice">

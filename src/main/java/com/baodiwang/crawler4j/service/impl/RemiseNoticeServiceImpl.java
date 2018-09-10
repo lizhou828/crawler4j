@@ -138,9 +138,16 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
         return remiseNoticeMapper.findNoticeMissDetail(pageNum,pageSize);
     }
 
+    /**
+     * 默认查询最后一页
+     */
     @Override
     public List<RemiseNotice> findNoticeWithoutContent() {
-        return remiseNoticeMapper.findNoticeWithoutContent(1, 20);
+        long maxId =  remiseNoticeMapper.findMaxId();
+        int pageSize = 20;
+        long allPages = maxId % pageSize == 0 ? maxId % pageSize : maxId % pageSize + 1;
+        long startId = ( allPages - 1)  * pageSize ;
+        return remiseNoticeMapper.findNoticeWithoutContent(startId, pageSize);
     }
 
     @Override
@@ -148,7 +155,8 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
         if(pageNum <= 0 || pageSize <= 0){
             return null;
         }
-        return remiseNoticeMapper.findNoticeWithoutContent( pageNum , pageSize);
+        long startId = ( pageNum - 1)  * pageSize ;
+        return remiseNoticeMapper.findNoticeWithoutContent( startId , pageSize);
     }
 
 
@@ -160,5 +168,15 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
             return null;
         }
         return remiseNoticeMapper.findNoticeWithoutContentById(startId,endId,pageNum,pageSize);
+    }
+
+    @Override
+    public long findMaxId() {
+        return remiseNoticeMapper.findMaxId();
+    }
+
+    @Override
+    public long findMinId() {
+        return remiseNoticeMapper.findMinId();
     }
 }
