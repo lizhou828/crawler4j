@@ -151,6 +151,15 @@
 		</dependency>
 		<!--support JSP-->
 
+
+		<!--整合memcached-->
+		<!-- https://mvnrepository.com/artifact/com.whalin/Memcached-Java-Client -->
+		<dependency>
+			<groupId>com.whalin</groupId>
+			<artifactId>Memcached-Java-Client</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<!--整合memcached-->
 	</dependencies>
 
 
