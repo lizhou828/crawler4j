@@ -34,14 +34,18 @@ public class MemcacheTest extends ApplicationTests {
 
 
         // 3s后过期
-        memCachedClient.set("b", "2", new Date(3000));
-        Object b = memCachedClient.get("b");
-        System.out.println(b);
+//        memCachedClient.set("b", "2", new Date(3000));
+//        Object b = memCachedClient.get("b");
+//        System.out.println(b);
+//
+//        Thread.sleep(3000);
+//        b = memCachedClient.get("b");
+//        System.out.println(b);
 
-        Thread.sleep(3000);
-        b = memCachedClient.get("b");
-        System.out.println(b);
 
+        memCachedClient.set("yunsuo_session_verify", "b4be5c62f8e233f66a9748ffdf8e183d");
+        System.out.println(memCachedClient.get("yunsuo_session_verify"));
     }
+
 
 }

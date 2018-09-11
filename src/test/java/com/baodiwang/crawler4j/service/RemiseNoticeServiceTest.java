@@ -91,9 +91,17 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
 
     @Test
     public void findNoticeMissDetailTest(){
-        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1,20);
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1, 20);
         System.out.println(remiseNoticeList);
     }
+
+
+    @Test
+    public void findMaxIdTest(){
+        long maxId = remiseNoticeService.findMaxId();
+        System.out.println("maxId=" + maxId);
+    }
+
 
 
 }

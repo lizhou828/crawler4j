@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class LandChinaHttpBreaker2 {
 
-    private static final Logger log = LogManager.getLogger(LandChinaHttpBreaker.class);
+    private static final Logger log = LogManager.getLogger(LandChinaHttpBreaker2.class);
     private static String yunsuo_session_verify = "";
     private static String security_session_mid_verify = "";
 

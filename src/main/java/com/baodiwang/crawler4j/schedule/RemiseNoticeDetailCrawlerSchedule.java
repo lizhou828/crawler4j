@@ -44,38 +44,56 @@ public class RemiseNoticeDetailCrawlerSchedule {
     @Autowired
     RemiseNoticeService remiseNoticeService;
 
-    @Async
-    @Scheduled(cron = "0 0/2 * * * ?")//每隔2分钟执行一次
+//    @Async
+//    @Scheduled(cron = "0 0/30 * * * ?")//每隔30分钟执行一次
+//    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void schedule(){
-        log.info("抓取详情页的定时器=======================开始执行");
+        String logMessage = "抓取详情页的定时器=======================";
+        log.info(logMessage +"开始执行");
 
-        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutContent();
-        log.info("抓取详情页的定时器============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
-        if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
-            return;
+        long maxId = remiseNoticeService.findMaxId();
+        int pageSize = 100;
+        long allPages = maxId / pageSize;
+        if(pageSize <= 0){
+            return ;
         }
-        int count = 0;
-        Map<String,String> headMap = new HashMap<>();
+        List<RemiseNotice> remiseNoticeList = null;
+        long start = 0L;
+        long end = 0L;
+        for(long i = allPages ;i > allPages - 10 ; i--){ //最多查询最后10页（每页100条）的数据，
+            start = System.currentTimeMillis();
+            remiseNoticeList = remiseNoticeService.findNoticeWithoutContent((int) i + 1, pageSize);
+            end = System.currentTimeMillis();
+            log.info(logMessage +",remiseNotice表的maxId="+maxId+" ，查询到第"+i+"页，每页"+pageSize+"条。需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()) + ",耗时"+(end - start)+"毫秒");
+            if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
+                return;
+            }
+            int count = 0;
+            Map<String,String> headMap = new HashMap<>();
 
-        for(RemiseNotice remiseNotice: remiseNoticeList ){
+            for(RemiseNotice remiseNotice: remiseNoticeList ){
 //            String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap, null); //post过多、过于频繁，易导致IP被封
-            String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
-            if(StringUtils.isNotEmpty(content) && content.length() > 8000){
-                remiseNotice.setContent(content);
-                int resultCount = remiseNoticeService.update(remiseNotice);
-                if(resultCount > 0 ){
-                    count ++;
+                String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
+                if(StringUtils.isNotEmpty(content) && content.length() > 8000){
+                    remiseNotice.setContent(content);
+                    int resultCount = remiseNoticeService.update(remiseNotice);
+                    if(resultCount > 0 ){
+                        count ++;
+                    }
+                }
+
+                int sleepSeconds = IntUtils.getRandomInt(5,8);
+                try {
+                    log.info(logMessage+"成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
+                    Thread.sleep( sleepSeconds * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-
-            int sleepSeconds = IntUtils.getRandomInt(5,8);
-            try {
-                log.info("抓取详情页的定时器============================成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
-                Thread.sleep( sleepSeconds * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            log.info(logMessage+"成功抓取到详情页并保存数据条数：" + count);
         }
-        log.info("抓取详情页的定时器============================成功抓取到详情页并保存数据条数：" + count);
+        log.info(logMessage+"结束");
+
+
     }
 }

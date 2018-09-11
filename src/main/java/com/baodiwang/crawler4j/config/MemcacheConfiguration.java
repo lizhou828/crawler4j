@@ -18,6 +18,10 @@ import org.springframework.context.annotation.Configuration;
  * https://blog.csdn.net/weixin_38336658/article/details/80368606
  * https://blog.csdn.net/saytime/article/details/80585370
  *
+ * 部分操作方法:
+ * set与add在key不存在时效果一致，add在key存在时不会成功。
+ * set与replace在key存在时效果一致，replace在key不存在不会成功。
+ *
  * 新增依赖
  *  https://mvnrepository.com/artifact/com.whalin/Memcached-Java-Client
  <dependency>

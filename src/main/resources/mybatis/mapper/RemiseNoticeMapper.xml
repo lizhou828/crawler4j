@@ -214,14 +214,13 @@
         from remise_notice n
         left join (SELECT notice_id as i from remise_notice_detail) as d
         on n.id = d.i
-        where d.i is null and n. type in (1,2,3,4)  and n.content is not null  LIMIT #{pageNum},#{pageSize}
+        where d.i is null and n.type in (1,2,3,4)  and n.content is not null  LIMIT #{pageNum},#{pageSize}
     </select>
 
     <select id="findNoticeWithoutContent" resultMap="RemiseNoticeResultMapper">
-        select n.id , n.type , n.content , n.notice_num , n.href
-        from remise_notice n
-        inner join (select id  from remise_notice   LIMIT #{startId} ,#{pageSize}) as t  on t.id  = n.id
-        where n.content is null
+        select id , type , content , notice_num , href
+        from remise_notice
+        where id > #{startId}  and content is null ORDER BY id ASC LIMIT #{pageSize}
     </select>
 
     <select id="findNoticeWithoutContentById" resultMap="RemiseNoticeResultMapper">
