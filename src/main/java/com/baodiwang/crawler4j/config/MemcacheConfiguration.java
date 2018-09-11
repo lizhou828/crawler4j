@@ -14,6 +14,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * spring-boot整合memcache
+ * https://blog.csdn.net/weixin_38336658/article/details/80368606
+ * https://blog.csdn.net/saytime/article/details/80585370
+ *
+ * 新增依赖
+ *  https://mvnrepository.com/artifact/com.whalin/Memcached-Java-Client
+ <dependency>
+ <groupId>com.whalin</groupId>
+ <artifactId>Memcached-Java-Client</artifactId>
+ <version>3.0.2</version>
+ </dependency>
  * @author lizhou
  * @version 1.0
  * @Date 2018年09月11日 15时03分
@@ -52,16 +63,26 @@ public class MemcacheConfiguration {
 
     @Bean
     public SockIOPool sockIOPool () {
-        SockIOPool pool = SockIOPool.getInstance();
+        SockIOPool pool = SockIOPool.getInstance(); //获取连接池的实例
+
+        //服务器列表及其权重
         pool.setServers(servers);
         pool.setFailover(failover);
+
+        //设置初始连接数、最小连接数、最大连接数
         pool.setInitConn(initConn);
         pool.setMinConn(minConn);
         pool.setMaxConn(maxConn);
+
+        //设置连接池守护线程的睡眠时间
         pool.setMaintSleep(maintSleep);
+
+        //设置TCP参数，连接超时
         pool.setNagle(nagle);
         pool.setSocketTO(socketTO);
         pool.setAliveCheck(aliveCheck);
+
+        //初始化并启动连接池
         pool.initialize();
         return pool;
     }
