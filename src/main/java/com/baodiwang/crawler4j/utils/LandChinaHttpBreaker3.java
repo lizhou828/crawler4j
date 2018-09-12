@@ -87,10 +87,17 @@ public class LandChinaHttpBreaker3 {
         map = getResponseHeaderMap();
         if (null != map && map.containsKey(YUNSUO_SESSION_VERIFY)) {
             String expiresTime = map.get(YUNSUO_SESSION_VERIFY+"_expires");
-            Date expiresDate = StringUtils.isNotEmpty(expiresTime) ? new Date(Long.parseLong(expiresTime)) : new Date(YUNSUO_SESSION_VERIFY_EXPIRED);
-            memCachedClient.set(YUNSUO_SESSION_VERIFY, map.get(YUNSUO_SESSION_VERIFY), expiresDate);
+            long expiresTimeLong = Long.parseLong(expiresTime);
+            long saveTime = expiresTimeLong - new Date().getTime();//解析出来的有效期
+            Date expiresDate = null;
+            if(saveTime > 0){
+                expiresDate = new Date(saveTime);
+            }else{
+                expiresDate = new Date( 3 * 24 * 3600 *1000);//默认有效期为3天
+            }
+            boolean setResult = memCachedClient.set(YUNSUO_SESSION_VERIFY, map.get(YUNSUO_SESSION_VERIFY), expiresDate);
             log.info("获取yunsuo_session_verify============================发送get请求获取到=" + map.get(YUNSUO_SESSION_VERIFY));
-            log.info("获取yunsuo_session_verify============================保存到memcache中：" + (memCachedClient.get(YUNSUO_SESSION_VERIFY)));
+            log.info("获取yunsuo_session_verify============================保存到memcache中setResult=" + setResult+",yunsuo_session_verify=" + memCachedClient.get(YUNSUO_SESSION_VERIFY));
             return map;
         } else {
             return null;
