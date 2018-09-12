@@ -53,4 +53,8 @@ public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, I
     public long findMaxId();
 
     public long findMinId();
+
+    public void batchInsertWithId(List<RemiseNotice> remiseNotices);
+
+    public long findMinIdWithoutContent(@Param("lastDataCount") Long lastDataCount);
 }

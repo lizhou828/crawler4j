@@ -102,6 +102,35 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
         System.out.println("maxId=" + maxId);
     }
 
+    /**
+     * 批量插入数据后，返回主键Id
+     */
+    @Test
+    public void batchInsertWithIdTest(){
+        List<RemiseNotice> remiseNoticeListInsert = new ArrayList<>();
+        RemiseNotice remiseNotice = new RemiseNotice();
+        remiseNotice.setHref("http://www.baidu.com");
+        remiseNotice.setTitle("测试1");
+        remiseNotice.setNoticeNum("test1");
+        remiseNotice.setType(0);
+        remiseNoticeListInsert.add(remiseNotice);
+        remiseNotice = new RemiseNotice();
+        remiseNotice.setHref("http://www.qq.com");
+        remiseNotice.setTitle("测试2");
+        remiseNotice.setNoticeNum("test2");
+        remiseNotice.setType(0);
+        remiseNoticeListInsert.add(remiseNotice);
+        remiseNoticeService.batchInsertWithId(remiseNoticeListInsert);
+        System.out.println(remiseNoticeListInsert);
+    }
+
+
+    @Test
+    public void findMinIdWithoutContentTest(){
+        long minId =remiseNoticeService.findMinIdWithoutContent(1000L);
+        System.out.println("minId=" + minId );
+    }
+
 
 
 }

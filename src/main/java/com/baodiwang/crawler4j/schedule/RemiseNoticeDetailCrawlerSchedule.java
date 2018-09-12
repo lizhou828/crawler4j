@@ -7,9 +7,11 @@
 
 package com.baodiwang.crawler4j.schedule;
 
+import com.baodiwang.crawler4j.constants.Constant;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.*;
+import com.whalin.MemCached.MemCachedClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,58 +46,63 @@ public class RemiseNoticeDetailCrawlerSchedule {
     @Autowired
     LandChinaHttpBreaker3 landChinaHttpBreaker3;
 
+    @Autowired
+    MemCachedClient memCachedClient;
 
-    //    @Async
-//    @Scheduled(cron = "0 0/30 * * * ?")//每隔30分钟执行一次
-//    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
+
+
+    @Async
+    @Scheduled(cron = "0 0/10 * * * ?")//每隔30分钟执行一次
     public void schedule(){
         String logMessage = "抓取详情页的定时器=======================";
         log.info(logMessage +"开始执行");
 
-        long maxId = remiseNoticeService.findMaxId();
-        int pageSize = 100;
-        long allPages = maxId / pageSize;
-        if(pageSize <= 0){
-            return ;
+        Object obj = memCachedClient.get(Constant.LANDCHINA_REMISE_NOTICE_MIN_ID);
+        long minIdInMemcache = 0L;
+        try{
+            minIdInMemcache = Long.parseLong(null == obj ? "0" :obj.toString());
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
         }
-        List<RemiseNotice> remiseNoticeList = null;
-        long start = 0L;
-        long end = 0L;
-        for(long i = allPages ;i > allPages - 10 ; i--){ //最多查询最后10页（每页100条）的数据，
-            start = System.currentTimeMillis();
-            remiseNoticeList = remiseNoticeService.findNoticeWithoutContent((int) i + 1, pageSize);
-            end = System.currentTimeMillis();
-            log.info(logMessage +",remiseNotice表的maxId="+maxId+" ，查询到第"+i+"页，每页"+pageSize+"条。需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()) + ",耗时"+(end - start)+"毫秒");
-            if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
-                return;
-            }
-            int count = 0;
-            Map<String,String> headMap = new HashMap<>();
+        log.info(logMessage + "minIdInMemcache=" +minIdInMemcache);
 
-            for(RemiseNotice remiseNotice: remiseNoticeList ){
+        List<RemiseNotice> remiseNoticeList = null;
+        long start = System.currentTimeMillis();
+        if(minIdInMemcache > 0L ){
+            remiseNoticeList= remiseNoticeService.findNoticeWithoutContent(minIdInMemcache, 100);
+        }else{
+            remiseNoticeList = remiseNoticeService.findNoticeWithoutContent(0, 100);
+        }
+        long end = System.currentTimeMillis();
+        log.info(logMessage +" ，查询到需要抓取详情页的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()) + ",耗时"+(end - start)+"毫秒");
+
+        if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
+            return;
+        }
+        int count = 0;
+        Map<String,String> headMap = new HashMap<>();
+
+        for(RemiseNotice remiseNotice: remiseNoticeList ){
 //            String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap, null); //post过多、过于频繁，易导致IP被封
 //                String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
-                String content = landChinaHttpBreaker3.breakBarrierGet(remiseNotice.getHref(), headMap);
-                if(StringUtils.isNotEmpty(content) && content.length() > 8000){
-                    remiseNotice.setContent(content);
-                    int resultCount = remiseNoticeService.update(remiseNotice);
-                    if(resultCount > 0 ){
-                        count ++;
-                    }
-                }
-
-                int sleepSeconds = IntUtils.getRandomInt(5,8);
-                try {
-                    log.info(logMessage+"成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
-                    Thread.sleep( sleepSeconds * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            String content = landChinaHttpBreaker3.breakBarrierGet(remiseNotice.getHref(), headMap);
+            if(StringUtils.isNotEmpty(content) && content.length() > 8000){
+                remiseNotice.setContent(content);
+                int resultCount = remiseNoticeService.update(remiseNotice);
+                if(resultCount > 0 ){
+                    count ++;
                 }
             }
-            log.info(logMessage+"成功抓取到详情页并保存数据条数：" + count);
+
+            int sleepSeconds = IntUtils.getRandomInt(5,8);
+            try {
+                log.info(logMessage+"成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
+                Thread.sleep( sleepSeconds * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        log.info(logMessage+"结束");
-
-
+        log.info(logMessage+"成功抓取到详情页并保存数据条数：" + count);
     }
+
 }

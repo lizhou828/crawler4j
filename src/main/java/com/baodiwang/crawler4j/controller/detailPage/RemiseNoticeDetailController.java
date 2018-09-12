@@ -64,8 +64,8 @@ public class RemiseNoticeDetailController {
 //        detailPageUrl =  "http://www.landchina.com/DesktopModule/BizframeExtendMdl/workList/bulWorkView.aspx?wmguid=20aae8dc-4a0c-4af5-aedf-cc153eb6efdf&recorderguid=b2297a6e-2368-4743-ac06-8adf1988fd60&sitePath="  //部分中文乱码 ： 博罗县石湾镇滘源路南侧地段
         Map<String, String> headMap = new HashMap<>();
         headMap.put("Referer", "http://www.landchina.com/default.aspx?tabid=261&ComName=default");
-        headMap.put("Origin", Constant.HTTP_HOST);
-        headMap.put("Host", Constant.HOST);
+        headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
+        headMap.put("Host", Constant.HOST_LANDCHINA);
         headMap.put("Accept-Encoding", "gzip, deflate");
         headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
         String webContent = landChinaHttpBreaker3.breakBarrierGet(detailPageUrl, headMap);

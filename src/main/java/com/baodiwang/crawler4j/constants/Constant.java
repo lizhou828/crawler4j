@@ -14,8 +14,15 @@ package com.baodiwang.crawler4j.constants;
  */
 public class Constant {
 
-    public static final String HOST = "www.landchina.com";
+    public static final String HOST_LANDCHINA = "www.landchina.com";
 
-    public static final String HTTP_HOST = "http://www.landchina.com";
+    public static final String HTTP_HOST_LANDCHINA = "http://www.landchina.com";
+
+    /* 抓取列表页时，保存到数据库后最小的id */
+    public static final String LANDCHINA_REMISE_NOTICE_MIN_ID = "landchina_min_remiseNoticeId";
+
+    /* 抓取列表页时，保存到数据库后最大的id */
+    public static final String LANDCHINA_REMISE_NOTICE_MAX_ID = "landchina_max_remiseNoticeId";
+
 
 }

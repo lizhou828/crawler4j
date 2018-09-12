@@ -117,7 +117,7 @@ public class RemiseNoticeParser {
                     }
                     Element aEle = aEleList.get(0);
                     String href = aEle.attr("href");
-                    remiseNotice.setHref(Constant.HTTP_HOST + href);
+                    remiseNotice.setHref(Constant.HTTP_HOST_LANDCHINA + href);
                     String title = "";
                     if(StringUtils.isNotEmpty(aEle.text()) && !aEle.text().contains("...")){
                         remiseNotice.setTitle(aEle.text());

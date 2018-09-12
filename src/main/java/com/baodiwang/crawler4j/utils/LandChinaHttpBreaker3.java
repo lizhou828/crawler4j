@@ -123,8 +123,8 @@ public class LandChinaHttpBreaker3 {
         Map<String, String> headMap = new HashMap<>();
 //        headMap.put("Cookie", "yunsuo_session_verify=a07658c84a6e83c4e917857b8aeaad57");
         headMap.put("Referer", "http://www.landchina.com/default.aspx?tabid=261&ComName=default");
-        headMap.put("Origin", Constant.HTTP_HOST);
-        headMap.put("Host", Constant.HOST);
+        headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
+        headMap.put("Host", Constant.HOST_LANDCHINA);
         headMap.put("Accept-Encoding", "gzip, deflate");
         headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
         return LandChinaHttpUtils.getResponseHeader(listPageUrl, headMap);
@@ -140,8 +140,8 @@ public class LandChinaHttpBreaker3 {
         headMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
         headMap.put("Accept-Encoding", "gzip, deflate");
         headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
-        headMap.put("Origin", Constant.HTTP_HOST);
-        headMap.put("Host", Constant.HOST);
+        headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
+        headMap.put("Host", Constant.HOST_LANDCHINA);
         if (StringUtils.isEmpty(charSet)) {
             charSet = HttpUtils.CHAR_SET_GB2312;
         }
@@ -221,8 +221,8 @@ public class LandChinaHttpBreaker3 {
         headMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
         headMap.put("Accept-Encoding", "gzip, deflate");
         headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
-        headMap.put("Origin", Constant.HTTP_HOST);
-        headMap.put("Host", Constant.HOST);
+        headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
+        headMap.put("Host", Constant.HOST_LANDCHINA);
         if (StringUtils.isEmpty(webPageUrl)) {
             return null;
         }

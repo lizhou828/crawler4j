@@ -38,8 +38,8 @@ public class LandChinaHttpBreaker3Test extends ApplicationTests {
         Map<String,String> headMap = new HashMap<>();
         headMap.put("Cookie", "yunsuo_session_verify=a07658c84a6e83c4e917857b8aeaad57; Hm_lvt_83853859c7247c5b03b527894622d3fa=1535094220,1536311959,1536645940; ASP.NET_SessionId=xdhtof12qyziwfde4zmzidcu; Hm_lpvt_83853859c7247c5b03b527894622d3fa=1536646717");
         headMap.put("Referer","http://www.landchina.com/default.aspx?tabid=261&ComName=default");
-        headMap.put("Origin", Constant.HTTP_HOST);
-        headMap.put("Host", Constant.HOST);
+        headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
+        headMap.put("Host", Constant.HOST_LANDCHINA);
 
 
         String todayStr = new SimpleDateFormat("yyyy-MM-dd").format(new Date());

@@ -7,9 +7,12 @@
 package com.baodiwang.crawler4j.model;
 
 import com.baodiwang.crawler4j.utils.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -167,4 +170,59 @@ public class RemiseNotice implements Serializable {
                     " , creator = " + creator +
             "}";
         }
+
+
+    public static long getMinId(List<RemiseNotice> remiseNoticeList){
+        if(CollectionUtils.isEmpty(remiseNoticeList)){
+            return 0L;
+        }
+        Long  minId = null;
+        for(RemiseNotice remiseNotice : remiseNoticeList){
+            if(null == remiseNotice || null == remiseNotice.getId()){
+                continue;
+            }
+            if(null == minId ){
+                minId = remiseNotice.getId();
+            }else if (remiseNotice.getId() < minId ){
+                minId = remiseNotice.getId();
+            }
+        }
+        if(minId == null ){
+            minId = 0L;
+        }
+        return minId;
+    }
+
+    public static int getIdCount(List<RemiseNotice> remiseNoticeList){
+        if(CollectionUtils.isEmpty(remiseNoticeList)){
+            return 0;
+        }
+        int count = 0;
+        for(RemiseNotice remiseNotice : remiseNoticeList){
+            if(null != remiseNotice && null != remiseNotice.getId() && remiseNotice.getId() > 0L){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        List<RemiseNotice> remiseNoticeList= new ArrayList<>();
+        RemiseNotice remiseNotice = new RemiseNotice();
+        remiseNotice.setId(42L);
+        remiseNotice.setHref("http://www.baidu.com");
+        remiseNotice.setTitle("测试1");
+        remiseNotice.setNoticeNum("test1");
+        remiseNotice.setType(0);
+        remiseNoticeList.add(remiseNotice);
+        RemiseNotice remiseNotice1 = new RemiseNotice();
+        remiseNotice1.setId(22L);
+        remiseNotice1.setHref("http://www.qq.com");
+        remiseNotice1.setTitle("测试2");
+        remiseNotice1.setNoticeNum("test2");
+        remiseNotice1.setType(0);
+        remiseNoticeList.add(remiseNotice1);
+        long minId = getMinId(remiseNoticeList);
+        System.out.println("minId=" + minId);
+    }
 }

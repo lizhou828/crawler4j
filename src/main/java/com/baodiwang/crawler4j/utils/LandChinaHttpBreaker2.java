@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  * Created by lizhou on 2018年08月23日 23时11分
  */
+@Deprecated
 public class LandChinaHttpBreaker2 {
 
     private static final Logger log = LogManager.getLogger(LandChinaHttpBreaker2.class);

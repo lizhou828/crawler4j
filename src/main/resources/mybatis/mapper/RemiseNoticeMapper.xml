@@ -235,10 +235,18 @@
                 and n.id BETWEEN  #{startId} and (select MAX(id) from remise_notice)
             </when>
             <otherwise>
-
+                and n.id BETWEEN  ((select MAX(id) from remise_notice) - 1000 ) and (select MAX(id) from remise_notice)
             </otherwise>
         </choose>
     </select>
+
+    <select id="findMinIdWithoutContent" resultType="long">
+        select MIN(ID)
+        from remise_notice
+        where id > (select MAX(ID) from remise_notice ) - #{lastDataCount}
+        AND content  IS NULL
+    </select>
+
 
     <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.RemiseNotice">
         insert into  remise_notice( <include refid="commonColumnsNotPK"/> )
@@ -255,6 +263,24 @@
                 #{item.href},
                 #{item.createTime},
                 #{item.creator}
+            )
+        </foreach>
+    </insert>
+    <insert id="batchInsertWithId" parameterType="com.baodiwang.crawler4j.model.RemiseNotice" useGeneratedKeys="true" keyProperty="id">
+        insert into  remise_notice( <include refid="commonColumnsNotPK"/> )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.type},
+            #{item.title},
+            #{item.noticeNum},
+            #{item.publishTime},
+            #{item.areaName},
+            #{item.areaId},
+            #{item.content},
+            #{item.href},
+            #{item.createTime},
+            #{item.creator}
             )
         </foreach>
     </insert>

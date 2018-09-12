@@ -8,6 +8,7 @@
 package com.baodiwang.crawler4j.service;
 
 import com.baodiwang.crawler4j.ApplicationTests;
+import com.baodiwang.crawler4j.constants.Constant;
 import com.whalin.MemCached.MemCachedClient;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,22 @@ public class MemcacheTest extends ApplicationTests {
 //        b = memCachedClient.get("b");
 //        System.out.println(b);
 
+//        memcache中的add和set方法区别  https://blog.csdn.net/myweishanli/article/details/40536957
+//        0、set方法用于设置一个指定key的缓存内容，set方法是add方法和replace方法的集合体。
+//        1）、如果要设置的key不存在时，则set方法与add方法的效果一致；
+//        2）、如果要设置的key已经存在时，则set方法与replace方法效果一样。
+
 
         memCachedClient.set("yunsuo_session_verify", "60c00063d0e156cd2afee5a6ff03e3d5");
         System.out.println(memCachedClient.get("yunsuo_session_verify"));
 
         memCachedClient.set("ASP.NET_SessionId", "ajmpu0kkue4ipz3uxe5jt1gs");
         System.out.println(memCachedClient.get("ASP.NET_SessionId"));
+
+        System.out.println(memCachedClient.keyExists("yunsuo_session_verify"));
+
+        long minId = 28949L;
+        memCachedClient.set(Constant.LANDCHINA_REMISE_NOTICE_MIN_ID, minId);
 
 
     }

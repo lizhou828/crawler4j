@@ -123,19 +123,19 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
     }
 
     public List<RemiseNotice> findNoticeWithoutDetail(){
-        return remiseNoticeMapper.findNoticeWithoutDetail(1,20);
+        return remiseNoticeMapper.findNoticeWithoutDetail(1, 20);
     }
     public List<RemiseNotice> findNoticeWithoutDetail( int pageNum , int pageSize){
         if(pageNum <= 0 || pageSize <= 0){
             return null;
         }
-        return remiseNoticeMapper.findNoticeWithoutDetail( pageNum , pageSize);
+        return remiseNoticeMapper.findNoticeWithoutDetail(pageNum, pageSize);
     }
 
 
     @Override
     public List<RemiseNotice> findNoticeMissDetail(int pageNum, int pageSize) {
-        return remiseNoticeMapper.findNoticeMissDetail(pageNum,pageSize);
+        return remiseNoticeMapper.findNoticeMissDetail(pageNum, pageSize);
     }
 
     /**
@@ -151,11 +151,14 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
     }
 
     @Override
-    public List<RemiseNotice> findNoticeWithoutContent(int pageNum, int pageSize) {
-        if(pageNum <= 0 || pageSize <= 0){
-            return null;
+    public List<RemiseNotice> findNoticeWithoutContent(long startId, int pageSize) {
+        if(startId <= 0L ){
+            long maxId = remiseNoticeMapper.findMaxId();
+            startId = maxId - 1000L;
         }
-        long startId = ( pageNum - 1)  * pageSize ;
+        if( pageSize <= 0){
+            pageSize = 1000;
+        }
         return remiseNoticeMapper.findNoticeWithoutContent( startId , pageSize);
     }
 
@@ -167,7 +170,7 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
         if(null == startId || startId <= 0L){
             return null;
         }
-        return remiseNoticeMapper.findNoticeWithoutContentById(startId,endId,pageNum,pageSize);
+        return remiseNoticeMapper.findNoticeWithoutContentById(startId, endId, pageNum, pageSize);
     }
 
     @Override
@@ -178,5 +181,16 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
     @Override
     public long findMinId() {
         return remiseNoticeMapper.findMinId();
+    }
+
+    public void batchInsertWithId(List<RemiseNotice> remiseNotices){
+        remiseNoticeMapper.batchInsertWithId(remiseNotices);
+    }
+
+    public long findMinIdWithoutContent(Long lastDataCount){
+        if(null == lastDataCount || lastDataCount <= 0L){
+            lastDataCount = 1000L;//默认在最新的1000条数据中查询 没有content的记录的最小的id
+        }
+        return remiseNoticeMapper.findMinIdWithoutContent(lastDataCount);
     }
 }
