@@ -9,10 +9,7 @@ package com.baodiwang.crawler4j.schedule;
 
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
-import com.baodiwang.crawler4j.utils.HttpUtils;
-import com.baodiwang.crawler4j.utils.IntUtils;
-import com.baodiwang.crawler4j.utils.LandChinaHttpBreaker2;
-import com.baodiwang.crawler4j.utils.StringUtils;
+import com.baodiwang.crawler4j.utils.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +41,11 @@ public class RemiseNoticeDetailCrawlerSchedule {
     @Autowired
     RemiseNoticeService remiseNoticeService;
 
-//    @Async
+    @Autowired
+    LandChinaHttpBreaker3 landChinaHttpBreaker3;
+
+
+    //    @Async
 //    @Scheduled(cron = "0 0/30 * * * ?")//每隔30分钟执行一次
 //    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void schedule(){
@@ -73,7 +74,8 @@ public class RemiseNoticeDetailCrawlerSchedule {
 
             for(RemiseNotice remiseNotice: remiseNoticeList ){
 //            String content = LandChinaHttpBreaker2.breakBarrier(remiseNotice.getHref(), headMap, null); //post过多、过于频繁，易导致IP被封
-                String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
+//                String content = HttpUtils.get(remiseNotice.getHref(), headMap);//get请求目前不会导致IP被封
+                String content = landChinaHttpBreaker3.breakBarrierGet(remiseNotice.getHref(), headMap);
                 if(StringUtils.isNotEmpty(content) && content.length() > 8000){
                     remiseNotice.setContent(content);
                     int resultCount = remiseNoticeService.update(remiseNotice);

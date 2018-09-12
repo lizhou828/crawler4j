@@ -134,7 +134,7 @@ public class RemiseNoticeController {
             page = 1;
         }
         paramsMap.put("TAB_QuerySubmitPagerData",page+"");
-        String pageContent  = landChinaHttpBreaker3.breakBarrier(listPageUrl,headMap,paramsMap);
+        String pageContent  = landChinaHttpBreaker3.breakBarrierPost(listPageUrl,headMap,paramsMap);
 
         if(StringUtils.isEmpty( pageContent ) || pageContent.length()< 10000){
             log.info("【抓取出让公告列表页数据】...............................未能抓到合法的数据 ：pageContent.length()=" + (StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) );

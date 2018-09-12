@@ -60,7 +60,7 @@ public class LandChinaHttpBreaker3Test extends ApplicationTests {
         paramsMap.put("TAB_RowButtonActionControl","");
         paramsMap.put("TAB_QuerySubmitSortData","");
         paramsMap.put("TAB_QuerySubmitPagerData", "1");
-        String pageContent  = landChinaHttpBreaker3.breakBarrier(listPageUrl, headMap, paramsMap);
+        String pageContent  = landChinaHttpBreaker3.breakBarrierPost(listPageUrl, headMap, paramsMap);
         System.out.println("pageContent.length=" +(StringUtils.isEmpty(pageContent) ? 0 : pageContent.length()) + "  ================================================================ ");
         System.out.println("pageContent=" +pageContent);
     }

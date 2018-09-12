@@ -43,8 +43,13 @@ public class MemcacheTest extends ApplicationTests {
 //        System.out.println(b);
 
 
-        memCachedClient.set("yunsuo_session_verify", "72ccfeb3026b2ee5f9c9dd3b9758f997");
+        memCachedClient.set("yunsuo_session_verify", "60c00063d0e156cd2afee5a6ff03e3d5");
         System.out.println(memCachedClient.get("yunsuo_session_verify"));
+
+        memCachedClient.set("ASP.NET_SessionId", "ajmpu0kkue4ipz3uxe5jt1gs");
+        System.out.println(memCachedClient.get("ASP.NET_SessionId"));
+
+
     }
 
 

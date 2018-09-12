@@ -50,11 +50,11 @@ public class LandChinaHttpBreaker3 {
      * @param webPageUrl
      * @return
      */
-    public String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
-        return breakBarrier(webPageUrl, headMap, paramsMap, HttpUtils.CHAR_SET_GB2312);
+    public String breakBarrierPost(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
+        return breakBarrierPost(webPageUrl, headMap, paramsMap, HttpUtils.CHAR_SET_GB2312);
     }
 
-    public String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
+    public String breakBarrierPost(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         Map<String, String> map = stepOne();
         if(null == map || !map.containsKey(YUNSUO_SESSION_VERIFY)){
             log.error("获取yunsuo_session_verify============================失败：map=" + map);
@@ -67,16 +67,25 @@ public class LandChinaHttpBreaker3 {
             cookieValue += "; ASP.NET_SessionId=" + ASPNET_SessionId;
         }
         headMap.put("Cookie", cookieValue);
-        return stepTwo(webPageUrl, headMap, paramsMap, charSet);
+        return stepTwoPost(webPageUrl, headMap, paramsMap, charSet);
 
     }
 
     private Map<String, String> stepOne() {
         Map<String, String> map = new HashMap<>();
-        Object obj = memCachedClient.get(YUNSUO_SESSION_VERIFY);
+        Object aspSessionObj = memCachedClient.get(ASP_NET_SESSIONID);
+        String aspSessionId= "";
+        if (null != aspSessionObj) {
+            aspSessionId = (String) aspSessionObj;
+        }
+        if (StringUtils.isNotEmpty(aspSessionId)) {
+            map.put(ASP_NET_SESSIONID, aspSessionId);
+        }
+
+        Object yunsuo_session_verify_Obj = memCachedClient.get(YUNSUO_SESSION_VERIFY);
         String yunsuo_session_verify = "";
-        if (null != obj) {
-            yunsuo_session_verify = (String) obj;
+        if (null != yunsuo_session_verify_Obj) {
+            yunsuo_session_verify = (String) yunsuo_session_verify_Obj;
         }
         if (StringUtils.isNotEmpty(yunsuo_session_verify)) {
             map.put(YUNSUO_SESSION_VERIFY, yunsuo_session_verify);
@@ -85,6 +94,11 @@ public class LandChinaHttpBreaker3 {
         }
 
         map = getResponseHeaderMap();
+        if(null != map && map.containsKey(ASP_NET_SESSIONID)){
+            Date expiresDate = new Date( 3 * 24 * 3600 *1000);//默认有效期为3天
+            boolean setResult = memCachedClient.set(ASP_NET_SESSIONID, map.get(ASP_NET_SESSIONID), expiresDate);
+            log.info("获取" + ASP_NET_SESSIONID + "============================保存到memcache中setResult=" + setResult+"," + ASP_NET_SESSIONID + "=" + memCachedClient.get(ASP_NET_SESSIONID));
+        }
         if (null != map && map.containsKey(YUNSUO_SESSION_VERIFY)) {
             String expiresTime = map.get(YUNSUO_SESSION_VERIFY+"_expires");
             long expiresTimeLong = Long.parseLong(expiresTime);
@@ -116,7 +130,7 @@ public class LandChinaHttpBreaker3 {
         return LandChinaHttpUtils.getResponseHeader(listPageUrl, headMap);
     }
 
-    private static String stepTwo(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
+    private static String stepTwoPost(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         if (null == headMap) {
             headMap = new HashMap<>();
         }
@@ -169,5 +183,50 @@ public class LandChinaHttpBreaker3 {
     }
 
 
+
+    /**
+     * 目录：打破 www.landchina.com 反扒屏障
+     * 原因：www.landchina.com 对http请求做了反扒处理，
+     * 机制：先获取yunsuo_session_verify3天有效期），通过yunsuo_session_verify 抓取真正网页数据
+     *
+     * @param webPageUrl
+     * @return
+     */
+    public String breakBarrierGet(String webPageUrl, Map<String, String> headMap) {
+        return breakBarrierGet(webPageUrl, headMap, HttpUtils.CHAR_SET_GB2312);
+    }
+
+    public String breakBarrierGet(String webPageUrl, Map<String, String> headMap, String charSet) {
+        Map<String, String> map = stepOne();
+        if(null == map || !map.containsKey(YUNSUO_SESSION_VERIFY)){
+            log.error("获取yunsuo_session_verify============================失败：map=" + map);
+            return null;
+        }
+        String yunsuo_session_verify = map.get(YUNSUO_SESSION_VERIFY);
+        String ASPNET_SessionId = map.containsKey(ASP_NET_SESSIONID) ? map.get(ASP_NET_SESSIONID) : "";
+        String cookieValue = "yunsuo_session_verify="+yunsuo_session_verify+"; Hm_lvt_83853859c7247c5b03b527894622d3fa=1535094220,1536311959,1536645940; Hm_lpvt_83853859c7247c5b03b527894622d3fa=1536646717";
+        if(StringUtils.isNotEmpty(ASPNET_SessionId)){
+            cookieValue += "; ASP.NET_SessionId=" + ASPNET_SessionId;
+        }
+        headMap.put("Cookie", cookieValue);
+        return stepTwoGet(webPageUrl, headMap, charSet);
+    }
+
+    private static String stepTwoGet(String webPageUrl, Map<String, String> headMap, String charSet) {
+        if (null == headMap) {
+            headMap = new HashMap<>();
+        }
+        headMap.put("Connection", "keep-alive");
+        headMap.put("Upgrade-Insecure-Requests", "1");
+        headMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+        headMap.put("Accept-Encoding", "gzip, deflate");
+        headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
+        headMap.put("Origin", Constant.HTTP_HOST);
+        headMap.put("Host", Constant.HOST);
+        if (StringUtils.isEmpty(webPageUrl)) {
+            return null;
+        }
+        return HttpUtils.get(webPageUrl, headMap);
+    }
 
 }
