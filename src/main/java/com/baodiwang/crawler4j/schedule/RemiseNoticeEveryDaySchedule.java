@@ -143,7 +143,7 @@ public class RemiseNoticeEveryDaySchedule {
             pageContent = null;
             paramsMap.put("TAB_QuerySubmitPagerData", i + "");
             try{
-                pageContent = LandChinaHttpBreaker2.breakBarrier0903(listPageUrl, headMap, paramsMap);
+                pageContent = landChinaHttpBreaker3.breakBarrierPost(listPageUrl, headMap, paramsMap);
             }catch (Exception e){
                 log.error(logMessage +"抓取网页发生异常：" + e.getMessage(),e);
                 continue;
