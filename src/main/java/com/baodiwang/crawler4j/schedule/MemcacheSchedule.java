@@ -8,6 +8,8 @@
 package com.baodiwang.crawler4j.schedule;
 
 import com.baodiwang.crawler4j.constants.Constant;
+import com.baodiwang.crawler4j.model.RemiseNoticeDetail;
+import com.baodiwang.crawler4j.service.RemiseNoticeDetailService;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.whalin.MemCached.MemCachedClient;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +37,9 @@ public class MemcacheSchedule {
     RemiseNoticeService remiseNoticeService;
 
     @Autowired
+    RemiseNoticeDetailService remiseNoticeDetailService;
+
+    @Autowired
     MemCachedClient memCachedClient;
 
     @Async
@@ -48,7 +53,13 @@ public class MemcacheSchedule {
         long end = System.currentTimeMillis();
         log.info(logMessage + "结束，耗时" + (end - start) + "毫秒，minId=" + minId);
         if(minId <= 0L){
-            memCachedClient.set(Constant.LANDCHINA_REMISE_NOTICE_MIN_ID,0);
+            RemiseNoticeDetail remiseNoticeDetail = new RemiseNoticeDetail();
+            remiseNoticeDetail.setNoticeId(minId);
+            int count = remiseNoticeDetailService.findByCount(remiseNoticeDetail);
+            if( count > 0){ //已经解析完
+                memCachedClient.set(Constant.LANDCHINA_REMISE_NOTICE_MIN_ID,0);
+            }
+
             return ;
         }
         Object obj = memCachedClient.get(Constant.LANDCHINA_REMISE_NOTICE_MIN_ID);

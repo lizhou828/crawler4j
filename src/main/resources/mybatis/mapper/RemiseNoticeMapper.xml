@@ -241,7 +241,7 @@
     </select>
 
     <select id="findMinIdWithoutContent" resultType="long">
-        select MIN(ID)
+        select IFNULL(MIN(ID),0) as id
         from remise_notice
         where id > (select MAX(ID) from remise_notice ) - #{lastDataCount}
         AND content  IS NULL

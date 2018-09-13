@@ -10,10 +10,7 @@ package com.baodiwang.crawler4j.schedule;
 import com.baodiwang.crawler4j.controller.listPage.RemiseNoticeParser;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
-import com.baodiwang.crawler4j.utils.IntUtils;
-import com.baodiwang.crawler4j.utils.LandChinaHttpBreaker2;
-import com.baodiwang.crawler4j.utils.RegexUtil;
-import com.baodiwang.crawler4j.utils.StringUtils;
+import com.baodiwang.crawler4j.utils.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +51,9 @@ public class RemiseNoticeEveryDaySchedule {
 
     @Autowired
     RemiseNoticeParser remiseNoticeParser;
+
+    @Autowired
+    LandChinaHttpBreaker3 landChinaHttpBreaker3;
 
     @Autowired
     RemiseNoticeSchedule singeProvinceScheduler;
@@ -122,7 +122,7 @@ public class RemiseNoticeEveryDaySchedule {
 
         //        doc.select(".pager").select("td").get(0).text()     共11681页 当前只显示200页 共350406条记录
 
-        String pageContent = LandChinaHttpBreaker2.breakBarrier0903(listPageUrl, headMap, paramsMap);
+        String pageContent = landChinaHttpBreaker3.breakBarrierPost(listPageUrl, headMap, paramsMap);
         if(StringUtils.isEmpty(pageContent) || pageContent.length() < 10000){
             log.warn(logMessage + ",列表页中这个时间段内没有合法的数据===================================pageContent=" + pageContent);
             return ;
