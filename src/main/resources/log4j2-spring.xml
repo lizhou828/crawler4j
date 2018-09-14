@@ -15,40 +15,31 @@
         </Console>
 
 
-        <File name="FileAppender" fileName="D:/logs/app.log">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-        </File>
-
-        <!--固定文件大小的日志-->
-        <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${LOG_HOME}/${FILE_NAME}.log" filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <!--固定文件大小的日志 http://www.zuidaima.com/blog/3887507677498368.htm-->
+        <!--https://blog.csdn.net/vbirdbest/article/details/71751835
+            该输出源也是写入到文件，不同的是比File更加强大，可以指定当文件达到一定大小（如20MB）时，另起一个文件继续写入日志，另起一个文件就涉及到新文件的名字命名规则，
+            因此需要配置文件命名规则这种方式更加实用，因为你不可能一直往一个文件中写，如果一直写，文件过大，打开就会卡死，也不便于查找日志。-->
+        <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${LOG_HOME}/${FILE_NAME}.log" filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:s,SSS}:%5p [%t] (%C.%M:%L) - %m%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1"/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="1"/>  <!-- 按天分日志文件   这个配置需要和filePattern结合使用，注意filePattern中配置的文件重命名规则是${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i，最小的时间粒度是mm，即分钟    -->
+                <SizeBasedTriggeringPolicy size="50 MB"/>  <!-- 按大小划分       指定当文件体积大于size指定的值时，触发Rolling -->
             </Policies>
-            <DefaultRolloverStrategy max="20"/>
+            <DefaultRolloverStrategy max="20"/> <!-- 指定最多保存的文件个数 -->
         </RollingRandomAccessFile>
-
-
-        <Async name="AsyncAppender">
-            <AppenderRef ref="FileAppender"/>
-            <AppenderRef ref="RollingRandomAccessFile"/>
-        </Async>
-
     </appenders>
 
 
     <loggers>
+
+        <Logger name="org.springframework" level="WARN" />
+        <Logger name="com.baodiwang" level="info" />
+
+
         <root level="INFO">
             <appender-ref ref="Console"/>
+            <appender-ref ref="RollingRandomAccessFile" />
         </root>
-        <Logger name="RollingRandomAccessFileLogger" level="info" additivity="false">
-            <AppenderRef ref="AsyncAppender" />
-            <AppenderRef ref="Console" />
-        </Logger>
-        <Logger name="AsyncFileLogger" level="trace" additivity="true">
-            <AppenderRef ref="AsyncAppender" />
-        </Logger>
     </loggers>
 
 

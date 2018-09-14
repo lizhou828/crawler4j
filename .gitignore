@@ -3,6 +3,8 @@
 
 /.idea
 /target
+/logs
+/log
 .mvn
 
 # Log file
