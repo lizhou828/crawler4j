@@ -29,7 +29,7 @@ public class LandChinaHttpUtils {
     private static final Logger log = LogManager.getLogger(LandChinaHttpUtils.class);
 
     public static Map<String,String> getResponseHeader(String webPageUrl, Map<String, String> headMap) {
-        return getResponseHeader(webPageUrl, headMap, HttpUtils.CHAR_SET_GB2312);
+        return getResponseHeader(webPageUrl, headMap, HttpUtils.CHAR_SET_GBK);
     }
     public static Map<String,String> getResponseHeader(String webPageUrl, Map<String, String> headMap,String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {

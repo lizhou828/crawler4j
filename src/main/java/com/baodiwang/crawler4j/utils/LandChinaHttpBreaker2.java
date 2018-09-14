@@ -36,7 +36,7 @@ public class LandChinaHttpBreaker2 {
      * @return
      */
     public static String breakBarrier(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
-        return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GB2312);
+        return breakBarrier(webPageUrl,  headMap,  paramsMap,HttpUtils.CHAR_SET_GBK);
     }
 
     /**
@@ -71,7 +71,7 @@ public class LandChinaHttpBreaker2 {
      * @return
      */
     public static String breakBarrier0903(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap){
-        return breakBarrier0903(webPageUrl,headMap,paramsMap, HttpUtils.CHAR_SET_GB2312);
+        return breakBarrier0903(webPageUrl,headMap,paramsMap, HttpUtils.CHAR_SET_GBK);
     }
     /**
      * 目录：打破 www.landchina.com 反扒屏障(2018-09-03)
@@ -185,7 +185,7 @@ public class LandChinaHttpBreaker2 {
         }
         log.info("发起第三次请求webPageUrl=" + webPageUrl +",headMap=" + headMap);
         if(StringUtils.isEmpty(charSet)){
-            charSet = HttpUtils.CHAR_SET_GB2312;
+            charSet = HttpUtils.CHAR_SET_GBK;
         }
         if(StringUtils.isEmpty(webPageUrl)){
             return null;

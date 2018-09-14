@@ -51,7 +51,7 @@ public class LandChinaHttpBreaker3 {
      * @return
      */
     public String breakBarrierPost(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
-        return breakBarrierPost(webPageUrl, headMap, paramsMap, HttpUtils.CHAR_SET_GB2312);
+        return breakBarrierPost(webPageUrl, headMap, paramsMap, HttpUtils.CHAR_SET_GBK);
     }
 
     public String breakBarrierPost(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
@@ -143,7 +143,7 @@ public class LandChinaHttpBreaker3 {
         headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
         headMap.put("Host", Constant.HOST_LANDCHINA);
         if (StringUtils.isEmpty(charSet)) {
-            charSet = HttpUtils.CHAR_SET_GB2312;
+            charSet = HttpUtils.CHAR_SET_GBK;
         }
         if (StringUtils.isEmpty(webPageUrl)) {
             return null;
@@ -193,7 +193,7 @@ public class LandChinaHttpBreaker3 {
      * @return
      */
     public String breakBarrierGet(String webPageUrl, Map<String, String> headMap) {
-        return breakBarrierGet(webPageUrl, headMap, HttpUtils.CHAR_SET_GB2312);
+        return breakBarrierGet(webPageUrl, headMap, HttpUtils.CHAR_SET_GBK);
     }
 
     public String breakBarrierGet(String webPageUrl, Map<String, String> headMap, String charSet) {
@@ -207,6 +207,14 @@ public class LandChinaHttpBreaker3 {
         String cookieValue = "yunsuo_session_verify="+yunsuo_session_verify+"; Hm_lvt_83853859c7247c5b03b527894622d3fa=1535094220,1536311959,1536645940; Hm_lpvt_83853859c7247c5b03b527894622d3fa=1536646717";
         if(StringUtils.isNotEmpty(ASPNET_SessionId)){
             cookieValue += "; ASP.NET_SessionId=" + ASPNET_SessionId;
+        }
+        if (null == headMap) {
+            headMap = new HashMap<>();
+            headMap.put("Referer", "http://www.landchina.com/default.aspx?tabid=261&ComName=default");
+            headMap.put("Origin", Constant.HTTP_HOST_LANDCHINA);
+            headMap.put("Host", Constant.HOST_LANDCHINA);
+            headMap.put("Accept-Encoding", "gzip, deflate");
+            headMap.put("Accept-Language", "zh-CN,zh;q=0.9");
         }
         headMap.put("Cookie", cookieValue);
         return stepTwoGet(webPageUrl, headMap, charSet);
@@ -226,7 +234,7 @@ public class LandChinaHttpBreaker3 {
         if (StringUtils.isEmpty(webPageUrl)) {
             return null;
         }
-        return HttpUtils.get(webPageUrl, headMap);
+        return HttpUtils.get(webPageUrl, headMap,charSet);
     }
 
 }

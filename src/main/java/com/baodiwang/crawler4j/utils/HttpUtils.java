@@ -38,13 +38,14 @@ public class HttpUtils {
 
     public static final String CHAR_SET_GBK = "GBK";
 
+    @Deprecated
     public static final String CHAR_SET_GB2312 = "gb2312";
 
     private static final Logger log = LogManager.getLogger(HttpUtils.class);
 
 
     public static String get(String webPageUrl, Map<String, String> headMap) {
-        return get(webPageUrl, headMap, CHAR_SET_GB2312);
+        return get(webPageUrl, headMap, CHAR_SET_GBK);
     }
 
     public static String get(String webPageUrl, Map<String, String> headMap, String charSet) {
@@ -118,7 +119,7 @@ public class HttpUtils {
      * @return
      */
     public static String post(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
-        return post(webPageUrl, headMap, paramsMap, CHAR_SET_GB2312);
+        return post(webPageUrl, headMap, paramsMap, CHAR_SET_GBK);
     }
     public static String post(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {
@@ -184,7 +185,7 @@ public class HttpUtils {
     }
 
     public static HttpResponse postWithResponse(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap) {
-        return postWithResponse(webPageUrl,headMap,paramsMap,CHAR_SET_GB2312);
+        return postWithResponse(webPageUrl,headMap,paramsMap,CHAR_SET_GBK);
     }
     public static HttpResponse postWithResponse(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         if (StringUtils.isEmpty(webPageUrl)) {
@@ -246,7 +247,7 @@ public class HttpUtils {
      */
     public static String convertStreamToString(InputStream is, String charSet) {
         if (StringUtils.isEmpty(charSet)) {
-            charSet = CHAR_SET_GB2312;
+            charSet = CHAR_SET_GBK;
         }
 
         //整个字节数组一起读取，解决因定长切割字符数组而导致的个别中文乱码问题

@@ -36,6 +36,7 @@ public class RemiseNoticeDetailParser {
         RemiseNotice remiseNotice = new RemiseNotice();
         List<RemiseNoticeDetail> remiseNoticeDetailList = new ArrayList<>();
 
+        pageContent = removeInvalidStr(pageContent);
         Document doc = Jsoup.parse(pageContent);
         Element tileEle = doc.getElementById("lblTitle");
         if(null != tileEle && tileEle.hasText()){

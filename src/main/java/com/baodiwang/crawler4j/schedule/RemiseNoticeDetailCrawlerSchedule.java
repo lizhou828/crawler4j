@@ -50,9 +50,9 @@ public class RemiseNoticeDetailCrawlerSchedule {
     MemCachedClient memCachedClient;
 
 
-
-    @Async
-    @Scheduled(cron = "0 0/10 * * * ?")//每隔30分钟执行一次
+//
+//    @Async
+//    @Scheduled(cron = "0 0/10 * * * ?")//每隔30分钟执行一次
     public void schedule(){
         String logMessage = "抓取详情页的定时器=======================";
         log.info(logMessage +"开始执行");
