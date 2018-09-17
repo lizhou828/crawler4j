@@ -82,6 +82,9 @@ public class RemiseNoticeDetail implements Serializable {
     /*  */
     private String creator;
 
+    /* 省市区信息 */
+    private String administrativeArea;
+
 
     /* get 主键 */
     public Long getId() {
@@ -282,30 +285,40 @@ public class RemiseNoticeDetail implements Serializable {
         this.creator = creator;
     }
 
+    public String getAdministrativeArea() {
+        return administrativeArea;
+    }
+
+    public void setAdministrativeArea(String administrativeArea) {
+        this.administrativeArea = administrativeArea;
+    }
+
+    @Override
     public String toString() {
-        return "RemiseNoticeDetail {" +
-                    " id = " + id +
-                    " , noticeId = " + noticeId +
-                    " , landSn = " + landSn +
-                    " , landTotalArea = " + landTotalArea +
-                    " , landLocation = " + landLocation +
-                    " , saleTime = " + saleTime +
-                    " , plotRatio = " + plotRatio +
-                    " , buildingDensity = " + buildingDensity +
-                    " , greeningRate = " + greeningRate +
-                    " , buildingLimitedHeight = " + buildingLimitedHeight +
-                    " , landUseDetails = " + landUseDetails +
-                    " , investmentIntensity = " + investmentIntensity +
-                    " , cashDeposit = " + cashDeposit +
-                    " , valuationReportNum = " + valuationReportNum +
-                    " , currentLandConditions = " + currentLandConditions +
-                    " , startingPrice = " + startingPrice +
-                    " , priceIncrease = " + priceIncrease +
-                    " , openStartTime = " + openStartTime +
-                    " , openEndTime = " + openEndTime +
-                    " , remark = " + remark +
-                    " , createTime = " + createTime +
-                    " , creator = " + creator +
-            "}";
-        }
+        return "RemiseNoticeDetail{" +
+                "id=" + id +
+                ", noticeId=" + noticeId +
+                ", landSn='" + landSn + '\'' +
+                ", landTotalArea='" + landTotalArea + '\'' +
+                ", landLocation='" + landLocation + '\'' +
+                ", saleTime='" + saleTime + '\'' +
+                ", plotRatio='" + plotRatio + '\'' +
+                ", buildingDensity='" + buildingDensity + '\'' +
+                ", greeningRate='" + greeningRate + '\'' +
+                ", buildingLimitedHeight='" + buildingLimitedHeight + '\'' +
+                ", landUseDetails='" + landUseDetails + '\'' +
+                ", investmentIntensity='" + investmentIntensity + '\'' +
+                ", cashDeposit='" + cashDeposit + '\'' +
+                ", valuationReportNum='" + valuationReportNum + '\'' +
+                ", currentLandConditions='" + currentLandConditions + '\'' +
+                ", startingPrice='" + startingPrice + '\'' +
+                ", priceIncrease='" + priceIncrease + '\'' +
+                ", openStartTime='" + openStartTime + '\'' +
+                ", openEndTime='" + openEndTime + '\'' +
+                ", remark='" + remark + '\'' +
+                ", createTime=" + createTime +
+                ", creator='" + creator + '\'' +
+                ", administrativeArea='" + administrativeArea + '\'' +
+                '}';
+    }
 }

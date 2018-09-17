@@ -75,7 +75,8 @@
         open_end_time,
         remark,
         create_time,
-        creator
+        creator,
+        administrativeArea
     </sql>
 
 
@@ -340,7 +341,8 @@
                 #{item.openEndTime},
                 #{item.remark},
                 #{item.createTime},
-                #{item.creator}
+                #{item.creator},
+                #{item.administrativeArea}
             )
         </foreach>
     </insert>

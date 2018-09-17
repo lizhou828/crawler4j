@@ -46,9 +46,10 @@ public class RemiseNoticeDetailParser {
         if(null != lblCreateDate && lblCreateDate.hasText()){
             log.debug(lblCreateDate.text());//发布时间
         }
+        String str = null;
         Element lblXzq = doc.getElementById("lblXzq");
         if(null != lblXzq && lblXzq.hasText()){
-            String str = lblXzq.text();
+            str = lblXzq.text();
             if(StringUtils.isNotEmpty(str)){
                 str = str.replace("行政区：","");
             }
@@ -96,6 +97,13 @@ public class RemiseNoticeDetailParser {
 
         for(Element table : tableEleList){
             RemiseNoticeDetail remiseNoticeDetail = parseTable(table);
+            if(null != remiseNoticeDetail){
+                if(StringUtils.isNotEmpty(str)){
+                    remiseNoticeDetail.setAdministrativeArea(str);//行政区
+                }
+                remiseNoticeDetailList.add(remiseNoticeDetail);
+            }
+
             if(null != remiseNoticeDetail){
                 remiseNoticeDetailList.add(remiseNoticeDetail);
             }

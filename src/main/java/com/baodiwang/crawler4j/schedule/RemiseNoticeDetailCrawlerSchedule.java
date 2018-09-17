@@ -51,8 +51,9 @@ public class RemiseNoticeDetailCrawlerSchedule {
 
 
 //
-//    @Async
+    @Async
 //    @Scheduled(cron = "0 0/10 * * * ?")//每隔30分钟执行一次
+    @Scheduled(cron = "0 41 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void schedule(){
         String logMessage = "抓取详情页的定时器=======================";
         log.info(logMessage +"开始执行");
@@ -90,17 +91,18 @@ public class RemiseNoticeDetailCrawlerSchedule {
                 remiseNotice.setContent(content);
                 int resultCount = remiseNoticeService.update(remiseNotice);
                 if(resultCount > 0 ){
+                    log.info(logMessage+"成功抓取到详情页数据后，已更新content到数据库");
                     count ++;
                 }
             }
 
-            int sleepSeconds = IntUtils.getRandomInt(5,8);
-            try {
-                log.info(logMessage+"成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
-                Thread.sleep( sleepSeconds * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            int sleepSeconds = IntUtils.getRandomInt(5,8);
+//            try {
+//                log.info(logMessage+"成功抓取到详情页数据后，休眠" + sleepSeconds + "秒");
+//                Thread.sleep( sleepSeconds * 1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         log.info(logMessage+"成功抓取到详情页并保存数据条数：" + count);
     }
