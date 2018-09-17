@@ -30,6 +30,9 @@ import java.util.Map;
 @Service
 public class LandChinaHttpBreaker3 {
 
+    //多个程序同时运行的话，各自的key也就不一样
+    public static final String YUNSUO_SESSION_VERIFY_KEY = NetUtils.getLanIpInWindows() + "_yunsuo_session_verify";
+
     public static final String YUNSUO_SESSION_VERIFY = "yunsuo_session_verify";
 
     public static final String ASP_NET_SESSIONID = "ASP.NET_SessionId";
@@ -56,11 +59,11 @@ public class LandChinaHttpBreaker3 {
 
     public String breakBarrierPost(String webPageUrl, Map<String, String> headMap, Map<String, String> paramsMap, String charSet) {
         Map<String, String> map = stepOne();
-        if(null == map || !map.containsKey(YUNSUO_SESSION_VERIFY)){
+        if(null == map || !map.containsKey(YUNSUO_SESSION_VERIFY_KEY)){
             log.error("获取yunsuo_session_verify============================失败：map=" + map);
             return null;
         }
-        String yunsuo_session_verify = map.get(YUNSUO_SESSION_VERIFY);
+        String yunsuo_session_verify = map.get(YUNSUO_SESSION_VERIFY_KEY);
         String ASPNET_SessionId = map.containsKey(ASP_NET_SESSIONID) ? map.get(ASP_NET_SESSIONID) : "";
         String cookieValue = "yunsuo_session_verify="+yunsuo_session_verify+"; Hm_lvt_83853859c7247c5b03b527894622d3fa=1535094220,1536311959,1536645940; Hm_lpvt_83853859c7247c5b03b527894622d3fa=1536646717";
         if(StringUtils.isNotEmpty(ASPNET_SessionId)){
@@ -82,13 +85,13 @@ public class LandChinaHttpBreaker3 {
             map.put(ASP_NET_SESSIONID, aspSessionId);
         }
 
-        Object yunsuo_session_verify_Obj = memCachedClient.get(YUNSUO_SESSION_VERIFY);
+        Object yunsuo_session_verify_Obj = memCachedClient.get(YUNSUO_SESSION_VERIFY_KEY);
         String yunsuo_session_verify = "";
         if (null != yunsuo_session_verify_Obj) {
             yunsuo_session_verify = (String) yunsuo_session_verify_Obj;
         }
         if (StringUtils.isNotEmpty(yunsuo_session_verify)) {
-            map.put(YUNSUO_SESSION_VERIFY, yunsuo_session_verify);
+            map.put(YUNSUO_SESSION_VERIFY_KEY, yunsuo_session_verify);
             log.info("获取yunsuo_session_verify============================从memcache中获取到=" + yunsuo_session_verify);
             return map;
         }
@@ -99,7 +102,7 @@ public class LandChinaHttpBreaker3 {
             boolean setResult = memCachedClient.set(ASP_NET_SESSIONID, map.get(ASP_NET_SESSIONID), expiresDate);
             log.info("获取" + ASP_NET_SESSIONID + "============================保存到memcache中setResult=" + setResult+"," + ASP_NET_SESSIONID + "=" + memCachedClient.get(ASP_NET_SESSIONID));
         }
-        if (null != map && map.containsKey(YUNSUO_SESSION_VERIFY)) {
+        if (null != map && map.containsKey(YUNSUO_SESSION_VERIFY_KEY)) {
             String expiresTime = map.get(YUNSUO_SESSION_VERIFY+"_expires");
             long expiresTimeLong = Long.parseLong(expiresTime);
             long saveTime = expiresTimeLong - new Date().getTime();//解析出来的有效期
@@ -109,9 +112,9 @@ public class LandChinaHttpBreaker3 {
             }else{
                 expiresDate = new Date( 3 * 24 * 3600 *1000);//默认有效期为3天
             }
-            boolean setResult = memCachedClient.set(YUNSUO_SESSION_VERIFY, map.get(YUNSUO_SESSION_VERIFY), expiresDate);
-            log.info("获取yunsuo_session_verify============================发送get请求获取到=" + map.get(YUNSUO_SESSION_VERIFY));
-            log.info("获取yunsuo_session_verify============================保存到memcache中setResult=" + setResult+",yunsuo_session_verify=" + memCachedClient.get(YUNSUO_SESSION_VERIFY));
+            boolean setResult = memCachedClient.set(YUNSUO_SESSION_VERIFY_KEY, map.get(YUNSUO_SESSION_VERIFY_KEY), expiresDate);
+            log.info("获取yunsuo_session_verify============================发送get请求获取到=" + map.get(YUNSUO_SESSION_VERIFY_KEY));
+            log.info("获取yunsuo_session_verify============================保存到memcache中setResult=" + setResult+",yunsuo_session_verify=" + memCachedClient.get(YUNSUO_SESSION_VERIFY_KEY));
             return map;
         } else {
             return null;
@@ -198,11 +201,11 @@ public class LandChinaHttpBreaker3 {
 
     public String breakBarrierGet(String webPageUrl, Map<String, String> headMap, String charSet) {
         Map<String, String> map = stepOne();
-        if(null == map || !map.containsKey(YUNSUO_SESSION_VERIFY)){
+        if(null == map || !map.containsKey(YUNSUO_SESSION_VERIFY_KEY)){
             log.error("获取yunsuo_session_verify============================失败：map=" + map);
             return null;
         }
-        String yunsuo_session_verify = map.get(YUNSUO_SESSION_VERIFY);
+        String yunsuo_session_verify = map.get(YUNSUO_SESSION_VERIFY_KEY);
         String ASPNET_SessionId = map.containsKey(ASP_NET_SESSIONID) ? map.get(ASP_NET_SESSIONID) : "";
         String cookieValue = "yunsuo_session_verify="+yunsuo_session_verify+"; Hm_lvt_83853859c7247c5b03b527894622d3fa=1535094220,1536311959,1536645940; Hm_lpvt_83853859c7247c5b03b527894622d3fa=1536646717";
         if(StringUtils.isNotEmpty(ASPNET_SessionId)){

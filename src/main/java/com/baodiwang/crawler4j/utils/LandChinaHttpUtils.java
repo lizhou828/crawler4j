@@ -85,7 +85,7 @@ public class LandChinaHttpUtils {
                             if(str.contains("yunsuo_session_verify")){
                                 String[] s  = str.split("=");
                                 if(s.length == 2 && !map.containsKey("yunsuo_session_verify")){
-                                    map.put(s[0],s[1]);
+                                    map.put(LandChinaHttpBreaker3.YUNSUO_SESSION_VERIFY_KEY,s[1]);
                                 }
                             }else if (str.contains("expires")){
                                 String[] s  = str.split("=");
