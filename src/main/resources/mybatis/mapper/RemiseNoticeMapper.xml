@@ -220,7 +220,7 @@
     <select id="findNoticeWithoutContent" resultMap="RemiseNoticeResultMapper">
         select id , type , content , notice_num , href
         from remise_notice
-        where id > #{startId}  and content is null ORDER BY id ASC LIMIT #{pageSize}
+        where id >= #{startId}  and content is null ORDER BY id ASC LIMIT #{pageSize}
     </select>
 
     <select id="findNoticeWithoutContentById" resultMap="RemiseNoticeResultMapper">
