@@ -131,6 +131,14 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
         System.out.println("minId=" + minId );
     }
 
+    @Test
+    public void findContentWithDirtyCodeTest(){
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findContentWithDirtyCode(1L, 1000L);
+        System.out.println("remiseNoticeList=" + remiseNoticeList);
+    }
+
+
+
 
 
 }

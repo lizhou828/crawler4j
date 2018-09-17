@@ -79,6 +79,9 @@ public class RemiseNoticeDetailParser {
         if(null != trEleList && !trEleList.isEmpty()){
             for(int i= 0;i < trEleList.size();i++){
                 String title = trEleList.get(0).text();
+                if(StringUtils.isNotEmpty(title)){
+                    remiseNotice.setTitle(title);
+                }
                 String noticeNum = StringUtils.getNoticeNumFromTitle(title);
                 if(StringUtils.isNotEmpty(noticeNum)){
                     remiseNotice.setNoticeNum(noticeNum);

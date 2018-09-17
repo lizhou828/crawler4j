@@ -193,4 +193,14 @@ public class RemiseNoticeServiceImpl extends GenericService<RemiseNotice, Intege
         }
         return remiseNoticeMapper.findMinIdWithoutContent(lastDataCount);
     }
+
+    /**
+     * 根据指定id区间，来查找content中含有乱码的的数据（需要自动校对）
+     * @param startId
+     * @param endId
+     * @return
+     */
+    public List<RemiseNotice> findContentWithDirtyCode(Long startId,Long endId){
+        return remiseNoticeMapper.findContentWithDirtyCode(startId,endId);
+    }
 }

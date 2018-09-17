@@ -124,7 +124,7 @@
         <if test="noticeNum!= null and noticeNum!= ''">
             , notice_num = #{noticeNum}
         </if>
-        <if test="publishTime!= null and publishTime!= ''">
+        <if test="publishTime!= null ">
             , publish_time = #{publishTime}
         </if>
         <if test="areaName!= null and areaName!= ''">
@@ -139,7 +139,7 @@
         <if test="href!= null and href!= ''">
             , href = #{href}
         </if>
-        <if test="createTime!= null and createTime!= ''">
+        <if test="createTime!= null ">
             , create_time = #{createTime}
         </if>
         <if test="creator!= null and creator!= ''">
@@ -247,6 +247,24 @@
         AND content  IS NULL
     </select>
 
+
+    <select id="findContentWithDirtyCode" resultMap="RemiseNoticeResultMapper">
+        select n.id , n.title,n.type , n.content , n.notice_num , n.href
+        from remise_notice n
+        where
+        <choose>
+            <when test="startId != null and startId != ''  and endId != null and endId != '' ">
+                 n.id BETWEEN  #{startId} and #{endId}
+            </when>
+            <when test="startId != null and startId != ''  and( endId = null or endId == '' )">
+                n.id BETWEEN  #{startId} and (select MAX(id) from remise_notice)
+            </when>
+            <otherwise>
+                n.id BETWEEN  ((select MAX(id) from remise_notice) - 1000 ) and (select MAX(id) from remise_notice)
+            </otherwise>
+        </choose>
+        and content is not null  and content like '%�%'
+    </select>
 
     <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.RemiseNotice">
         insert into  remise_notice( <include refid="commonColumnsNotPK"/> )

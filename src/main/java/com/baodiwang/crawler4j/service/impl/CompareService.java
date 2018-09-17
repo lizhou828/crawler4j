@@ -43,6 +43,35 @@ public class CompareService {
     @Autowired
     LandChinaHttpBreaker3 landChinaHttpBreaker3;
 
+    @Transactional
+    public Boolean compareContent(Integer remiseNoticeId){
+        String logMessage = "比对数据功能remiseNoticeId="+remiseNoticeId+",===================================================";
+        if(null == remiseNoticeId || remiseNoticeId <= 0){
+            log.error(logMessage + "非法id:"+remiseNoticeId) ;
+            return false;
+        }
+        RemiseNotice remiseNotice = remiseNoticeService.getByPK(remiseNoticeId);
+        if(null == remiseNotice || StringUtils.isEmpty(remiseNotice.getHref())){
+            log.error(logMessage + "没有该id的数据");
+            return false;
+        }
+        String webContent = landChinaHttpBreaker3.breakBarrierGet(remiseNotice.getHref(), null);
+        if(StringUtils.isEmpty(webContent) || webContent.length() < 8000){
+            log.error(logMessage + "抓取到的网页异常！webContent=" + webContent);
+            return false;
+        }
+
+
+        RemiseNotice temp = new RemiseNotice();
+        temp.setId(remiseNotice.getId());
+        if(!webContent.equals(remiseNotice.getContent())){
+            temp.setContent(webContent);
+            int result = remiseNoticeService.update(temp);
+            return result > 0;
+        }
+        return null;
+    }
+
 
     /**
      * 比对数据
@@ -96,35 +125,63 @@ public class CompareService {
 
         }
 
-        //详情页数据条数长度不一样
+        //一、详情页数据条数长度不一样
         if(remiseNoticeDetailList.size() != remiseNoticeVo.getRemiseNoticeDetailList().size()){
             if(autoUpdate){
+                /* 校对数据后，更新remiseNoticeDetail表 */
                 updateAfterCompareDetail(remiseNotice, remiseNoticeVo.getRemiseNoticeDetailList());
-                log.info(logMessage + "详情页条数不一样，已更新数据库");
+
+                /* 校对数据后，更新remiseNotice表 */
+                Boolean update = updateRemiseNotice(remiseNotice, remiseNoticeVo, webContent);
+                if(null == update){
+                    log.info(logMessage + "详情页数据条数长度不一样,remiseNotice数据无需更新");
+                } else if(update){
+                    log.info(logMessage + "详情页数据条数长度不一样,更新remiseNotice表成功");
+                } else {
+                    log.error(logMessage + "详情页数据条数长度不一样,更新remiseNotice表失败，remiseNotice=" + remiseNotice);
+                }
+                log.info(logMessage + "详情页数据条数长度不一样,已更新数据库");
                 return true;
             }else{
-                log.warn(logMessage + "详情页条数不一样，需要更新数据库");
+                log.warn(logMessage + "详情页数据条数长度不一样，需要更新数据库");
                 return true;
             }
         }
 
-        boolean updateResult = compareList(remiseNotice,remiseNoticeDetailList ,remiseNoticeVo.getRemiseNoticeDetailList(),autoUpdate);
-        if(updateResult){
-            log.info(logMessage + "详情页个别数据不一样，已更新数据库");
+        //二、详情页数据条数长度一样的情况
+        /* 校对数据后，更新remiseNoticeDetail表 */
+        Boolean updateResult = compareListWithSameLength(remiseNotice, remiseNoticeDetailList, remiseNoticeVo.getRemiseNoticeDetailList(), autoUpdate);
+
+        /* 校对数据后，更新remiseNotice表（详情页其他内容可能会有改动、乱码等。所以需要更新） */
+        Boolean update = updateRemiseNotice(remiseNotice, remiseNoticeVo, webContent);
+        if(null == update){
+            log.info(logMessage + "详情页数据条数长度一样的情况,remiseNotice数据无需更新");
+        } else if(update){
+            log.info(logMessage + "详情页数据条数长度一样的情况,更新remiseNotice表成功");
+        }else {
+            log.error(logMessage + "详情页数据条数长度一样的情况,更新remiseNotice表失败.......remiseNotice=" + remiseNotice);
+        }
+
+        if(null == updateResult){
+            log.info(logMessage + "详情页数据条数长度一样的情况,详情页数据无需更新");
+            return null;
+        }else if(updateResult){
+            log.info(logMessage + "详情页数据条数长度一样的情况,详情页个别数据不一样，已更新数据库");
             return true;
         }else {
-            log.info(logMessage + "详情页数据无需更新");
-            return null;
+            log.error(logMessage + "详情页数据条数长度一样的情况,详情页个别数据不一样，更新remiseNoticeDetai失败.......remiseNotice=" + remiseNotice);
+            return false;
         }
     }
 
-    private boolean compareList(RemiseNotice remiseNotice ,List<RemiseNoticeDetail> listInDB ,List<RemiseNoticeDetail> listInPage ,boolean autoUpdate){
+    private Boolean compareListWithSameLength(RemiseNotice remiseNotice ,List<RemiseNoticeDetail> listInDB ,List<RemiseNoticeDetail> listInPage ,boolean autoUpdate){
         if(!autoUpdate){
             return autoUpdate;
         }
-        if(CollectionUtils.isEmpty(listInDB) || CollectionUtils.isEmpty(listInPage) || listInDB.size() != listInPage.size() ){
-            return false;
+        if (CollectionUtils.isEmpty(listInDB) && CollectionUtils.isEmpty(listInPage)){
+            return null ;//无需处理
         }
+
         boolean isSame = true;
         for(int i = 0 ;i <listInDB.size();i++){
             isSame = compareRemiseNotice(listInDB.get(i), listInPage.get(i));
@@ -136,7 +193,7 @@ public class CompareService {
         if(autoUpdate && !isSame){
             return updateAfterCompareDetail(remiseNotice,listInPage);
         }
-        return false;
+        return null;
     }
 
     private boolean updateAfterCompareDetail(RemiseNotice remiseNotice,List<RemiseNoticeDetail> listInPage){
@@ -246,4 +303,39 @@ public class CompareService {
         return isSame;
     }
 
+    /**
+     * 校对数据成功后，更新remiseNotice的相关字段
+     * @param remiseNotice
+     * @param remiseNoticeVo
+     * @param webContent
+     * @return
+     */
+    private Boolean updateRemiseNotice(RemiseNotice remiseNotice, RemiseNoticeVo remiseNoticeVo, String webContent){
+        if(StringUtils.isEmpty(webContent) || webContent.length() < 8000){
+            return false;
+        }
+        Boolean needUpdate = false;
+        RemiseNotice temp = new RemiseNotice();
+        temp.setId(remiseNotice.getId());
+        if(!webContent.equals(remiseNotice.getContent())){
+            temp.setContent(webContent);
+            needUpdate = true;
+        }
+
+        RemiseNotice remiseNoticeInVo  = remiseNoticeVo.getRemiseNotice();
+        if(null != remiseNoticeInVo  && StringUtils.isNotEmpty(remiseNoticeInVo.getTitle()) &&  !remiseNoticeInVo.getTitle().equals(remiseNotice.getTitle())){
+            temp.setTitle(remiseNoticeInVo.getTitle());
+            needUpdate = true;
+        }
+        if(null != remiseNoticeInVo  && StringUtils.isNotEmpty(remiseNoticeInVo.getNoticeNum()) &&  !remiseNoticeInVo.getNoticeNum().equals(remiseNotice.getNoticeNum())){
+            temp.setNoticeNum(remiseNoticeInVo.getNoticeNum());
+            needUpdate = true;
+        }
+        if(needUpdate){
+            int result = remiseNoticeService.update(temp);
+            return result > 0;
+        }else{
+            return null;
+        }
+    }
 }

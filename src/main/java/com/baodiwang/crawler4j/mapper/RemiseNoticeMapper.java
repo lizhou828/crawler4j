@@ -57,4 +57,12 @@ public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, I
     public void batchInsertWithId(List<RemiseNotice> remiseNotices);
 
     public long findMinIdWithoutContent(@Param("lastDataCount") Long lastDataCount);
+
+    /**
+     * 根据指定id区间，来查找content中含有乱码的的数据（需要自动校对）
+     * @param startId
+     * @param endId
+     * @return
+     */
+    public List<RemiseNotice> findContentWithDirtyCode(@Param("startId")Long startId,@Param("endId")Long endId);
 }
