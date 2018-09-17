@@ -187,9 +187,23 @@ public class RemiseNoticeDetailParserSchedule {
 
         RemiseNotice update  = null == remiseNoticeVo ? null : remiseNoticeVo.getRemiseNotice();
         if(null != update ){
-            update.setId(remiseNotice.getId());
+            RemiseNotice  remiseNoticeTemp =  new RemiseNotice();
+            remiseNoticeTemp.setId(remiseNotice.getId());
+            boolean updateFlag = false;
             if(StringUtils.isNotEmpty(remiseNotice.getNoticeNum()) && !remiseNotice.getNoticeNum().equals(update.getNoticeNum())){
-                remiseNoticeService.update(update);
+                remiseNoticeTemp.setNoticeNum(update.getNoticeNum());
+                updateFlag = true;
+            }
+            if(StringUtils.isNotEmpty(remiseNotice.getTitle()) && !remiseNotice.getTitle().equals(update.getTitle())){
+                remiseNoticeTemp.setTitle(update.getTitle());
+                updateFlag = true;
+            }
+            if(StringUtils.isNotEmpty(remiseNotice.getAreaName()) && !remiseNotice.getAreaName().equals(update.getAreaName())){
+                remiseNoticeTemp.setAreaName(update.getAreaName());
+                updateFlag = true;
+            }
+            if(updateFlag ){
+                remiseNoticeService.update(remiseNoticeTemp);
             }
         }
     }

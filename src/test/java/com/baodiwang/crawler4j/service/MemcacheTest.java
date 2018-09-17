@@ -49,10 +49,10 @@ public class MemcacheTest extends ApplicationTests {
 //        2）、如果要设置的key已经存在时，则set方法与replace方法效果一样。
 
 
-        memCachedClient.set("yunsuo_session_verify", "9a45a9daf225f18583f9b176867de9ab");
+        memCachedClient.set("yunsuo_session_verify", "94f01d33f3985890f36d44c67fdb827e");
         System.out.println(memCachedClient.get("yunsuo_session_verify"));
 
-        memCachedClient.set("ASP.NET_SessionId", "kyyxsjkbih1anfqdgss415up");
+        memCachedClient.set("ASP.NET_SessionId", "umgctxczmqbyecbnpxqbyhns");
         System.out.println(memCachedClient.get("ASP.NET_SessionId"));
 
         System.out.println(memCachedClient.keyExists("yunsuo_session_verify"));

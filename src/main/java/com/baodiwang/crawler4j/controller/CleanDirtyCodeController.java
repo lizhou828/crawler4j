@@ -37,8 +37,8 @@ public class CleanDirtyCodeController {
 
     @RequestMapping("/clean")
     public String clean (){
-        Long startId = 4000L;
-        Long endId = 5000L;
+        Long startId = 1L;
+        Long endId = 2000L;
         long start = System.currentTimeMillis();
         List<RemiseNotice> remiseNoticeList = remiseNoticeService.findContentWithDirtyCode(startId, endId);
         long end = System.currentTimeMillis();

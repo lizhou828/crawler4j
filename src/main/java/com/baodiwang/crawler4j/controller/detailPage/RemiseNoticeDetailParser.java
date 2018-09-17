@@ -49,14 +49,12 @@ public class RemiseNoticeDetailParser {
         Element lblXzq = doc.getElementById("lblXzq");
         if(null != lblXzq && lblXzq.hasText()){
             String str = lblXzq.text();
-//            log.info(str);
-//            if(StringUtils.isNotEmpty(str)){
-//                str = str.replace("行政区：","");
-//            }
-//            if(StringUtils.isNotEmpty(str)){
-//
-//                remiseNotice.setAreaName(str);//行政区
-//            }
+            if(StringUtils.isNotEmpty(str)){
+                str = str.replace("行政区：","");
+            }
+            if(StringUtils.isNotEmpty(str)){
+                remiseNotice.setAreaName(str);//行政区
+            }
         }
 
         Element tdContent = doc.getElementById("tdContent");//网页中的正文部分
