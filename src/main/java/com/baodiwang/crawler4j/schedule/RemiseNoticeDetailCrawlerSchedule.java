@@ -52,8 +52,8 @@ public class RemiseNoticeDetailCrawlerSchedule {
 
 //
     @Async
-//    @Scheduled(cron = "0 0/10 * * * ?")//每隔30分钟执行一次
-    @Scheduled(cron = "0 41 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
+    @Scheduled(cron = "0 0/5 * * * ?")//每隔30分钟执行一次
+//    @Scheduled(cron = "0 41 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void schedule(){
         String logMessage = "抓取详情页的定时器=======================";
         log.info(logMessage +"开始执行");
@@ -71,8 +71,6 @@ public class RemiseNoticeDetailCrawlerSchedule {
         long start = System.currentTimeMillis();
         if(minIdInMemcache > 0L ){
             remiseNoticeList= remiseNoticeService.findNoticeWithoutContent(minIdInMemcache, 100);
-        }else{
-            remiseNoticeList = remiseNoticeService.findNoticeWithoutContent(0, 100);
         }
         long end = System.currentTimeMillis();
         log.info(logMessage +" ，查询到需要抓取详情页的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()) + ",耗时"+(end - start)+"毫秒");

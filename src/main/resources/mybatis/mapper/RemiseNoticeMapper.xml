@@ -243,7 +243,7 @@
     <select id="findMinIdWithoutContent" resultType="long">
         select IFNULL(MIN(ID),0) as id
         from remise_notice
-        where id > (select MAX(ID) from remise_notice ) - #{lastDataCount}
+        where id <![CDATA[ >= ]]> (select MAX(ID) from remise_notice ) - #{lastDataCount}
         AND content  IS NULL
     </select>
 
