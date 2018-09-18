@@ -59,8 +59,8 @@ public class RemiseNoticeDetailParserSchedule {
     @Autowired
     RemiseNoticeDetailService remiseNoticeDetailService;
 
-//    @Async
-//    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
+    @Async
+    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void parseDataToRemiseNoticeDetail(){
 
         log.info("多线程解析公告详情页数据============================开始");
