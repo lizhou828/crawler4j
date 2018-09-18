@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baodiwang.crawler4j.mapper.SecondLandDetailMapper">
+    <!--<cache type="com.yyw.yhyc.cache.LoggingRedisCache"-->
+    <!--flushInterval="86400000" size="1024000">-->
+    <!--</cache>-->
+    <resultMap id="SecondLandDetailResultMapper" type="com.baodiwang.crawler4j.model.SecondLandDetail">
+        <result column="id" property="id"/>
+        <result column="second_land_id" property="secondLandId"/>
+        <result column="land_type" property="landType"/>
+        <result column="land_code" property="landCode"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="title" property="title"/>
+        <result column="usage" property="usage"/>
+        <result column="land_price" property="landPrice"/>
+        <result column="transfer_type" property="transferType"/>
+        <result column="transfer_time" property="transferTime"/>
+        <result column="total_area" property="totalArea"/>
+        <result column="regional_location" property="regionalLocation"/>
+        <result column="contacts" property="contacts"/>
+        <result column="contacts_phone" property="contactsPhone"/>
+        <result column="create_time" property="createTime"/>
+        <result column="from" property="from"/>
+    </resultMap>
+
+    <sql id="commonColumns">
+        id,
+        second_land_id,
+        land_type,
+        land_code,
+        update_time,
+        title,
+        usage,
+        land_price,
+        transfer_type,
+        transfer_time,
+        total_area,
+        regional_location,
+        contacts,
+        contacts_phone,
+        create_time,
+        from
+    </sql>
+
+    <sql id="commonColumnsNotPK">
+        second_land_id,
+        land_type,
+        land_code,
+        update_time,
+        title,
+        usage,
+        land_price,
+        transfer_type,
+        transfer_time,
+        total_area,
+        regional_location,
+        contacts,
+        contacts_phone,
+        create_time,
+        from
+    </sql>
+
+
+    <sql id="commonProcessDateColumns">
+        id,
+        second_land_id,
+        land_type,
+        land_code,
+        update_time,
+        title,
+        usage,
+        land_price,
+        transfer_type,
+        transfer_time,
+        total_area,
+        regional_location,
+        contacts,
+        contacts_phone,
+        create_time,
+        from
+    </sql>
+
+    <sql id="commonCondition">
+        <if test="secondLandId!= null and secondLandId!= ''">
+            AND second_land_id = #{secondLandId}
+        </if>
+        <if test="landType!= null and landType!= ''">
+            AND land_type = #{landType}
+        </if>
+        <if test="landCode!= null and landCode!= ''">
+            AND land_code = #{landCode}
+        </if>
+        <if test="updateTime!= null and updateTime!= ''">
+            AND update_time = #{updateTime}
+        </if>
+        <if test="title!= null and title!= ''">
+            AND title = #{title}
+        </if>
+        <if test="usage!= null and usage!= ''">
+            AND usage = #{usage}
+        </if>
+        <if test="landPrice!= null and landPrice!= ''">
+            AND land_price = #{landPrice}
+        </if>
+        <if test="transferType!= null and transferType!= ''">
+            AND transfer_type = #{transferType}
+        </if>
+        <if test="transferTime!= null and transferTime!= ''">
+            AND transfer_time = #{transferTime}
+        </if>
+        <if test="totalArea!= null and totalArea!= ''">
+            AND total_area = #{totalArea}
+        </if>
+        <if test="regionalLocation!= null and regionalLocation!= ''">
+            AND regional_location = #{regionalLocation}
+        </if>
+        <if test="contacts!= null and contacts!= ''">
+            AND contacts = #{contacts}
+        </if>
+        <if test="contactsPhone!= null and contactsPhone!= ''">
+            AND contacts_phone = #{contactsPhone}
+        </if>
+        <if test="createTime!= null and createTime!= ''">
+            AND create_time = #{createTime}
+        </if>
+        <if test="from!= null and from!= ''">
+            AND from = #{from}
+        </if>
+    </sql>
+
+
+    <insert id="save" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail">
+        <![CDATA[ INSERT INTO second_land_detail ( ]]> <include refid="commonColumnsNotPK"/>
+        <![CDATA[
+                ) VALUES (
+                #{secondLandId},
+                #{landType},
+                #{landCode},
+                #{updateTime},
+                #{title},
+                #{usage},
+                #{landPrice},
+                #{transferType},
+                #{transferTime},
+                #{totalArea},
+                #{regionalLocation},
+                #{contacts},
+                #{contactsPhone},
+                #{createTime},
+                #{from}
+      ) ]]>
+    </insert>
+
+    <update id="update" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail">
+        <![CDATA[ UPDATE second_land_detail SET
+         id = #{id} ]]>
+
+        <if test="secondLandId!= null and secondLandId!= ''">
+            , second_land_id = #{secondLandId}
+        </if>
+        <if test="landType!= null and landType!= ''">
+            , land_type = #{landType}
+        </if>
+        <if test="landCode!= null and landCode!= ''">
+            , land_code = #{landCode}
+        </if>
+        <if test="updateTime!= null and updateTime!= ''">
+            , update_time = #{updateTime}
+        </if>
+        <if test="title!= null and title!= ''">
+            , title = #{title}
+        </if>
+        <if test="usage!= null and usage!= ''">
+            , usage = #{usage}
+        </if>
+        <if test="landPrice!= null and landPrice!= ''">
+            , land_price = #{landPrice}
+        </if>
+        <if test="transferType!= null and transferType!= ''">
+            , transfer_type = #{transferType}
+        </if>
+        <if test="transferTime!= null and transferTime!= ''">
+            , transfer_time = #{transferTime}
+        </if>
+        <if test="totalArea!= null and totalArea!= ''">
+            , total_area = #{totalArea}
+        </if>
+        <if test="regionalLocation!= null and regionalLocation!= ''">
+            , regional_location = #{regionalLocation}
+        </if>
+        <if test="contacts!= null and contacts!= ''">
+            , contacts = #{contacts}
+        </if>
+        <if test="contactsPhone!= null and contactsPhone!= ''">
+            , contacts_phone = #{contactsPhone}
+        </if>
+        <if test="createTime!= null and createTime!= ''">
+            , create_time = #{createTime}
+        </if>
+        <if test="from!= null and from!= ''">
+            , from = #{from}
+        </if>
+
+        <![CDATA[  WHERE id = #{id} ]]>
+    </update>
+
+
+    <delete id="deleteByPK" parameterType="java.lang.Integer">
+        <![CDATA[ DELETE FROM second_land_detail
+        WHERE id = #{id} ]]>
+    </delete>
+
+    <delete id="deleteByPKeys" parameterType="map">
+        DELETE FROM second_land_detail WHERE
+        <foreach collection="primaryKeys" index="index" item="id" open=" id IN(" separator="," close=") ">
+            ${id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail">
+        DELETE FROM second_land_detail WHERE 1 = 1
+        <include refid="commonCondition"/>
+    </delete>
+
+    <select id="getByPK" parameterType="java.lang.Integer" resultMap="SecondLandDetailResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM second_land_detail WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="SecondLandDetailResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM second_land_detail
+    </select>
+
+    <select id="listByProperty" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail" resultMap="SecondLandDetailResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM second_land_detail WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByCount" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail" resultType="int">
+        SELECT count(1) AS totalcount FROM second_land_detail WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByPagination" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail" resultMap="SecondLandDetailResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM second_land_detail WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+</mapper>

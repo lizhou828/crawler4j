@@ -42,8 +42,8 @@ public class MemcacheSchedule {
     @Autowired
     MemCachedClient memCachedClient;
 
-    @Async
-    @Scheduled(cron = "0 0/2 * * * ? ")//每隔20分钟执行一次
+//    @Async
+//    @Scheduled(cron = "0 0/2 * * * ? ")//每隔20分钟执行一次
     public void updateRemiseNoticeMinId(){
         Long lastDataCount = 1000L;
         String logMessage = "memcache更新最小id（从RemiseNotice表中，没有content的最近的"+lastDataCount+"条数据中查询）============================================================";

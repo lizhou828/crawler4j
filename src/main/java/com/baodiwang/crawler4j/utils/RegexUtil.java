@@ -53,10 +53,10 @@ public class RegexUtil {
         String osAndDeviceStr = findMatchContent(OS_AND_DEVICE_REGEX ,src);
         System.out.println("osAndDeviceStr=" + osAndDeviceStr + ",src= " + src);
 
-        String pageInfoStr = "共11681页 当前只显示200页 共350406条记录";
-        String pageInfoStrMatch = RegexUtil.findMatchContent("共\\d+页", pageInfoStr);
-        String allRecodes = RegexUtil.findMatchContent("共\\d+条记录", pageInfoStr);
-        System.out.println("pageInfoStrMatch=" + pageInfoStrMatch);
+//        String pageInfoStr = "共11681页 当前只显示200页 共350406条记录";
+//        String pageInfoStrMatch = RegexUtil.findMatchContent("共\\d+页", pageInfoStr);
+//        String allRecodes = RegexUtil.findMatchContent("共\\d+条记录", pageInfoStr);
+//        System.out.println("pageInfoStrMatch=" + pageInfoStrMatch);
 
 
     }

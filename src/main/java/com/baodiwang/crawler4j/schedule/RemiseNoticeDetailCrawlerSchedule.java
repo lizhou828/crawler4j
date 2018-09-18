@@ -51,8 +51,8 @@ public class RemiseNoticeDetailCrawlerSchedule {
 
 
 //
-    @Async
-    @Scheduled(cron = "0 0/5 * * * ?")//每隔30分钟执行一次
+//    @Async
+//    @Scheduled(cron = "0 0/5 * * * ?")//每隔30分钟执行一次
 //    @Scheduled(cron = "0 41 18 1/1 * ? ")//,每小时执行一次 从10点30分开始,
     public void schedule(){
         String logMessage = "抓取详情页的定时器=======================";

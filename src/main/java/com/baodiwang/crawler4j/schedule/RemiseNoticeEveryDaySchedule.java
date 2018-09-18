@@ -206,13 +206,13 @@ public class RemiseNoticeEveryDaySchedule {
 //        pageInfoStr = "共11681页 当前只显示200页 共350406条记录";
         Map<String,Integer> map = new HashMap<>();
 
-        String allPages = RegexUtil.findMatchContent("共\\d+页", pageInfoStr);
-        allPages = RegexUtil.findMatchContent("\\d+",allPages);
-        map.put(All_PAGES,StringUtils.isNotEmpty(allPages) ? Integer.valueOf(allPages) : 0);
-
-        String allRecodes = RegexUtil.findMatchContent("共\\d+条记录", pageInfoStr);
-        allRecodes = RegexUtil.findMatchContent("\\d+",allRecodes);
-        map.put(ALL_RECODES,StringUtils.isNotEmpty(allRecodes) ? Integer.valueOf(allRecodes) : 0);
+//        String allPages = RegexUtil.findMatchContent("共\\d+页", pageInfoStr);
+//        allPages = RegexUtil.findMatchContent("\\d+",allPages);
+//        map.put(All_PAGES,StringUtils.isNotEmpty(allPages) ? Integer.valueOf(allPages) : 0);
+//
+//        String allRecodes = RegexUtil.findMatchContent("共\\d+条记录", pageInfoStr);
+//        allRecodes = RegexUtil.findMatchContent("\\d+",allRecodes);
+//        map.put(ALL_RECODES,StringUtils.isNotEmpty(allRecodes) ? Integer.valueOf(allRecodes) : 0);
         return map;
     }
 

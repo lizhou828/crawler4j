@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baodiwang.crawler4j.mapper.SecondLandMapper">
+    <!--<cache type="com.yyw.yhyc.cache.LoggingRedisCache"-->
+    <!--flushInterval="86400000" size="1024000">-->
+    <!--</cache>-->
+    <resultMap id="SecondLandResultMapper" type="com.baodiwang.crawler4j.model.SecondLand">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="href" property="href"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <sql id="commonColumns">
+        id,
+        title,
+        href,
+        content,
+        create_time
+    </sql>
+
+    <sql id="commonColumnsNotPK">
+        title,
+        href,
+        content,
+        create_time
+    </sql>
+
+
+    <sql id="commonProcessDateColumns">
+        id,
+        title,
+        href,
+        content,
+        create_time
+    </sql>
+
+    <sql id="commonCondition">
+        <if test="title!= null and title!= ''">
+            AND title = #{title}
+        </if>
+        <if test="href!= null and href!= ''">
+            AND href = #{href}
+        </if>
+        <if test="content!= null and content!= ''">
+            AND content = #{content}
+        </if>
+        <if test="createTime!= null and createTime!= ''">
+            AND create_time = #{createTime}
+        </if>
+    </sql>
+
+
+    <insert id="save" parameterType="com.baodiwang.crawler4j.model.SecondLand">
+        <![CDATA[ INSERT INTO second_land ( ]]> <include refid="commonColumnsNotPK"/>
+        <![CDATA[
+                ) VALUES (
+                #{title},
+                #{href},
+                #{content},
+                #{createTime}
+      ) ]]>
+    </insert>
+
+    <update id="update" parameterType="com.baodiwang.crawler4j.model.SecondLand">
+        <![CDATA[ UPDATE second_land SET
+         id = #{id} ]]>
+
+        <if test="title!= null and title!= ''">
+            , title = #{title}
+        </if>
+        <if test="href!= null and href!= ''">
+            , href = #{href}
+        </if>
+        <if test="content!= null and content!= ''">
+            , content = #{content}
+        </if>
+        <if test="createTime!= null and createTime!= ''">
+            , create_time = #{createTime}
+        </if>
+
+        <![CDATA[  WHERE id = #{id} ]]>
+    </update>
+
+
+    <delete id="deleteByPK" parameterType="java.lang.Integer">
+        <![CDATA[ DELETE FROM second_land
+        WHERE id = #{id} ]]>
+    </delete>
+
+    <delete id="deleteByPKeys" parameterType="map">
+        DELETE FROM second_land WHERE
+        <foreach collection="primaryKeys" index="index" item="id" open=" id IN(" separator="," close=") ">
+            ${id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="com.baodiwang.crawler4j.model.SecondLand">
+        DELETE FROM second_land WHERE 1 = 1
+        <include refid="commonCondition"/>
+    </delete>
+
+    <select id="getByPK" parameterType="java.lang.Integer" resultMap="SecondLandResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM second_land WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="SecondLandResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM second_land
+    </select>
+
+    <select id="listByProperty" parameterType="com.baodiwang.crawler4j.model.SecondLand" resultMap="SecondLandResultMapper">
+        SELECT  <include refid="commonProcessDateColumns"/>
+        FROM second_land WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByCount" parameterType="com.baodiwang.crawler4j.model.SecondLand" resultType="int">
+        SELECT count(1) AS totalcount FROM second_land WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <select id="findByPagination" parameterType="com.baodiwang.crawler4j.model.SecondLand" resultMap="SecondLandResultMapper">
+        SELECT <include refid="commonProcessDateColumns"/>
+        FROM second_land WHERE 1=1
+        <include refid="commonCondition"/>
+    </select>
+
+    <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.SecondLand">
+        insert into  second_land( <include refid="commonColumnsNotPK"/> )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.title},
+                #{item.href},
+                #{item.content},
+                #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+</mapper>
