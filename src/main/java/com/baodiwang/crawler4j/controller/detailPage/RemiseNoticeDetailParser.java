@@ -103,10 +103,6 @@ public class RemiseNoticeDetailParser {
                 }
                 remiseNoticeDetailList.add(remiseNoticeDetail);
             }
-
-            if(null != remiseNoticeDetail){
-                remiseNoticeDetailList.add(remiseNoticeDetail);
-            }
         }
 
         remiseNoticeVo.setRemiseNoticeDetailList(remiseNoticeDetailList);
