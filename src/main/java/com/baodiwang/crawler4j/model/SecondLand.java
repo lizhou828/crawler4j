@@ -31,6 +31,12 @@ public class SecondLand implements Serializable {
     /*  */
     private java.sql.Timestamp createTime;
 
+    /* 地块类型（1宅基地，2工商用地, 3农村用地） */
+    private java.lang.Integer landType;
+
+    /* 土地信息来源 */
+    private java.lang.String landSource;
+
 
     /* get  */
     public java.lang.Integer getId() {
@@ -78,13 +84,32 @@ public class SecondLand implements Serializable {
         this.createTime = createTime;
     }
 
+    public Integer getLandType() {
+        return landType;
+    }
+
+    public void setLandType(Integer landType) {
+        this.landType = landType;
+    }
+
+    public String getLandSource() {
+        return landSource;
+    }
+
+    public void setLandSource(String landSource) {
+        this.landSource = landSource;
+    }
+
+    @Override
     public String toString() {
-        return "SecondLand {" +
-                " id = " + id +
-                " , title = " + title +
-                " , href = " + href +
-                " , content = " + content +
-                " , createTime = " + createTime +
-                "}";
+        return "SecondLand{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", href='" + href + '\'' +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                ", landType=" + landType +
+                ", landSource='" + landSource + '\'' +
+                '}';
     }
 }

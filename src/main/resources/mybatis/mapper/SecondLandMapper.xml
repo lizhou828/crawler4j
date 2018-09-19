@@ -11,6 +11,8 @@
         <result column="href" property="href"/>
         <result column="content" property="content"/>
         <result column="create_time" property="createTime"/>
+        <result column="land_type" property="landType"/>
+        <result column="land_source" property="landSource"/>
     </resultMap>
 
     <sql id="commonColumns">
@@ -18,14 +20,18 @@
         title,
         href,
         content,
-        create_time
+        create_time,
+        land_type,
+        land_source
     </sql>
 
     <sql id="commonColumnsNotPK">
         title,
         href,
         content,
-        create_time
+        create_time,
+        land_type,
+        land_source
     </sql>
 
 
@@ -34,7 +40,9 @@
         title,
         href,
         content,
-        create_time
+        create_time,
+        land_type,
+        land_source
     </sql>
 
     <sql id="commonCondition">
@@ -50,6 +58,14 @@
         <if test="createTime!= null and createTime!= ''">
             AND create_time = #{createTime}
         </if>
+
+        <if test="landType!= null and landType!= ''">
+            AND land_type = #{landType}
+        </if>
+        <if test="landSource!= null and landSource!= ''">
+            AND land_source = #{landSource}
+        </if>
+
     </sql>
 
 
@@ -60,7 +76,9 @@
                 #{title},
                 #{href},
                 #{content},
-                #{createTime}
+                #{createTime},
+                #{landType},
+                #{landSource}
       ) ]]>
     </insert>
 
@@ -81,6 +99,12 @@
             , create_time = #{createTime}
         </if>
 
+        <if test="landType!= null and landType!= ''">
+            , land_type = #{landType}
+        </if>
+        <if test="landSource!= null and landSource!= ''">
+            , land_source = #{landSource}
+        </if>
         <![CDATA[  WHERE id = #{id} ]]>
     </update>
 
@@ -137,9 +161,46 @@
                 #{item.title},
                 #{item.href},
                 #{item.content},
-                #{item.createTime}
+                #{item.createTime},
+                #{item.landType},
+                #{item.landSource}
             )
         </foreach>
     </insert>
+
+    <select id="findWithoutContent" resultMap="SecondLandResultMapper">
+        select n.id, n.href, n.land_type,n.land_source
+        from second_land n
+        where n.content is null
+        <choose>
+            <when test="startId != null and startId != ''  and endId != null and endId != '' ">
+                and n.id BETWEEN  #{startId} and #{endId}
+            </when>
+            <when test="startId != null and startId != ''  and( endId = null or endId == '' )">
+                and n.id BETWEEN  #{startId} and (select MAX(id) from second_land)
+            </when>
+            <otherwise>
+                and n.id BETWEEN  ((select MAX(id) from second_land) - 1000 ) and (select MAX(id) from second_land)
+            </otherwise>
+        </choose>
+    </select>
+    <select id="findWithId" resultMap="SecondLandResultMapper">
+        select n.id,n.content, n.href, n.land_type,n.land_source
+        from second_land n
+        where
+        <choose>
+            <when test="startId != null and startId != ''  and endId != null and endId != '' ">
+                n.id BETWEEN  #{startId} and #{endId}
+            </when>
+            <when test="startId != null and startId != ''  and( endId = null or endId == '' )">
+                n.id BETWEEN  #{startId} and (select MAX(id) from second_land)
+            </when>
+            <otherwise>
+                n.id BETWEEN  ((select MAX(id) from second_land) - 1000 ) and (select MAX(id) from second_land)
+            </otherwise>
+        </choose>
+    </select>
+
+
 
 </mapper>

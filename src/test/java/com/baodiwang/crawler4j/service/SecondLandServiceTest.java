@@ -12,6 +12,8 @@ import com.baodiwang.crawler4j.model.SecondLand;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * @author lizhou
  * @version 1.0
@@ -27,4 +29,11 @@ public class SecondLandServiceTest extends ApplicationTests {
         SecondLand secondLand  = secondLandService.getByPK(1);
         System.out.println(secondLand );
     }
+
+    @Test
+    public void findWithoutContentTest() throws Exception {
+        List<SecondLand > secondLandList  = secondLandService.findWithoutContent(1,1000);
+        System.out.println(secondLandList);
+    }
+
 }

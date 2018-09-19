@@ -122,4 +122,14 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
         }
         return (Page<SecondLand>)secondLandList;
     }
+
+    @Override
+    public List<SecondLand> findWithoutContent(Integer startId, Integer endId) {
+        return secondLandMapper.findWithoutContent(startId, endId);
+    }
+
+    @Override
+    public List<SecondLand> findWithId(Integer startId, Integer endId) {
+        return secondLandMapper.findWithId(startId, endId);
+    }
 }

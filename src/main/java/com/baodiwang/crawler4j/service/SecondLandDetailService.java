@@ -11,4 +11,7 @@ import com.baodiwang.crawler4j.model.SecondLandDetail;
 
 public interface SecondLandDetailService extends GenericIService<SecondLandDetail,Integer>{
 
+    public String getContactsPhone(String detailHref);
+
+    public String getContactsPhone(Integer detailId);
 }

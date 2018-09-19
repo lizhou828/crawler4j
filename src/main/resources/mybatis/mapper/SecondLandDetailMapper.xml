@@ -12,7 +12,7 @@
         <result column="land_code" property="landCode"/>
         <result column="update_time" property="updateTime"/>
         <result column="title" property="title"/>
-        <result column="usage" property="usage"/>
+        <result column="purpose" property="purpose"/>
         <result column="land_price" property="landPrice"/>
         <result column="transfer_type" property="transferType"/>
         <result column="transfer_time" property="transferTime"/>
@@ -21,7 +21,8 @@
         <result column="contacts" property="contacts"/>
         <result column="contacts_phone" property="contactsPhone"/>
         <result column="create_time" property="createTime"/>
-        <result column="from" property="from"/>
+        <result column="trade_status" property="tradeStatus"/>
+        <result column="remark" property="remark"/>
     </resultMap>
 
     <sql id="commonColumns">
@@ -31,7 +32,7 @@
         land_code,
         update_time,
         title,
-        usage,
+        purpose,
         land_price,
         transfer_type,
         transfer_time,
@@ -40,7 +41,8 @@
         contacts,
         contacts_phone,
         create_time,
-        from
+        trade_status,
+        remark
     </sql>
 
     <sql id="commonColumnsNotPK">
@@ -49,7 +51,7 @@
         land_code,
         update_time,
         title,
-        usage,
+        purpose,
         land_price,
         transfer_type,
         transfer_time,
@@ -58,7 +60,8 @@
         contacts,
         contacts_phone,
         create_time,
-        from
+        trade_status,
+        remark
     </sql>
 
 
@@ -69,7 +72,7 @@
         land_code,
         update_time,
         title,
-        usage,
+        purpose,
         land_price,
         transfer_type,
         transfer_time,
@@ -78,7 +81,8 @@
         contacts,
         contacts_phone,
         create_time,
-        from
+        trade_status,
+        remark
     </sql>
 
     <sql id="commonCondition">
@@ -97,8 +101,8 @@
         <if test="title!= null and title!= ''">
             AND title = #{title}
         </if>
-        <if test="usage!= null and usage!= ''">
-            AND usage = #{usage}
+        <if test="purpose!= null and purpose!= ''">
+            AND purpose = #{purpose}
         </if>
         <if test="landPrice!= null and landPrice!= ''">
             AND land_price = #{landPrice}
@@ -121,12 +125,17 @@
         <if test="contactsPhone!= null and contactsPhone!= ''">
             AND contacts_phone = #{contactsPhone}
         </if>
-        <if test="createTime!= null and createTime!= ''">
+        <if test="createTime!= null">
             AND create_time = #{createTime}
         </if>
-        <if test="from!= null and from!= ''">
-            AND from = #{from}
+
+        <if test="tradeStatus!= null and tradeStatus!= ''">
+            AND trade_status = #{tradeStatus}
         </if>
+        <if test="remark!= null and remark!= ''">
+            AND remark = #{remark}
+        </if>
+
     </sql>
 
 
@@ -139,7 +148,7 @@
                 #{landCode},
                 #{updateTime},
                 #{title},
-                #{usage},
+                #{purpose},
                 #{landPrice},
                 #{transferType},
                 #{transferTime},
@@ -148,7 +157,8 @@
                 #{contacts},
                 #{contactsPhone},
                 #{createTime},
-                #{from}
+                #{tradeStatus},
+                #{remark}
       ) ]]>
     </insert>
 
@@ -171,8 +181,8 @@
         <if test="title!= null and title!= ''">
             , title = #{title}
         </if>
-        <if test="usage!= null and usage!= ''">
-            , usage = #{usage}
+        <if test="purpose!= null and purpose!= ''">
+            , purpose = #{purpose}
         </if>
         <if test="landPrice!= null and landPrice!= ''">
             , land_price = #{landPrice}
@@ -195,11 +205,12 @@
         <if test="contactsPhone!= null and contactsPhone!= ''">
             , contacts_phone = #{contactsPhone}
         </if>
-        <if test="createTime!= null and createTime!= ''">
-            , create_time = #{createTime}
+
+        <if test="tradeStatus!= null and tradeStatus!= ''">
+            , trade_status = #{tradeStatus}
         </if>
-        <if test="from!= null and from!= ''">
-            , from = #{from}
+        <if test="remark!= null and remark!= ''">
+            , remark = #{remark}
         </if>
 
         <![CDATA[  WHERE id = #{id} ]]>
@@ -250,4 +261,29 @@
         <include refid="commonCondition"/>
     </select>
 
+
+    <insert id="batchInsert" parameterType="com.baodiwang.crawler4j.model.SecondLandDetail">
+        insert into  second_land_detail( <include refid="commonColumnsNotPK"/> )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.secondLandId},
+            #{item.landType},
+            #{item.landCode},
+            #{item.updateTime},
+            #{item.title},
+            #{item.purpose},
+            #{item.landPrice},
+            #{item.transferType},
+            #{item.transferTime},
+            #{item.totalArea},
+            #{item.regionalLocation},
+            #{item.contacts},
+            #{item.contactsPhone},
+            #{item.createTime},
+            #{item.tradeStatus},
+            #{item.remark}
+            )
+        </foreach>
+    </insert>
 </mapper>

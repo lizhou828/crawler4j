@@ -7,21 +7,30 @@
 
 package com.baodiwang.crawler4j.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baodiwang.crawler4j.utils.HttpUtils;
+import com.baodiwang.crawler4j.utils.RegexUtil;
+import com.baodiwang.crawler4j.utils.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.baodiwang.crawler4j.mapper.SecondLandDetailMapper;
 import com.baodiwang.crawler4j.model.SecondLandDetail;
 import java.util.List;
+import java.util.Map;
 
 import com.baodiwang.crawler4j.service.SecondLandDetailService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)
-@Service
+@Service("secondLandDetailService")
 public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail, Integer> implements SecondLandDetailService {
+
+    private static Log log = LogFactory.getLog(SecondLandDetailServiceImpl.class);
 
     private SecondLandDetailMapper secondLandDetailMapper;
 
@@ -31,7 +40,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * Í¨¹ýÖ÷¼ü²éÑ¯ÊµÌå¶ÔÏó
+     * é€šè¿‡ä¸»é”®æŸ¥è¯¢å®žä½“å¯¹è±¡
      * @param primaryKey
      * @return
      */
@@ -40,7 +49,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ²éÑ¯ËùÓÐ¼ÇÂ¼
+     * æŸ¥è¯¢æ‰€æœ‰è®°å½•
      * @return
      */
     public List<SecondLandDetail> list() {
@@ -48,7 +57,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ¸ù¾Ý²éÑ¯Ìõ¼þ²éÑ¯ËùÓÐ¼ÇÂ¼
+     * æ ¹æ®æŸ¥è¯¢æ¡ä»¶æŸ¥è¯¢æ‰€æœ‰è®°å½•
      * @return
      */
     public List<SecondLandDetail> listByProperty(SecondLandDetail secondLandDetail){
@@ -57,7 +66,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
 
 
     /**
-     * ¸ù¾ÝÖ÷¼üÉ¾³ý¼ÇÂ¼
+     * æ ¹æ®ä¸»é”®åˆ é™¤è®°å½•
      * @param primaryKey
      * @return
      */
@@ -66,7 +75,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ¸ù¾Ý¶à¸öÖ÷¼üÉ¾³ý¼ÇÂ¼
+     * æ ¹æ®å¤šä¸ªä¸»é”®åˆ é™¤è®°å½•
      * @param primaryKeys
      */
     public void deleteByPKeys(List<java.lang.Integer> primaryKeys) {
@@ -74,7 +83,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ¸ù¾Ý´«Èë²ÎÊýÉ¾³ý¼ÇÂ¼
+     * æ ¹æ®ä¼ å…¥å‚æ•°åˆ é™¤è®°å½•
      * @param secondLandDetail
      * @return
      */
@@ -83,7 +92,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ±£´æ¼ÇÂ¼
+     * ä¿å­˜è®°å½•
      * @param secondLandDetail
      * @return
      */
@@ -92,7 +101,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ¸üÐÂ¼ÇÂ¼
+     * æ›´æ–°è®°å½•
      * @param secondLandDetail
      * @return
      */
@@ -101,7 +110,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ¸ù¾ÝÌõ¼þ²éÑ¯¼ÇÂ¼ÌõÊý
+     * æ ¹æ®æ¡ä»¶æŸ¥è¯¢è®°å½•æ¡æ•°
      * @param secondLandDetail
      * @return
      */
@@ -110,7 +119,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
     }
 
     /**
-     * ¸ù¾Ý²éÑ¯Ìõ¼þ²éÑ¯·ÖÒ³¼ÇÂ¼
+     * æ ¹æ®æŸ¥è¯¢æ¡ä»¶æŸ¥è¯¢åˆ†é¡µè®°å½•
      * @return
      */
     @Override
@@ -121,5 +130,58 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
             return new Page<SecondLandDetail>();
         }
         return (Page<SecondLandDetail>)secondLandDetailList;
+    }
+
+
+
+
+    public String getContactsPhone(String detailHref){
+        if(StringUtils.isEmpty(detailHref)){
+            return null;
+        }
+        String detailIdStr =  RegexUtil.findMatchContent("\\d+", detailHref);
+        Integer detailId = 0;
+        try{
+            detailId = Integer.parseInt(detailIdStr);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+        }
+        if(null == detailId || detailId <= 0){
+            log.error("è§£æždetailIdå¤±è´¥! detailId=" +detailId);
+            return null;
+        }
+        return this.getContactsPhone(detailId);
+    }
+
+    public String getContactsPhone(Integer detailId){
+        if(null == detailId || detailId <= 0){
+            return null;
+        }
+        String url = String.format("https://zunyixian.tuliu.com/landext/view/%s/1",detailId);
+        String result = HttpUtils.get(url, null, HttpUtils.CHAR_SET_UTF8);
+        if(StringUtils.isEmpty(result)){
+            return null;
+        }
+        Map map = JSONObject.parseObject(result, Map.class);
+        if(null == map || map.get("data") == null ){
+            log.error("map=" + map);
+            return  null;
+        }
+        Integer code = (Integer) map.get("code");
+        if(null == code || 200 != code){
+            log.error("map=" + map);
+            return null;
+        }
+
+        String phone = "";
+        try{
+            phone = ((JSONObject) map.get("data")).get("display_phone").toString();
+            if(StringUtils.isNotEmpty(phone)){
+                phone = phone.trim();
+            }
+        }catch (Exception e){
+             log.error("è§£æžè”ç³»ç”µè¯å‘ç”Ÿå¼‚å¸¸:"+e.getMessage(),e);
+        }
+        return phone;
     }
 }

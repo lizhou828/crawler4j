@@ -19,50 +19,52 @@ public class SecondLandDetail implements Serializable {
     /*  */
     private java.lang.Integer id;
 
-    /* ¶şÊÖÍÁµØid */
+    /* äºŒæ‰‹åœŸåœ°id */
     private java.lang.Integer secondLandId;
 
-    /* µØ¿éÀàĞÍ£¨1Õ¬»ùµØ£¬2¹¤ÉÌÓÃµØ£© */
+    /* åœ°å—ç±»å‹ï¼ˆ1å®…åŸºåœ°ï¼Œ2å·¥å•†ç”¨åœ°, 3å†œæ‘ç”¨åœ°ï¼‰ */
     private java.lang.Integer landType;
 
-    /* ÍÁµØ±àÂë */
+    /* åœŸåœ°ç¼–ç  */
     private java.lang.String landCode;
 
-    /* ¸üĞÂÊ±¼ä */
-    private java.sql.Timestamp updateTime;
+    /* æ›´æ–°æ—¶é—´ */
+    private java.lang.String updateTime;
 
-    /* ±êÌâ */
+    /* æ ‡é¢˜ */
     private java.lang.String title;
 
-    /* ÓÃÍ¾ */
-    private java.lang.String usage;
+    /* ç”¨é€” */
+    private java.lang.String purpose;
 
-    /* ÍÁµØ¼Û¸ñ */
+    /* åœŸåœ°ä»·æ ¼ */
     private java.lang.String landPrice;
 
-    /* Á÷×ªÀàĞÍ */
+    /* æµè½¬ç±»å‹ */
     private java.lang.String transferType;
 
-    /* Á÷×ªÄêÏŞ */
+    /* æµè½¬å¹´é™ */
     private java.lang.String transferTime;
 
-    /* ÍÁµØÃæ»ı */
+    /* åœŸåœ°é¢ç§¯ */
     private java.lang.String totalArea;
 
-    /* µØÇøÎ»ÖÃ */
+    /* åœ°åŒºä½ç½® */
     private java.lang.String regionalLocation;
 
-    /* ÁªÏµÈË */
+    /* è”ç³»äºº */
     private java.lang.String contacts;
 
-    /* ÁªÏµµç»° */
+    /* è”ç³»ç”µè¯ */
     private java.lang.String contactsPhone;
 
     /*  */
     private java.sql.Timestamp createTime;
 
-    /* ĞÅÏ¢À´Ô´ */
-    private java.lang.String from;
+    /* äº¤æ˜“çŠ¶æ€ï¼ˆ0æœªäº¤æ˜“ã€1å·²äº¤æ˜“ï¼‰ */
+    private Integer tradeStatus;
+
+    private String remark;
 
 
     /* get  */
@@ -74,120 +76,117 @@ public class SecondLandDetail implements Serializable {
     public void setId(java.lang.Integer id) {
         this.id = id;
     }
-    /* get ¶şÊÖÍÁµØid */
+    /* get äºŒæ‰‹åœŸåœ°id */
     public java.lang.Integer getSecondLandId() {
         return secondLandId;
     }
 
-    /* set ¶şÊÖÍÁµØid */
+    /* set äºŒæ‰‹åœŸåœ°id */
     public void setSecondLandId(java.lang.Integer secondLandId) {
         this.secondLandId = secondLandId;
     }
-    /* get µØ¿éÀàĞÍ£¨1Õ¬»ùµØ£¬2¹¤ÉÌÓÃµØ£© */
     public java.lang.Integer getLandType() {
         return landType;
     }
-
-    /* set µØ¿éÀàĞÍ£¨1Õ¬»ùµØ£¬2¹¤ÉÌÓÃµØ£© */
     public void setLandType(java.lang.Integer landType) {
         this.landType = landType;
     }
-    /* get ÍÁµØ±àÂë */
+    /* get åœŸåœ°ç¼–ç  */
     public java.lang.String getLandCode() {
         return landCode;
     }
 
-    /* set ÍÁµØ±àÂë */
+    /* set åœŸåœ°ç¼–ç  */
     public void setLandCode(java.lang.String landCode) {
         this.landCode = landCode;
     }
-    /* get ¸üĞÂÊ±¼ä */
-    public java.sql.Timestamp getUpdateTime() {
+    /* get æ›´æ–°æ—¶é—´ */
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    /* set ¸üĞÂÊ±¼ä */
-    public void setUpdateTime(java.sql.Timestamp updateTime) {
+    /* set æ›´æ–°æ—¶é—´ */
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
-    /* get ±êÌâ */
+    /* get æ ‡é¢˜ */
     public java.lang.String getTitle() {
         return title;
     }
 
-    /* set ±êÌâ */
+    /* set æ ‡é¢˜ */
     public void setTitle(java.lang.String title) {
         this.title = title;
     }
-    /* get ÓÃÍ¾ */
-    public java.lang.String getUsage() {
-        return usage;
+
+    public String getPurpose() {
+        return purpose;
     }
 
-    /* set ÓÃÍ¾ */
-    public void setUsage(java.lang.String usage) {
-        this.usage = usage;
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
-    /* get ÍÁµØ¼Û¸ñ */
+
+    /* get åœŸåœ°ä»·æ ¼ */
     public java.lang.String getLandPrice() {
         return landPrice;
     }
 
-    /* set ÍÁµØ¼Û¸ñ */
+    /* set åœŸåœ°ä»·æ ¼ */
     public void setLandPrice(java.lang.String landPrice) {
         this.landPrice = landPrice;
     }
-    /* get Á÷×ªÀàĞÍ */
+    /* get æµè½¬ç±»å‹ */
     public java.lang.String getTransferType() {
         return transferType;
     }
 
-    /* set Á÷×ªÀàĞÍ */
+    /* set æµè½¬ç±»å‹ */
     public void setTransferType(java.lang.String transferType) {
         this.transferType = transferType;
     }
-    /* get Á÷×ªÄêÏŞ */
+    /* get æµè½¬å¹´é™ */
     public java.lang.String getTransferTime() {
         return transferTime;
     }
 
-    /* set Á÷×ªÄêÏŞ */
+    /* set æµè½¬å¹´é™ */
     public void setTransferTime(java.lang.String transferTime) {
         this.transferTime = transferTime;
     }
-    /* get ÍÁµØÃæ»ı */
+    /* get åœŸåœ°é¢ç§¯ */
     public java.lang.String getTotalArea() {
         return totalArea;
     }
 
-    /* set ÍÁµØÃæ»ı */
+    /* set åœŸåœ°é¢ç§¯ */
     public void setTotalArea(java.lang.String totalArea) {
         this.totalArea = totalArea;
     }
-    /* get µØÇøÎ»ÖÃ */
+    /* get åœ°åŒºä½ç½® */
     public java.lang.String getRegionalLocation() {
         return regionalLocation;
     }
 
-    /* set µØÇøÎ»ÖÃ */
+    /* set åœ°åŒºä½ç½® */
     public void setRegionalLocation(java.lang.String regionalLocation) {
         this.regionalLocation = regionalLocation;
     }
-    /* get ÁªÏµÈË */
+    /* get è”ç³»äºº */
     public java.lang.String getContacts() {
         return contacts;
     }
 
-    /* set ÁªÏµÈË */
+    /* set è”ç³»äºº */
     public void setContacts(java.lang.String contacts) {
         this.contacts = contacts;
     }
-    /* get ÁªÏµµç»° */
+    /* get è”ç³»ç”µè¯ */
     public java.lang.String getContactsPhone() {
         return contactsPhone;
     }
 
-    /* set ÁªÏµµç»° */
+    /* set è”ç³»ç”µè¯ */
     public void setContactsPhone(java.lang.String contactsPhone) {
         this.contactsPhone = contactsPhone;
     }
@@ -200,34 +199,44 @@ public class SecondLandDetail implements Serializable {
     public void setCreateTime(java.sql.Timestamp createTime) {
         this.createTime = createTime;
     }
-    /* get ĞÅÏ¢À´Ô´ */
-    public java.lang.String getFrom() {
-        return from;
+
+    public Integer getTradeStatus() {
+        return tradeStatus;
     }
 
-    /* set ĞÅÏ¢À´Ô´ */
-    public void setFrom(java.lang.String from) {
-        this.from = from;
+    public void setTradeStatus(Integer tradeStatus) {
+        this.tradeStatus = tradeStatus;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
     public String toString() {
-        return "SecondLandDetail {" +
-                " id = " + id +
-                " , secondLandId = " + secondLandId +
-                " , landType = " + landType +
-                " , landCode = " + landCode +
-                " , updateTime = " + updateTime +
-                " , title = " + title +
-                " , usage = " + usage +
-                " , landPrice = " + landPrice +
-                " , transferType = " + transferType +
-                " , transferTime = " + transferTime +
-                " , totalArea = " + totalArea +
-                " , regionalLocation = " + regionalLocation +
-                " , contacts = " + contacts +
-                " , contactsPhone = " + contactsPhone +
-                " , createTime = " + createTime +
-                " , from = " + from +
-                "}";
+        return "SecondLandDetail{" +
+                "id=" + id +
+                ", secondLandId=" + secondLandId +
+                ", landType=" + landType +
+                ", landCode='" + landCode + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                ", title='" + title + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", landPrice='" + landPrice + '\'' +
+                ", transferType='" + transferType + '\'' +
+                ", transferTime='" + transferTime + '\'' +
+                ", totalArea='" + totalArea + '\'' +
+                ", regionalLocation='" + regionalLocation + '\'' +
+                ", contacts='" + contacts + '\'' +
+                ", contactsPhone='" + contactsPhone + '\'' +
+                ", createTime=" + createTime +
+                ", landType=" + landType +
+                ", tradeStatus=" + tradeStatus +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }
