@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)
-@Service
+@Service("secondLandService")
 public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> implements SecondLandService {
 
     private SecondLandMapper secondLandMapper;
