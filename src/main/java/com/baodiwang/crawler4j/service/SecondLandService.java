@@ -16,4 +16,8 @@ public interface SecondLandService extends GenericIService<SecondLand,Integer>{
     List<SecondLand> findWithoutContent(Integer startId, Integer endId);
 
     List<SecondLand> findWithId(Integer startId, Integer endId);
+
+    public Integer findMaxId();
+
+    public Integer findMinId();
 }

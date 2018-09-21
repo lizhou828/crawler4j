@@ -52,17 +52,32 @@ public class SecondLandDetailController {
 
     /**
      * 按照id区间段来抓取网页
-     * @param startId
-     * @param endId
      * @return
      */
     @RequestMapping("/fetchDetail")
-    public String fetchDetail(Integer startId ,Integer endId){
-        String logMsg = "抓取id区间段从" + startId + "  到 " + endId + "的数据=====================================";
-        List<SecondLand> secondLandList = secondLandService.findWithoutContent(startId, endId);
-        if(CollectionUtils.isEmpty(secondLandList)){
-            return logMsg + "没有要处理的数据";
+    public String fetchDetail(){
+
+        Integer maxId = secondLandService.findMaxId();
+        Integer pageSize = 1000;
+        Integer allPages = maxId % pageSize == 0 ? maxId / pageSize : (maxId/pageSize) +1;
+        Integer startId = 0;
+        Integer endId = 0;
+        for(int i = 0 ;i <= allPages ;i++){
+            startId = i == 0 ? 1 : i*pageSize;
+            endId = i == 0 ? i*pageSize : i*pageSize + pageSize;
+            String logMsg = "抓取id区间段从" + startId + "  到 " + endId + "的数据=====================================";
+            List<SecondLand> secondLandList = secondLandService.findWithoutContent(startId, endId);
+            if(CollectionUtils.isEmpty(secondLandList)){
+                log.info(logMsg + "没有要处理的数据");
+                continue;
+            }
+            getContent(secondLandList,logMsg);
+
         }
+        return "success";
+
+    }
+    private void getContent(List<SecondLand> secondLandList,String logMsg){
         SecondLand update = null;
         int successCount = 0;
         long start = System.currentTimeMillis();
@@ -86,7 +101,7 @@ public class SecondLandDetailController {
             }
         }
         long end = System.currentTimeMillis();
-        return logMsg + "本次要处理的数据条数为：" + secondLandList.size() + ",更新成功的条数为：" + successCount +",耗时"+ (end - start) + "毫秒";
+        log.info(logMsg + "本次要处理的数据条数为：" + secondLandList.size() + ",更新成功的条数为：" + successCount +",耗时"+ (end - start) + "毫秒");
     }
 
     /**

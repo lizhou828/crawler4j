@@ -19,4 +19,8 @@ public interface SecondLandMapper extends GenericIBatisMapper<SecondLand, Intege
     List<SecondLand> findWithoutContent(@Param("startId")Integer startId, @Param("endId") Integer endId);
 
     List<SecondLand> findWithId(@Param("startId") Integer startId, @Param("endId") Integer endId);
+
+    public Integer findMaxId();
+
+    public Integer findMinId();
 }

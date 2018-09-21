@@ -132,4 +132,14 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     public List<SecondLand> findWithId(Integer startId, Integer endId) {
         return secondLandMapper.findWithId(startId, endId);
     }
+
+    @Override
+    public Integer findMaxId() {
+        return secondLandMapper.findMaxId();
+    }
+
+    @Override
+    public Integer findMinId() {
+        return secondLandMapper.findMinId();
+    }
 }

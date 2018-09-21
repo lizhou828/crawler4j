@@ -201,6 +201,12 @@
         </choose>
     </select>
 
+    <select id="findMaxId" resultType="int">
+        SELECT MAX(id)  as id  FROM second_land
+    </select>
+    <select id="findMinId" resultType="int">
+        SELECT MIN(id)  as id  FROM second_land
+    </select>
 
 
 </mapper>
