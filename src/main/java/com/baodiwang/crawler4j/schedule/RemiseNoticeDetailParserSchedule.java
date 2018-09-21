@@ -8,6 +8,7 @@
 package com.baodiwang.crawler4j.schedule;
 
 import com.baodiwang.crawler4j.VO.RemiseNoticeVo;
+import com.baodiwang.crawler4j.constants.Constant;
 import com.baodiwang.crawler4j.controller.detailPage.RemiseNoticeDetailParser;
 import com.baodiwang.crawler4j.model.RemiseNotice;
 import com.baodiwang.crawler4j.model.RemiseNoticeDetail;
@@ -15,6 +16,7 @@ import com.baodiwang.crawler4j.service.RemiseNoticeDetailService;
 import com.baodiwang.crawler4j.service.RemiseNoticeService;
 import com.baodiwang.crawler4j.utils.SpringContextHolder;
 import com.baodiwang.crawler4j.utils.StringUtils;
+import com.whalin.MemCached.MemCachedClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,6 +54,8 @@ public class RemiseNoticeDetailParserSchedule {
 
     private static  int THREAD_NUMBER = 0;
 
+    @Autowired
+    MemCachedClient memCachedClient;
 
     @Autowired
     RemiseNoticeService remiseNoticeService;
@@ -63,17 +67,21 @@ public class RemiseNoticeDetailParserSchedule {
 //    @Scheduled(cron = "0/20 * * * * ? ")//每隔20秒执行一次
     public void parseDataToRemiseNoticeDetail(){
 
-        log.info("多线程解析公告详情页数据============================开始");
-
-        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutDetail(1,100); //每次抓取100条未解析的数据（多线程）
-        if(CollectionUtils.isEmpty(remiseNoticeList)){
-            remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1,100);//查询是否还有遗漏的没有解析
-            if(CollectionUtils.isNotEmpty(remiseNoticeList)){
-                log.info("多线程解析公告详情页数据============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()) + ",查询到有遗漏没有解析的数据");
-            }
+        Object obj = memCachedClient.get(Constant.LANDCHINA_REMISE_NOTICE_MIN_ID);
+        Integer minIdInMemcache = 0;
+        try{
+            minIdInMemcache = Integer.parseInt(null == obj ? "0" : obj.toString());
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
         }
-        log.info("多线程解析公告详情页数据============================需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
 
+        List<RemiseNotice> remiseNoticeList = null;
+        int pageSize = 100;
+        if(minIdInMemcache > 0L ){
+            remiseNoticeList= remiseNoticeService.findNoticeMissDetail(minIdInMemcache, pageSize); //每次抓取100条未解析的数据（多线程）
+        }
+        String logMessage = "多线程解析公告详情页数据,============================";
+        log.info(logMessage + "从id="+minIdInMemcache+"开始的" + pageSize + "条数据,需要处理的数据条数：" + (CollectionUtils.isEmpty(remiseNoticeList) ? 0 : remiseNoticeList.size()));
         if(null == remiseNoticeList || remiseNoticeList.isEmpty() ){
             return;
         }

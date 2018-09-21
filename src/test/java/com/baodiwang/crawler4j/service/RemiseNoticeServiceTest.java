@@ -58,11 +58,6 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
         System.out.println(listPage);
     }
 
-    @Test
-    public void findNoticeWithoutDetailTest(){
-        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeWithoutDetail();
-        System.out.println(remiseNoticeList);
-    }
 
     @Test
     public void findNoticeWithoutContentTest(){
@@ -91,7 +86,7 @@ public class RemiseNoticeServiceTest extends ApplicationTests {
 
     @Test
     public void findNoticeMissDetailTest(){
-        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1, 20);
+        List<RemiseNotice> remiseNoticeList = remiseNoticeService.findNoticeMissDetail(1, 1000);
         System.out.println(remiseNoticeList);
     }
 

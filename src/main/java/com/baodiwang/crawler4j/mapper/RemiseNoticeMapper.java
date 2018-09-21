@@ -15,21 +15,14 @@ import java.util.List;
 
 public interface RemiseNoticeMapper extends GenericIBatisMapper <RemiseNotice, Integer>{
 
-    /**
-     * 查询没有解析详情页的数据（查询速度快）
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    public List<RemiseNotice> findNoticeWithoutDetail(@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
 
     /**
      * 查询遗漏的、没有解析的详情页的数据（（查询速度慢，用作查询因网络等原因没有抓取到的数据）,用左连接取差集）
-     * @param pageNum
+     * @param startId
      * @param pageSize
      * @return
      */
-    public List<RemiseNotice> findNoticeMissDetail(@Param("pageNum") int pageNum ,@Param("pageSize") int pageSize);
+    public List<RemiseNotice> findNoticeMissDetail(@Param("startId") int startId ,@Param("pageSize") int pageSize);
 
     /**
      * 查询没有抓取到详情页内容的数据

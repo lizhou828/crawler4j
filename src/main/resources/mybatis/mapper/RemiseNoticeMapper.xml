@@ -201,20 +201,12 @@
         <include refid="commonCondition"/>
     </select>
 
-    <select id="findNoticeWithoutDetail" resultMap="RemiseNoticeResultMapper">
-        select n.id,n.type ,n.content,n.notice_num,n.href
-        from remise_notice  n
-        where n.id BETWEEN  (select MAX(notice_id) from remise_notice_detail) and (select MAX(id) from remise_notice)
-        and n.type in(1,2,3,4)
-        and n.content is not null   LIMIT #{pageNum},#{pageSize}
-    </select>
-
     <select id="findNoticeMissDetail" resultMap="RemiseNoticeResultMapper">
         select n.id,n.type ,n.content,n.notice_num,n.href
         from remise_notice n
         left join (SELECT notice_id as i from remise_notice_detail) as d
         on n.id = d.i
-        where d.i is null and n.type in (1,2,3,4)  and n.content is not null  LIMIT #{pageNum},#{pageSize}
+        where n.id  <![CDATA[ >= ]]> #{startId}  and d.i is null and n.type in (1,2,3,4)  and n.content is not null  LIMIT #{pageSize}
     </select>
 
     <select id="findNoticeWithoutContent" resultMap="RemiseNoticeResultMapper">

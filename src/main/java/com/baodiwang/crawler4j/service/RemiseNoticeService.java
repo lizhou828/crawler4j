@@ -13,12 +13,7 @@ import java.util.List;
 
 public interface RemiseNoticeService extends GenericIService<RemiseNotice,Integer>{
 
-    public List<RemiseNotice> findNoticeWithoutDetail();
-
-    public List<RemiseNotice> findNoticeWithoutDetail( int pageNum , int pageSize);
-
-
-    public List<RemiseNotice> findNoticeMissDetail( int pageNum , int pageSize);
+    public List<RemiseNotice> findNoticeMissDetail( int startId , int pageSize);
 
     public List<RemiseNotice> findNoticeWithoutContent();
 
