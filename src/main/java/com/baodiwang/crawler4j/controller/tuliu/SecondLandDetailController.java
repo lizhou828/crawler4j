@@ -65,6 +65,7 @@ public class SecondLandDetailController {
         }
         SecondLand update = null;
         int successCount = 0;
+        long start = System.currentTimeMillis();
         for(SecondLand secondLand : secondLandList){
             if(null == secondLand|| StringUtils.isEmpty(secondLand.getHref())){
                 log.error(logMsg + ",数据异常：secondLand" + secondLand);
@@ -84,7 +85,8 @@ public class SecondLandDetailController {
                 successCount ++ ;
             }
         }
-        return (logMsg + "本次要处理的数据条数为：" + secondLandList.size() + ",更新成功的条数为：" + successCount);
+        long end = System.currentTimeMillis();
+        return logMsg + "本次要处理的数据条数为：" + secondLandList.size() + ",更新成功的条数为：" + successCount +",耗时"+ (end - start) + "毫秒";
     }
 
     /**
