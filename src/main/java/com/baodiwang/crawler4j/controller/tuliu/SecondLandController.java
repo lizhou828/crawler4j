@@ -55,23 +55,25 @@ public class SecondLandController {
     @RequestMapping("/getZhaijidi")
     public String getZhaijidi(){
         Integer landType = 1;
-        for(int i = 1 ;i<150 ;i++){
+        int count = 0;
+        int page = 30;
+        for(int i = 1 ;i< page ;i++){
             try{
                 String url = "https://www.tuliu.com/gongying/nongcunzhaijidi/list-pg"+i+".html";
                 String result = HttpUtils.get(url,null,HttpUtils.CHAR_SET_UTF8);
                 List<SecondLand> secondLandList = secondLandParser.parserHtml(result,landType,LAND_SOURCE_TULIU);
                 if(CollectionUtils.isNotEmpty(secondLandList)){
                     secondLandService.batchInsert(secondLandList);
-                    log.info("抓取宅基地数据===================================================第" + i + "页数据保存成功!");
+                    count += secondLandList.size();
+                    log.info("抓取宅基地数据===================================================第" + i + "页数据保存成功的数据条数：" + secondLandList.size());
                 }else{
                     log.error("抓取宅基地数据===================================================第" + i + "页数据解析异常!");
                 }
             }catch (Exception e){
                 log.error("抓取宅基地数据===================================================第" + i + "页数据时发生异常:" + e.getMessage(),e);
             }
-
         }
-        return "success";
+        return  "抓取宅基地数据===================================================本次处理了" + page + "页数据，保存成功了"+count+"条数数据";
     }
 
 
@@ -82,23 +84,25 @@ public class SecondLandController {
     @RequestMapping("/getGongShang")
     public String getGongShang(){
         Integer landType = 2;
-        for(int i = 1 ;i<150 ;i++){
+        int count = 0;
+        int page = 30;
+        for(int i = 1 ;i<page ;i++){
             try{
                 String url = "https://www.tuliu.com/gongying/chengshi/list-pg"+i+".html";
                 String result = HttpUtils.get(url,null,HttpUtils.CHAR_SET_UTF8);
                 List<SecondLand> secondLandList = secondLandParser.parserHtml(result,landType,LAND_SOURCE_TULIU);
                 if(CollectionUtils.isNotEmpty(secondLandList)){
                     secondLandService.batchInsert(secondLandList);
-                    log.info("抓取工商用地数据===================================================第" + i + "页数据保存成功!");
+                    count += secondLandList.size();
+                    log.info("抓取工商用地数据===================================================第" + i + "页数据保存成功的数据条数：" + secondLandList.size());
                 }else{
                     log.error("抓取工商用地数据===================================================第" + i + "页数据解析异常!");
                 }
             }catch (Exception e){
                 log.error("抓取工商用地数据===================================================第" + i + "页数据时发生异常:" + e.getMessage(),e);
             }
-
         }
-        return "success";
+        return  "抓取工商用地数据===================================================本次处理了" + page + "页数据，保存成功了"+count+"条数数据";
     }
 
     /**
@@ -108,14 +112,17 @@ public class SecondLandController {
     @RequestMapping("/getNongcun")
     public String getNongcun(){
         Integer landType = 3;
-        for(int i = 1 ;i<150 ;i++){
+        int count = 0;
+        int page = 30;
+        for(int i = 1 ;i<30 ;i++){
             try{
                 String url = "https://www.tuliu.com/gongying/nongcun/list-vt2-pg"+i+".html";
                 String result = HttpUtils.get(url,null,HttpUtils.CHAR_SET_UTF8);
                 List<SecondLand> secondLandList = secondLandParser.parserHtml(result,landType,LAND_SOURCE_TULIU);
                 if(CollectionUtils.isNotEmpty(secondLandList)){
                     secondLandService.batchInsert(secondLandList);
-                    log.info("抓取农村用地数据（电话核实后的）===================================================第" + i + "页数据保存成功!");
+                    count += secondLandList.size();
+                    log.info("抓取农村用地数据（电话核实后的）===================================================第"+ i + "页数据保存成功的数据条数：" + secondLandList.size());
                 }else{
                     log.error("抓取农村用地数据（电话核实后的）===================================================第" + i + "页数据解析异常!");
                 }
@@ -124,7 +131,7 @@ public class SecondLandController {
             }
 
         }
-        return "success";
+        return  "抓取农村用地数据（电话核实后的）===================================================本次处理了" + page + "页数据，保存成功了"+count+"条数数据";
     }
 
 
@@ -191,6 +198,8 @@ public class SecondLandController {
         @Override
         public void run() {
             long start = System.currentTimeMillis();
+            int count = 0;
+            SecondLandDetail query = null;
             try{
 
                 SecondLandDetailParser  secondLandDetailParser = SpringContextHolder.getBean("secondLandDetailParser");
@@ -202,6 +211,14 @@ public class SecondLandController {
                     if(null == secondLand || secondLand.getId() <= 0){
                         continue;
                     }
+//                    判断是否已经解析过了
+                    query = new SecondLandDetail();
+                    query.setSecondLandId(secondLand.getId());
+                    count = secondLandDetailService.findByCount(query);
+                    if(count > 0){
+                        continue;
+                    }
+
                     secondLandDetail = secondLandDetailParser.parserHtml(secondLand.getId(),secondLand.getContent(),secondLand.getHref());
                     if(null != secondLandDetail){
                         secondLandDetailList.add(secondLandDetail);
