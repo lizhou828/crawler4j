@@ -116,6 +116,36 @@ public class StringUtils {
 
     }
 
+    /**
+     * unicode的字符串转中文
+     * @param unicode
+     * @return
+     */
+    private static String unicodeToCn(String unicode) {
+        /** 以 \ u 分割，因为java注释也能识别unicode，因此中间加了一个空格*/
+        String[] strs = unicode.split("\\\\u");
+        String returnStr = "";
+        // 由于unicode字符串以 \ u 开头，因此分割出的第一个字符是""。
+        for (int i = 1; i < strs.length; i++) {
+            returnStr += (char) Integer.valueOf(strs[i], 16).intValue();
+        }
+        return returnStr;
+    }
+
+    /**
+     * 中文字符串转成unicode的字符串
+     * @param cn
+     * @return
+     */
+    private static String cnToUnicode(String cn) {
+        char[] chars = cn.toCharArray();
+        String returnStr = "";
+        for (int i = 0; i < chars.length; i++) {
+            returnStr += "\\u" + Integer.toString(chars[i], 16);
+        }
+        return returnStr;
+    }
+
     public static void main(String[] args) {
         String str ="1366,768";
         System.out.println(stringToHex(str));
@@ -125,5 +155,12 @@ public class StringUtils {
         System.out.println(getNoticeNumFromTitle("常熟市(320581)国有建设用地使用权挂牌出让公告"));
         System.out.println(getNoticeNumFromTitle("郁南县国土资源局国有土地使用权挂牌出让公告(郁土交易（公）告字[2018]14号)"));
         System.out.println(getNoticeNumFromTitle("台州市(本级)国土资源局国有建设用地使用权挂牌出让公告(台土告字[2018] 077号)"));
+
+
+        String cn = "你";
+        System.out.println(cnToUnicode(cn));
+        // 字符串 : \u5f00\u59cb\u4efb\u52a1 ，由于 \ 在java里是转义字符，要写出下面这种形式
+        String unicode = "\\u4f60";
+        System.out.println(unicodeToCn(unicode));
     }
 }
