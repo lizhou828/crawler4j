@@ -16,12 +16,19 @@ import com.github.pagehelper.PageHelper;
 
 import com.baodiwang.crawler4j.mapper.SecondLandDetailMapper;
 import com.baodiwang.crawler4j.model.SecondLandDetail;
+
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.baodiwang.crawler4j.service.SecondLandDetailService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,30 +142,82 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
 
 
 
-    public String getContactsPhone(String detailHref){
-        if(StringUtils.isEmpty(detailHref)){
+    public String getContactsPhone(String content,String href){
+        if(StringUtils.isEmpty(content) || StringUtils.isEmpty(href)){
             return null;
         }
-        String detailIdStr =  RegexUtil.findMatchContent("\\d+", detailHref);
-        Integer detailId = 0;
-        try{
-            detailId = Integer.parseInt(detailIdStr);
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        Document doc = Jsoup.parse(content);
+        Elements scripts = doc.select("script");
+        String src = "";
+        String detailId = "";
+        for(Element script : scripts) {
+            log.info("script.html()=" + script.html());
+            if (script.html().contains("var js_data =")) { //注意这里一定是html(), 而不是text()
+
+                String jsonStr  = script.html();
+                if(StringUtils.isNotEmpty(jsonStr)){
+                    jsonStr = jsonStr.replace("var js_data =","");
+                }
+                if(jsonStr.contains(";")){
+                    jsonStr = jsonStr.replace(";","");
+                }
+                if(jsonStr.contains("'")){
+                    jsonStr = jsonStr.replace("'","\"");
+                }
+                if(!jsonStr.startsWith("{") && !jsonStr.endsWith("}")){
+
+                }
+                JSONObject jsonObject  = JSONObject.parseObject(jsonStr);
+                src = (String) jsonObject.get("src");
+                detailId= (String) jsonObject.get("did");
+                if(StringUtils.isNotEmpty(src) && StringUtils.isNotEmpty(detailId)){
+                    break;
+                }
+            }
         }
-        if(null == detailId || detailId <= 0){
-            log.error("解析detailId失败! detailId=" +detailId);
+        if(StringUtils.isEmpty(src) ||  StringUtils.isEmpty(detailId)){
             return null;
         }
-        return this.getContactsPhone(detailId);
+        return this.getContactsPhone(detailId,src,href);
     }
 
-    public String getContactsPhone(Integer detailId){
-        if(null == detailId || detailId <= 0){
-            return null;
+    /**
+     * 调用其网站的接口，获取详情页的联系人电话号码
+     * @param detailId
+     * @param landSrc
+     * @param href
+     * @return
+     */
+    private String getContactsPhone(String detailId,String landSrc,String href){
+        if(StringUtils.isEmpty(href) || !href.contains("/s-view-")){
+            log.error("获取到的联系电话信息异常，参数landSrc=" + landSrc  + ",href= "+ href);
+            return "";
         }
-        String url = String.format("https://zunyixian.tuliu.com/landext/view/%s/1",detailId);
-        String result = HttpUtils.get(url, null, HttpUtils.CHAR_SET_UTF8);
+        String[] hostInfo = href.split("/s-view-");
+        if(null == hostInfo || hostInfo.length != 2 ){
+            log.error("获取到的联系电话信息异常，解析详情页链接的信息异常！ hostInfo=" + Arrays.asList(hostInfo));
+            return "";
+        }
+        String httpHost = hostInfo[0];
+        if(StringUtils.isEmpty(httpHost)){
+            log.error("获取到的联系电话信息异常，解析详情页链接的信息异常！ host=" + httpHost);
+            return "";
+        }
+        String host = httpHost.replace("https://","");
+
+        String url = String.format( httpHost + "/landext/view/%s/%s" , detailId , landSrc)  ;
+        Map <String,String> headMap = new HashMap<>();
+        headMap.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+        headMap.put("Accept-Encoding","gzip, deflate, br");
+        headMap.put("Accept-Language","zh-CN,zh;q=0.9");
+        headMap.put("Connection","keep-alive");
+        headMap.put("Cookie","gr_user_id=3bfc5c67-dc75-4231-b417-12f66c5a6842; gr_session_id_8d0f4cbc7395183a=b08d29fa-5a9b-4368-89a4-976893ca70e9; gr_session_id_8d0f4cbc7395183a_b08d29fa-5a9b-4368-89a4-976893ca70e9=true; PHPSESSID=ST-1989-iVcf6gHfY5Dog6VIeUq6-castuliucom; tluid=860188; tlusername=17520464602; tlauth=c1b3uc7IWa%2FsSwAQBi5T9YPMqfOoAZ1MBz28KLdJBW0tvkO%2By8x2eaqAQg4dnDx%2Fkxr1gHO%2F; tluser_agent=Mozilla%2F5.0+%28Windows+NT+6.3%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F69.0.3497.81+Safari%2F537.36; Hm_lvt_621cacc45e5c3b2243ac6211222ee1e5=1538191311,1538535033,1538535215,1538535551; Hm_lpvt_621cacc45e5c3b2243ac6211222ee1e5=1538901723; XSRF-TOKEN=eyJpdiI6Ik5Tb1ZxXC9xMXUzS3BKcjY0YXZzMENRPT0iLCJ2YWx1ZSI6IllnTzNJNTRkZHJMdW1KVFBKTHI0WFVJZmxhTlNURVJoQU95M1JWQVl6b2dTRGdKeXZLdHJYdkk0NXA3SGZMXC9sMGt4R3pYUG8wXC9wVFkzTGd6M3NVN2c9PSIsIm1hYyI6IjJjMWQyNzkyOTNhOWU1YWFlMzQ4ZDJjMzEyZmI4NmRhODliYjRiOGI4YjZjMzQ2MjgwN2RjYmJmNDhlZjM4NDEifQ%3D%3D; tuliu_session=eyJpdiI6Im5wUkhPSzhKU3hnSzljT0ZJSGJiR2c9PSIsInZhbHVlIjoiSWxKR01HMzBjZ2JYeUVjaEFQOEFSSTcyOXBENjNrNW9leVIrWW5iT1Y4ZzRoZUtPZGlURWVSUVJTdXJqK1pZQjdzMW5DaEFSZFlMNTlLSHVhWEdJbVE9PSIsIm1hYyI6IjhhOTgzNmFlN2RkYjllZTc0ZjI5MWFlYTQwMzNlOWZkNjI1NThiNThkYjYwMzMwYjk1M2IzNzg1ZjczZDdhMTQifQ%3D%3D");
+        headMap.put("Host",host);
+        headMap.put("Pragma","no-cache");
+        headMap.put("Upgrade-Insecure-Requests","1");
+        headMap.put("User-Agent","Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36");
+        String result = HttpUtils.get(url, headMap, HttpUtils.CHAR_SET_UTF8);
+        log.info("获取到的联系电话信息的原始数据：result =" + result );
         if(StringUtils.isEmpty(result)){
             return null;
         }
@@ -181,6 +240,9 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
             }
         }catch (Exception e){
              log.error("解析联系电话发生异常:"+e.getMessage(),e);
+        }
+        if(phone.contains("\\u")){
+            phone = StringUtils.unicodeToCn(phone);
         }
         return phone;
     }

@@ -121,15 +121,34 @@ public class StringUtils {
      * @param unicode
      * @return
      */
-    private static String unicodeToCn(String unicode) {
-        /** 以 \ u 分割，因为java注释也能识别unicode，因此中间加了一个空格*/
-        String[] strs = unicode.split("\\\\u");
-        String returnStr = "";
-        // 由于unicode字符串以 \ u 开头，因此分割出的第一个字符是""。
-        for (int i = 1; i < strs.length; i++) {
-            returnStr += (char) Integer.valueOf(strs[i], 16).intValue();
+    public static String unicodeToCn(String unicode) {
+//        /** 以 \ u 分割，因为java注释也能识别unicode，因此中间加了一个空格*/
+//        String[] strs = unicode.split("\\\\u");
+//        String returnStr = "";
+//        // 由于unicode字符串以 \ u 开头，因此分割出的第一个字符是""。
+//        for (int i = 1; i < strs.length; i++) {
+//            returnStr += (char) Integer.valueOf(strs[i], 16).intValue();
+//        }
+//        return returnStr;
+
+        int start = 0;
+        int end = 0;
+        StringBuffer buffer = new StringBuffer();
+        while (start > -1) {
+            end = unicode.indexOf("\\u", start + 2);
+            String charStr = "";
+            if (end == -1) {
+                charStr = unicode.substring(start + 2, unicode.length());
+            } else {
+                charStr = unicode.substring(start + 2, end);
+            }
+            char letter = (char) Integer.parseInt(charStr, 16); // 16进制parse整形字符串。
+            buffer.append(new Character(letter).toString());
+            start = end;
         }
-        return returnStr;
+        return buffer.toString();
+
+
     }
 
     /**
@@ -137,7 +156,7 @@ public class StringUtils {
      * @param cn
      * @return
      */
-    private static String cnToUnicode(String cn) {
+    public static String cnToUnicode(String cn) {
         char[] chars = cn.toCharArray();
         String returnStr = "";
         for (int i = 0; i < chars.length; i++) {
@@ -160,7 +179,7 @@ public class StringUtils {
         String cn = "你";
         System.out.println(cnToUnicode(cn));
         // 字符串 : \u5f00\u59cb\u4efb\u52a1 ，由于 \ 在java里是转义字符，要写出下面这种形式
-        String unicode = "\\u4f60";
+        String unicode = "400 8120 586 \\u8f6c 75598";
         System.out.println(unicodeToCn(unicode));
     }
 }

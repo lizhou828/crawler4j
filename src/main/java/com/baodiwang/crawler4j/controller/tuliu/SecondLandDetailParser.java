@@ -185,7 +185,7 @@ public class SecondLandDetailParser {
 
         detail.setSecondLandId(secondLandId);
 
-        String phone = secondLandDetailService.getContactsPhone(href);
+        String phone = secondLandDetailService.getContactsPhone(content,href);
         if(StringUtils.isNotEmpty(phone)){
             detail.setContactsPhone(phone);
         }
