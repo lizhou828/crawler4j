@@ -165,7 +165,7 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
                     jsonStr = jsonStr.replace("'","\"");
                 }
                 if(!jsonStr.startsWith("{") && !jsonStr.endsWith("}")){
-
+                    continue;
                 }
                 JSONObject jsonObject  = JSONObject.parseObject(jsonStr);
                 src = (String) jsonObject.get("src");
@@ -189,16 +189,11 @@ public class SecondLandDetailServiceImpl extends GenericService<SecondLandDetail
      * @return
      */
     private String getContactsPhone(String detailId,String landSrc,String href){
-        if(StringUtils.isEmpty(href) || !href.contains("/s-view-")){
+        if(StringUtils.isEmpty(href)){
             log.error("获取到的联系电话信息异常，参数landSrc=" + landSrc  + ",href= "+ href);
             return "";
         }
-        String[] hostInfo = href.split("/s-view-");
-        if(null == hostInfo || hostInfo.length != 2 ){
-            log.error("获取到的联系电话信息异常，解析详情页链接的信息异常！ hostInfo=" + Arrays.asList(hostInfo));
-            return "";
-        }
-        String httpHost = hostInfo[0];
+        String httpHost = href.substring(0,href.lastIndexOf("/"));
         if(StringUtils.isEmpty(httpHost)){
             log.error("获取到的联系电话信息异常，解析详情页链接的信息异常！ host=" + httpHost);
             return "";
