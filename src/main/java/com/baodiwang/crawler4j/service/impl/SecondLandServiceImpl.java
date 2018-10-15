@@ -31,7 +31,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * Í¨¹ıÖ÷¼ü²éÑ¯ÊµÌå¶ÔÏó
+     * é€šè¿‡ä¸»é”®æŸ¥è¯¢å®ä½“å¯¹è±¡
      * @param primaryKey
      * @return
      */
@@ -40,7 +40,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ²éÑ¯ËùÓĞ¼ÇÂ¼
+     * æŸ¥è¯¢æ‰€æœ‰è®°å½•
      * @return
      */
     public List<SecondLand> list() {
@@ -48,7 +48,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ¸ù¾İ²éÑ¯Ìõ¼ş²éÑ¯ËùÓĞ¼ÇÂ¼
+     * æ ¹æ®æŸ¥è¯¢æ¡ä»¶æŸ¥è¯¢æ‰€æœ‰è®°å½•
      * @return
      */
     public List<SecondLand> listByProperty(SecondLand secondLand){
@@ -57,7 +57,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
 
 
     /**
-     * ¸ù¾İÖ÷¼üÉ¾³ı¼ÇÂ¼
+     * æ ¹æ®ä¸»é”®åˆ é™¤è®°å½•
      * @param primaryKey
      * @return
      */
@@ -66,7 +66,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ¸ù¾İ¶à¸öÖ÷¼üÉ¾³ı¼ÇÂ¼
+     * æ ¹æ®å¤šä¸ªä¸»é”®åˆ é™¤è®°å½•
      * @param primaryKeys
      */
     public void deleteByPKeys(List<java.lang.Integer> primaryKeys) {
@@ -74,7 +74,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ¸ù¾İ´«Èë²ÎÊıÉ¾³ı¼ÇÂ¼
+     * æ ¹æ®ä¼ å…¥å‚æ•°åˆ é™¤è®°å½•
      * @param secondLand
      * @return
      */
@@ -83,7 +83,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ±£´æ¼ÇÂ¼
+     * ä¿å­˜è®°å½•
      * @param secondLand
      * @return
      */
@@ -92,7 +92,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ¸üĞÂ¼ÇÂ¼
+     * æ›´æ–°è®°å½•
      * @param secondLand
      * @return
      */
@@ -101,7 +101,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ¸ù¾İÌõ¼ş²éÑ¯¼ÇÂ¼ÌõÊı
+     * æ ¹æ®æ¡ä»¶æŸ¥è¯¢è®°å½•æ¡æ•°
      * @param secondLand
      * @return
      */
@@ -110,7 +110,7 @@ public class SecondLandServiceImpl extends GenericService<SecondLand, Integer> i
     }
 
     /**
-     * ¸ù¾İ²éÑ¯Ìõ¼ş²éÑ¯·ÖÒ³¼ÇÂ¼
+     * æ ¹æ®æŸ¥è¯¢æ¡ä»¶æŸ¥è¯¢åˆ†é¡µè®°å½•
      * @return
      */
     @Override
