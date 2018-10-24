@@ -139,7 +139,9 @@ public class SecondLandController {
     public String multiThreadParser(Integer startId ,Integer endId){
         String logMsg = "多线程解析id区间段从" + startId + "  到 " + endId + "的数据=====================================";
         List<SecondLand> secondLandList = secondLandService.findWithId(startId, endId);
-
+        if(CollectionUtils.isEmpty(secondLandList)){
+            return logMsg + "需要处理的数据条数=" + (secondLandList.size());
+        }
         int threadHandleCount = 10;//每个线程处理的任务个数
 
         long start = System.currentTimeMillis();
