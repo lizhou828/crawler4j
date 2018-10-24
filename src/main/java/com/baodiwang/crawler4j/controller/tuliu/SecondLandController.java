@@ -232,7 +232,6 @@ public class SecondLandController {
                 }
             }catch (Exception e){
                 log.error("当前子线程(" + Thread.currentThread().getName() + ")执行发生异常：" + e.getMessage(), e);
-
             }
             long end = System.currentTimeMillis();
             log.info("当前子线程(" + Thread.currentThread().getName() + ")已经执行完毕 耗时：" + (end - start) + "毫秒");
