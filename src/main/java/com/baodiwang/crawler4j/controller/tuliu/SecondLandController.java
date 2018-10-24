@@ -228,7 +228,9 @@ public class SecondLandController {
                 }
                 if(CollectionUtils.isNotEmpty(secondLandDetailList)){
                     int insertCount = secondLandDetailService.batchInsert(secondLandDetailList);
+
                     log.info("批量插入数据，返回结果insertCount=" + insertCount);
+
                 }
             }catch (Exception e){
                 log.error("当前子线程(" + Thread.currentThread().getName() + ")执行发生异常：" + e.getMessage(), e);
