@@ -236,6 +236,7 @@ public class SecondLandController {
             long end = System.currentTimeMillis();
             log.info("当前子线程(" + Thread.currentThread().getName() + ")已经执行完毕 耗时：" + (end - start) + "毫秒");
             sCountDownLatch.countDown();
+            System.out.println("asd");
         }
     }
 
